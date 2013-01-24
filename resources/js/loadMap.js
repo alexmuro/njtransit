@@ -1,0 +1,113 @@
+function loadCensusLayers()
+{
+
+    var cdata = 'P0010001';
+    //map.fractionalZoom = true;
+
+
+    var fip = 34;//Starting State
+
+    stateCounties = getStateCounties(fip);
+    map.addLayer(stateCounties);
+    stateCounties.events.register("loadend", stateCounties, function (e) {
+        $('#sf1').val(1);
+         quant = getLayerAttribute(stateCounties,sf1var[$('#sf1').val()]);
+         stateCounties.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
+         stateCounties.redraw();
+         activelayer = stateCounties;
+    }); 
+
+    countiesSelect = getStateCounties(fip);
+    selectlayer = countiesSelect;
+    map.addLayer(selectlayer);
+    countiesSelect.events.register("loadend", countiesSelect, function (e) {
+          console.log()
+          countiesSelect.styleMap = getDefaultStyle();
+    }); 
+    countiesSelect.styleMap = getDefaultStyle();
+    selectlayerer = new OpenLayers.Control.SelectFeature([selectlayer],{
+        hover:true,
+        tiple: true,
+        autoActivate:true
+    });
+    map.addControl(selectlayerer);
+    var countydblclick = new DblclickFeature(countiesSelect, {
+    dblclick: function (event) { 
+
+            event.attributes.GEO_ID[1]=4;
+            var name = event.attributes.NAME+" "+event.attributes.LSAD+" tracts";
+            var statefip=event.attributes.GEO_ID[9]+event.attributes.GEO_ID[10];
+            var countyfip=event.attributes.GEO_ID[11]+event.attributes.GEO_ID[12]+event.attributes.GEO_ID[13];
+            console.log(name+' '+statefip+' '+countyfip);
+            console.log(event.geometry.bounds);
+            map.zoomToExtent(event.geometry.bounds);
+            
+            activelayer.styleMap = getDefaultStyle('blank');
+            activelayer.redraw();
+
+            countyTracts = getCountyTracts(statefip,countyfip,name);
+            map.addLayer(countyTracts);
+            activelayer = countyTracts;
+
+            activelayer.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
+            activelayer.redraw();
+
+            tractSelect =getCountyTracts(statefip,countyfip,name);
+            selectlayer = tractSelect;
+            map.addLayer(selectlayer);
+            selectlayer.styleMap = getDefaultStyle();
+            
+            tractselectlayerer = new OpenLayers.Control.SelectFeature([selectlayer],{
+                hover:true,
+                tiple: true,
+                autoActivate:true
+            });
+            map.addControl(tractselectlayerer);
+            level++;
+
+            var tractdblclick = new DblclickFeature(tractSelect, {
+            dblclick: function (event) { 
+
+                        event.attributes.GEO_ID[1]=4;
+                        var name = event.attributes.NAME+"block groups";
+                        var statefip=event.attributes.GEO_ID[9]+event.attributes.GEO_ID[10];
+                        var countyfip=event.attributes.GEO_ID[11]+event.attributes.GEO_ID[12]+event.attributes.GEO_ID[13];
+                        var tractfip = event.attributes.GEO_ID[14]+event.attributes.GEO_ID[15]+event.attributes.GEO_ID[16]+event.attributes.GEO_ID[17]+event.attributes.GEO_ID[18]+event.attributes.GEO_ID[19];
+                        console.log(name+' '+statefip+' '+countyfip+' '+tractfip);
+                        console.log(event.geometry.bounds);
+                        map.zoomToExtent(event.geometry.bounds);
+                    
+                        activelayer.styleMap = getDefaultStyle('blank');
+                        activelayer.redraw();
+
+                        var TractBlockGroups = getTractBlockGroups(statefip,countyfip,tractfip,name);
+                        map.addLayer(TractBlockGroups);
+                        activelayer = TractBlockGroups;
+
+                        activelayer.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
+                        activelayer.redraw();
+
+                        var BGSelect = getTractBlockGroups(statefip,countyfip,tractfip,name); 
+                        selectlayer = BGSelect;
+                        map.addLayer(selectlayer);
+                        selectlayer.styleMap = getDefaultStyle();
+                        
+                        bgselectlayerer = new OpenLayers.Control.SelectFeature([selectlayer],{
+                            hover:true,
+                            tiple: true,
+                            autoActivate:true
+                        });
+                        map.addControl(bgselectlayerer);
+                        level++;
+                    } 
+                });
+            
+            map.addControl(tractdblclick);
+            tractdblclick.activate();
+
+
+        }
+    });
+    map.addControl(countydblclick);
+    countydblclick.activate();
+}
