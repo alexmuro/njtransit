@@ -3,11 +3,28 @@ function loadCensusLayers()
 
     var cdata = 'P0010001';
     //map.fractionalZoom = true;
-
-
     var fip = 34;//Starting State
+    
+    /*   
+    var vectorlayer = new OpenLayers.Layer.Vector("Taz", {
+    strategies: [new OpenLayers.Strategy.Fixed()],                
+    protocol: new OpenLayers.Protocol.HTTP({
+    url: 'data/taz.json',
+    format: new OpenLayers.Format.GeoJSON()
+    })
+    });
+    map.addLayer(vectorlayer);
+    vectorlayer.events.register("loadend", vectorlayer, function (e) {
+       
+         quant = getLayerAttribute(vectorlayer,'SUM_OccH20');
+         vectorlayer.styleMap = getStyle('SUM_OccH20',3,quant);
+         vectorlayer.redraw();
+         activelayer = vectorlayer;
+    }); 
+    */   
 
-    stateCounties = getStateCounties(fip);
+
+    stateCounties = getCountyTracts(fip,'none','NJ Census Tracts');
     map.addLayer(stateCounties);
     stateCounties.events.register("loadend", stateCounties, function (e) {
         $('#sf1').val(1);
@@ -15,22 +32,25 @@ function loadCensusLayers()
          stateCounties.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
          stateCounties.redraw();
          activelayer = stateCounties;
-    }); 
+    });
 
-    countiesSelect = getStateCounties(fip);
+    countiesSelect = getCountyTracts(fip,'none','select');
     selectlayer = countiesSelect;
     map.addLayer(selectlayer);
     countiesSelect.events.register("loadend", countiesSelect, function (e) {
-          console.log()
-          countiesSelect.styleMap = getDefaultStyle();
+          countiesSelect.styleMap = getMultiStyle();
     }); 
-    countiesSelect.styleMap = getDefaultStyle();
+    countiesSelect.styleMap =  getMultiStyle();
     selectlayerer = new OpenLayers.Control.SelectFeature([selectlayer],{
-        hover:true,
-        tiple: true,
-        autoActivate:true
+                    
+                    clickout: false, toggle: false,
+                    multiple: true, hover: false,
+                    toggleKey: "ctrlKey", // ctrl key removes from selection
+                    multipleKey: "shiftKey" // shift key adds to selection
     });
     map.addControl(selectlayerer);
+    selectlayerer.activate();
+    /*
     var countydblclick = new DblclickFeature(countiesSelect, {
     dblclick: function (event) { 
 
@@ -110,4 +130,5 @@ function loadCensusLayers()
     });
     map.addControl(countydblclick);
     countydblclick.activate();
+    */
 }

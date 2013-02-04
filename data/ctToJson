@@ -1,0 +1,8 @@
+counties=("001" "003" "005" "007" "009" "011" "013" "015" "017" "019" "021" "023" "025" "027" "029" "031" "033" "035" "037" "039" "041")
+#fipcodes=(1)
+
+for county in ${counties[*]}
+do
+    printf "   %s\n" $county
+    curl -o states/34/census_tracts_county"${county}".json "http://localhost/njtransit/data/load/getCountyTracts.php?fip=34&county=${county}"
+done

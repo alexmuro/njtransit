@@ -29,7 +29,6 @@
         <script src="resources/js/getJson.js"></script>
         <script src="resources/js/addBusRoute.js"></script>
 
-
         <script type="text/javascript" src="app.js"></script>
 
     </head>
@@ -39,7 +38,7 @@
             <?php
                 include "config/db.php"; 
                 include "partials/infopane.php";
-                include "gtfs/loadGTFS.php";
+                //include "gtfs/loadGTFS.php";
                 include "partials/legend.php";
             ?>
             </div>

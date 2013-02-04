@@ -1,9 +1,9 @@
-function addBusRoute(route)
+function addBusRoute()
 {
-    var name = "route"+route;
-    var url = "data/gtfs/bus/route"+route+".json";
+    var name = "NJTransit Bus GTFS";
+    var url = "data/gtfs/bus.json";
     
-    console.log(name+" "+url);
+    //console.log(name+" "+url);
     var vectorlayer = new OpenLayers.Layer.Vector(name, {
     eventListeners:{
         'featureselected':function(evt){

@@ -169,5 +169,26 @@ function getDefaultStyle(type)
  return styles;
 }
 
+function getMultiStyle()
+{
+    var styles = new OpenLayers.StyleMap({
+        "default": {
+            strokeWidth: .5,
+            strokeColor:'#fff',
+            fillColor: "#fff",
+            fillOpacity: ".1" 
+        },
+        "select": {
+             strokeColor: "#00c",
+             fillColor: "#00f",
+            strokeWidth: 4,
+            fillOpacity: ".37" 
+        }
+    });
+    
+
+ return styles;
+}
+
 
 

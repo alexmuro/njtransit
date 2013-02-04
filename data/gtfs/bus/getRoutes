@@ -5,5 +5,4 @@ for route in ${routes[*]}
 do
     printf "   %s\n" $route
     curl -o route"${route}".json "http://localhost/njtransit/data/load/getGTFSshapes.php?route=${route}"
-    
 done

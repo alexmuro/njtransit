@@ -13,7 +13,7 @@ do
     cd "states/$code"
     curl -O "http://www2.census.gov/geo/tiger/GENZ2010/gz_2010_${code}_150_00_500k.zip"
     unzip "gz_2010_${code}_150_00_500k.zip"
-    ogr2ogr -f "GeoJSON" block_grouphttp://www2.census.gov/geo/tis.json "gz_2010_${code}_150_00_500k.shp"
+    ogr2ogr -f "GeoJSON" block_groups.json "gz_2010_${code}_150_00_500k.shp"
     rm "gz_2010_${code}_150_00_500k.shp"
     rm "gz_2010_${code}_150_00_500k.dbf"
     rm "gz_2010_${code}_150_00_500k.prj"

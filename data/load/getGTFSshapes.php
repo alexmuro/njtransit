@@ -1,7 +1,7 @@
 <?php
 //Pass Map ID by Map ID
-ini_set("memory_limit","500M");
-ini_set('max_execution_time', 600);
+ini_set("memory_limit","1500M");
+ini_set('max_execution_time', 1200);
 $routeID = $_GET["route"];
 include '../../config/db.php'; 
 $test = new db();
