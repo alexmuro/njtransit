@@ -23,7 +23,7 @@ var style = new OpenLayers.Style(
         strokeWidth: 0,
         strokeColor:'#333',
         fillColor: "#0033cc",
-        fillOpacity: "1.",
+        fillOpacity: ".4",
     },
     // the second argument will include all rules
     {
@@ -174,7 +174,7 @@ function getMultiStyle()
     var styles = new OpenLayers.StyleMap({
         "default": {
             strokeWidth: .5,
-            strokeColor:'#fff',
+            strokeColor:'#000',
             fillColor: "#fff",
             fillOpacity: ".1" 
         },
