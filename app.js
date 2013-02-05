@@ -11,26 +11,23 @@
  *  ----------
  *  Create all kinds of tree nodes.
  */
-/*
- var urls = [
-    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
-    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
-    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png"
-    ];
-*/
-     var urls = [
+    var map = 1
+     var urls = [[
     "http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
-    ];
+    ],[
+    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
+    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
+    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png"
+    ]];
     //console.log(urls);
 
 
-var mapPanel, tree,map;
 map = new OpenLayers.Map({
 
     layers: [
-       new OpenLayers.Layer.XYZ("Cloud Made", urls, {
+       new OpenLayers.Layer.XYZ("Cloud Made", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
         })
     ],
@@ -194,3 +191,5 @@ Ext.onReady(function() {
     });
 });
 loadTrentonLayers();
+console.log('appjs')
+//loadCensusLayers();

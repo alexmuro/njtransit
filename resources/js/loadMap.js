@@ -50,6 +50,29 @@ function loadCensusLayers()
     });
     map.addControl(selectlayerer);
     selectlayerer.activate();
+
+    url = "data/gtfs/trenton.json";
+
+     gtfs = new OpenLayers.Layer.Vector('GTFS', {
+    eventListeners:{
+        'featureselected':function(evt){
+            var feature = evt.feature;
+            console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
+            //document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
+        },
+        'featureunselected':function(evt){
+            var feature = evt.feature; 
+         }   
+        }, 
+    strategies: [new OpenLayers.Strategy.Fixed()],                
+    protocol: new OpenLayers.Protocol.HTTP({
+    url: url,
+    format: new OpenLayers.Format.GeoJSON()
+    })
+    });
+    gtfs.styleMap =  getBusRouteStyle("route");
+    map.addLayer(gtfs);
+
     /*
     var countydblclick = new DblclickFeature(countiesSelect, {
     dblclick: function (event) { 
@@ -131,5 +154,5 @@ function loadCensusLayers()
     map.addControl(countydblclick);
     countydblclick.activate();
     */
-    setZoomEnd();
+    //setZoomEnd();
 }

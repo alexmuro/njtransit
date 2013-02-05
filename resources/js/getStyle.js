@@ -130,6 +130,12 @@ var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#
 var routes = ['89','110','117','149','150','151','152','153','155','156','157','158','159','160','160','162','163'];
  console.log(routes[0]+" "+routeColors[0])
 
+ var quantile = pv.Scale.quantile()
+  .quantiles(4)
+  .domain(pv.values(quant));
+
+  console.log(quantile.quantiles());
+
 var style = new OpenLayers.Style( 
      {
         strokeWidth: 2,
@@ -175,48 +181,85 @@ var style = new OpenLayers.Style(
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[5]}),
-                symbolizer: {   strokeColor: routeColors[5]}}),new OpenLayers.Rule({
+                symbolizer: {   strokeColor: routeColors[5]}}),
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[6]}),
                 symbolizer: {   strokeColor: routeColors[6]}}),
-                new OpenLayers.Rule({
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[7]}),
                 symbolizer: {   strokeColor: routeColors[7]}}),
-                new OpenLayers.Rule({
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[8]}),
                 symbolizer: {   strokeColor: routeColors[8]}}),
-                new OpenLayers.Rule({
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[9]}),
                 symbolizer: {   strokeColor: routeColors[9]}}),
-                new OpenLayers.Rule({
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[10]}),
                 symbolizer: {   strokeColor: routeColors[10]}}),
-                new OpenLayers.Rule({
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[11]}),
-                symbolizer: {   strokeColor: routeColors[11]}})
-                ,new OpenLayers.Rule({
+                symbolizer: {   strokeColor: routeColors[11]}}),
+            new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
                     property: route, 
                     value: routes[12]}),
-                symbolizer: {   strokeColor: routeColors[12]}})
+                symbolizer: {   strokeColor: routeColors[12]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.OR_EQUAL_TO,
+                    property: 'num_trips', 
+                    value: 1}),
+                symbolizer: {   strokeWidth:2}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.BETWEEN,
+                    property: 'num_trips',
+                    lowerBoundary: 2,
+                    upperBoundary: 12
+                }),
+                symbolizer: {
+                    
+                    strokeWidth: 2
+                }
+            }),
+             new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.BETWEEN,
+                    property: 'num_trips',
+                    lowerBoundary: 12,
+                    upperBoundary: 16
+                }),
+                symbolizer: {
+                    
+                    strokeWidth: 4
+                }
+            }),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
+                    property: 'num_trips', 
+                    value: 16}),
+                symbolizer: {   strokeWidth: 6}})
         ]
     }
 );
@@ -260,12 +303,14 @@ function getGTFSStyle()
 {
  var styles = new OpenLayers.StyleMap({
         "default": {
-            strokeWidth: 2,
-            strokeColor:'#f00'
+            strokeWidth: 4,
+            strokeOpacity: "0" 
+
         },
         "select": {
              strokeColor: "#0f0",
-            strokeWidth: 4
+            strokeWidth: 4,
+            strokeOpacity: ".7" 
         }
     });
     

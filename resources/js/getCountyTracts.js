@@ -38,6 +38,5 @@ function getCountyTracts(fip,county,name)
     })
 	});
     
-
     return vectorlayer;
 }
