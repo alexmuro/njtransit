@@ -15,10 +15,10 @@ var acsvar = ['B00001_001E','B00002_001E','B23001_001E','B25044_003E','B25044_00
 //---------------------------------------------------
 // Screen Behavior Jquery - to be Refactored
 //---------------------------------------------------
-jQuery(document).ready(function(){
 
 
-$("#acs").change(function() {
+
+$("#acs").live("change",function() {
         var page = 'data/load/?s=1&v='+$(this).val();
         activelayer.log(counties['features'])
         activelayer.styleMap = getStyle(sf1var[$(this).val()]);
@@ -27,7 +27,7 @@ $("#acs").change(function() {
         $("#acs").css("border-color","red");
     });
 
-$("#sf1").change(function() {
+$("#sf1").live("change",function() {
        
         quant = getLayerAttribute(activelayer,sf1var[$(this).val()]);
         activelayer.styleMap = getStyle(sf1var[$(this).val()],$("#color").val(),quant);
@@ -36,8 +36,7 @@ $("#sf1").change(function() {
         $("#sf1").css("border-color","red");
     });
 
-$("#color").change(function() {
+$("#color").live("change",function() {
         activelayer.styleMap = getStyle(sf1var[$('#sf1').val()],$(this).val(),quant);
         activelayer.redraw();
     });
-});

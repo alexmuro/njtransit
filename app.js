@@ -88,6 +88,7 @@ Ext.onReady(function() {
         split: true,
         collapsible: true,
         collapseMode: "mini",
+        collapsed:true,
         autoScroll: true,
         plugins: [
             new GeoExt.plugins.TreeNodeRadioButton({
@@ -180,16 +181,14 @@ Ext.onReady(function() {
             items: [mapPanel, tree, {
                 contentEl: "desc",
                 region: "west",
-                bodyStyle: {"padding": "5px"},
+                bodyStyle: {"padding": "0px"},
                 collapsible: true,
                 collapseMode: "mini",
                 split: true,
-                width: 200,
-                title: "Description"
+                width: 300
             }]
         }
     });
 });
 loadTrentonLayers();
-console.log('appjs')
 //loadCensusLayers();

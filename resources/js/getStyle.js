@@ -328,8 +328,8 @@ function getMultiStyle()
             fillOpacity: ".1" 
         },
         "select": {
-             strokeColor: "#00c",
-             fillColor: "#00f",
+             strokeColor: "#fff",
+             fillColor: "#fff",
             strokeWidth: 4,
             fillOpacity: ".37" 
         }

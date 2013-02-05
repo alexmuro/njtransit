@@ -99,6 +99,7 @@ function loadTrentonLayers()
           quant = getLayerAttribute(gtfs,'num_trips');
           console.log(quant);
           gtfs.styleMap =  getBusRouteStyle("route",quant);
+          gtfs.redraw();
          
     });
 
@@ -121,7 +122,8 @@ function loadTrentonLayers()
     });
     gtfsSelect.styleMap =  getGTFSStyle();
     map.addLayer(gtfsSelect);
-
+    gtfsSelect.redraw();
+    
     selectlayerer = new OpenLayers.Control.SelectFeature([selectlayer,gtfsSelect],{
                     
                     clickout: false, toggle: false,

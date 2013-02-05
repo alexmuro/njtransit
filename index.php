@@ -30,6 +30,7 @@
         <script src="resources/js/addBusRoute.js"></script>
         <script src="resources/js/onZoomEnd.js"></script>
         <script src="resources/js/loadTrenton.js"></script>
+        <script src="partials/infopane.js"></script>
 
         <script type="text/javascript" src="app.js"></script>
 
@@ -41,7 +42,6 @@
                 include "config/db.php"; 
                 include "partials/infopane.php";
                 //include "gtfs/loadGTFS.php";
-                include "partials/legend.php";
             ?>
             </div>
         </div>
