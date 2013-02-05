@@ -1,4 +1,3 @@
-
 <script>
 addBusRoute();
 </script>

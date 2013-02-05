@@ -131,4 +131,5 @@ function loadCensusLayers()
     map.addControl(countydblclick);
     countydblclick.activate();
     */
+    setZoomEnd();
 }

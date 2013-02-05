@@ -3,8 +3,7 @@ function getCountyTracts(fip,county,name)
     var url = "data/load/getCountyTracts.php?fip="+fip+"&county="+county;
     if(fip == 34)
     {
-        url = "data/states/34/census_tracts_sf1.json";
-        //name = 'NJ Census Tracts'
+       url = "data/states/34/census_tracts_sf1.json";
     }
     
     var vectorlayer = new OpenLayers.Layer.Vector(name, {
@@ -22,6 +21,7 @@ function getCountyTracts(fip,county,name)
         },
         'featureunselected':function(evt){
             var feature = evt.feature;
+            var geoString = '[';
             for(var i = 0;i<selectlayer.selectedFeatures.length;i++)
             {
                 geoString += '"' +selectlayer.selectedFeatures[i].attributes.GEO_ID+'",'
@@ -37,6 +37,7 @@ function getCountyTracts(fip,county,name)
     format: new OpenLayers.Format.GeoJSON()
     })
 	});
-	
+    
+
     return vectorlayer;
 }

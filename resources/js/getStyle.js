@@ -8,6 +8,7 @@ var colors =[['#F1EEF6','#ECE7F2','#D0D1E6','#A6BDDB','#74A9CF','#3690C0','#0570
               ['#FFF7F3','#FDE0DD','#FCC5C0','#FA9FB5','#F768A1','#DD3497','#AE017E','#7A0177'],
               ['#FFFFFF','#F0F0F0','#D9D9D9','#BDBDBD','#969696','#737373','#525252','#252525'],
               ['#D73027','#F46D43','#FDAE61','#FEE08B','#D9EF8B','#A6D96A','#66BD63','#1A9850']];
+
 //console.log(quant);
 //console.log(pv.values(quant))
 var quantile = pv.Scale.quantile()
@@ -122,19 +123,105 @@ var style = new OpenLayers.Style(
 return new OpenLayers.StyleMap(style);
 }
 
-function getBusRouteStyle()
+function getBusRouteStyle(route)
 {
-    var styles = new OpenLayers.StyleMap({
-        "default": {
-            strokeWidth: 1,
-                },
-        "select": {
-             strokeColor: "#00f",
-             strokeWidth: 2,
-        }
-    });
+var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788'];
 
-    return styles;
+var routes = ['89','110','117','149','150','151','152','153','155','156','157','158','159','160','160','162','163'];
+ console.log(routes[0]+" "+routeColors[0])
+
+var style = new OpenLayers.Style( 
+     {
+        strokeWidth: 2,
+        strokeColor:'#333',
+        fillColor: "#0033cc",
+        fillOpacity: ".4",
+    },
+    // the second argument will include all rules
+    {
+        rules: [
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'route', 
+                    value: routes[0]}),
+                symbolizer: {   strokeColor: routeColors[0]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[1]}),
+                symbolizer: {   strokeColor: routeColors[1]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[2]}),
+                symbolizer: {   strokeColor: routeColors[2]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[3]}),
+                symbolizer: {   strokeColor: routeColors[3]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[4]}),
+                symbolizer: {   strokeColor: routeColors[4]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[5]}),
+                symbolizer: {   strokeColor: routeColors[5]}}),new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[6]}),
+                symbolizer: {   strokeColor: routeColors[6]}}),
+                new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[7]}),
+                symbolizer: {   strokeColor: routeColors[7]}}),
+                new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[8]}),
+                symbolizer: {   strokeColor: routeColors[8]}}),
+                new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[9]}),
+                symbolizer: {   strokeColor: routeColors[9]}}),
+                new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[10]}),
+                symbolizer: {   strokeColor: routeColors[10]}}),
+                new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[11]}),
+                symbolizer: {   strokeColor: routeColors[11]}})
+                ,new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[12]}),
+                symbolizer: {   strokeColor: routeColors[12]}})
+        ]
+    }
+);
+
+return new OpenLayers.StyleMap(style);
 }
 
 function getDefaultStyle(type)
@@ -165,6 +252,23 @@ function getDefaultStyle(type)
             }
         });
     } 
+
+ return styles;
+}
+
+function getGTFSStyle()
+{
+ var styles = new OpenLayers.StyleMap({
+        "default": {
+            strokeWidth: 2,
+            strokeColor:'#f00'
+        },
+        "select": {
+             strokeColor: "#0f0",
+            strokeWidth: 4
+        }
+    });
+    
 
  return styles;
 }

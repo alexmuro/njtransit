@@ -28,6 +28,8 @@
         <script src="resources/js/loadMap.js"></script>
         <script src="resources/js/getJson.js"></script>
         <script src="resources/js/addBusRoute.js"></script>
+        <script src="resources/js/onZoomEnd.js"></script>
+        <script src="resources/js/loadTrenton.js"></script>
 
         <script type="text/javascript" src="app.js"></script>
 

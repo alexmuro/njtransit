@@ -11,13 +11,13 @@
  *  ----------
  *  Create all kinds of tree nodes.
  */
-
- /*var urls = [
+/*
+ var urls = [
     "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
     "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
     "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png"
-    ];*/
-
+    ];
+*/
      var urls = [
     "http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
@@ -193,4 +193,4 @@ Ext.onReady(function() {
         }
     });
 });
-loadCensusLayers();
+loadTrentonLayers();
