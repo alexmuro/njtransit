@@ -17,10 +17,15 @@
     "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
     ],[
-    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
-    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png",
-    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/20760/256/${z}/${x}/${y}.png"
-    ]];
+    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png",
+    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png",
+    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png"
+    ],
+    ["http://a.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
+        "http://b.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
+        "http://c.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
+        "http://d.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png"]
+    ];
     //console.log(urls);
 
 

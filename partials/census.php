@@ -12,8 +12,8 @@
         <b>Select a variable to display</b><br>
         Summary File 1 Variables:<br>
         <select id="sf1" style='border-color:red;'>
-         <option selected></option>
-         <option value="0" >Total Population</option>
+         <option value="99" selected></option>
+         <option value="0">Total Population</option>
          <option value="1">White Population</option>
          <option value="2">Black Population</option>
          <option value="3">Asian Population</option>
@@ -25,7 +25,7 @@
         </select>
         American Community Survey Variables:<br>
         <select id="acs">
-        <option value="0"></option>
+        <option value="99"></option>
          <option value="0"> Population Sample </option>
          <option value="1"> Housing Units Sample</option>
          <option value="2">Population in Poverty</option>

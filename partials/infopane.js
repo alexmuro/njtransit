@@ -14,8 +14,9 @@ $("#census_tab").live("click", function() {
 		loadCensusPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
 		$(this).addClass('selected');
-		$("#sf1").val(1);
+		$("#sf1").val(5);
 		$("#color").val(1);
+		$("#sf1").val(0);
 	} 
 });
 $("#transit_tab").live("click", function() { 

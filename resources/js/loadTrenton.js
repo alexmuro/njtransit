@@ -38,13 +38,14 @@ function loadTrentonLayers()
     strategies: [new OpenLayers.Strategy.Fixed()],                
     protocol: new OpenLayers.Protocol.HTTP({
     url: url,
-    format: new OpenLayers.Format.GeoJSON()
+    format: new OpenLayers.Format.GeoJSON(),
+    renderers: ["Canvas", "SVG", "VML"]
     })
     });
     
     map.addLayer(stateCounties);
     stateCounties.events.register("loadend", stateCounties, function (e) {
-        $('#sf1').val(1);
+        $('#sf1').val(0);
          quant = getLayerAttribute(stateCounties,sf1var[$('#sf1').val()]);
          stateCounties.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
          stateCounties.redraw();
@@ -66,7 +67,8 @@ function loadTrentonLayers()
     strategies: [new OpenLayers.Strategy.Fixed()],                
     protocol: new OpenLayers.Protocol.HTTP({
     url: url,
-    format: new OpenLayers.Format.GeoJSON()
+    format: new OpenLayers.Format.GeoJSON(),
+    renderers: ["Canvas", "SVG", "VML"]
     })
     });
     selectlayer = countiesSelect;
@@ -91,13 +93,14 @@ function loadTrentonLayers()
     strategies: [new OpenLayers.Strategy.Fixed()],                
     protocol: new OpenLayers.Protocol.HTTP({
     url: url,
-    format: new OpenLayers.Format.GeoJSON()
+    format: new OpenLayers.Format.GeoJSON(),
+    renderers: ["Canvas", "SVG", "VML"]
     })
     });
     map.addLayer(gtfs);
     gtfs.events.register("loadend", countiesSelect, function (e) {
           quant = getLayerAttribute(gtfs,'num_trips');
-          console.log(quant);
+          //console.log(quant);
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           gtfs.redraw();
          
@@ -107,7 +110,7 @@ function loadTrentonLayers()
     eventListeners:{
         'featureselected':function(evt){
             var feature = evt.feature;
-            console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
+            //console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
             //document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
         },
         'featureunselected':function(evt){
@@ -117,13 +120,14 @@ function loadTrentonLayers()
     strategies: [new OpenLayers.Strategy.Fixed()],                
     protocol: new OpenLayers.Protocol.HTTP({
     url: url,
-    format: new OpenLayers.Format.GeoJSON()
+    format: new OpenLayers.Format.GeoJSON(),
+    renderers: ["Canvas", "SVG", "VML"]
     })
     });
     gtfsSelect.styleMap =  getGTFSStyle();
     map.addLayer(gtfsSelect);
     gtfsSelect.redraw();
-    
+
     selectlayerer = new OpenLayers.Control.SelectFeature([selectlayer,gtfsSelect],{
                     
                     clickout: false, toggle: false,

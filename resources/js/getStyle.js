@@ -128,13 +128,13 @@ function getBusRouteStyle(route)
 var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788'];
 
 var routes = ['89','110','117','149','150','151','152','153','155','156','157','158','159','160','160','162','163'];
- console.log(routes[0]+" "+routeColors[0])
+ //console.log(routes[0]+" "+routeColors[0])
 
  var quantile = pv.Scale.quantile()
   .quantiles(4)
   .domain(pv.values(quant));
 
-  console.log(quantile.quantiles());
+  //console.log(quantile.quantiles());
 
 var style = new OpenLayers.Style( 
      {
@@ -303,7 +303,7 @@ function getGTFSStyle()
 {
  var styles = new OpenLayers.StyleMap({
         "default": {
-            strokeWidth: 4,
+            strokeWidth: 8,
             strokeOpacity: "0" 
 
         },

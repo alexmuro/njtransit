@@ -7,6 +7,7 @@ var usBounds;
 var selectlayerer,tractselectlayerer,bgselectlayerer;
 var counties, states,countyTracts;
 var stateCounties,countiesSelect,tractSelect;
+var gtfs,gtfsSelect;
 var level = 0;
 var sources = ['sf1','acs5'];
 var sf1var = ['P0010001','P0030002','P0030003','P0030005','P0040001','P0120002','P0120026','P0180001']

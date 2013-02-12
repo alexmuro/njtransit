@@ -25,7 +25,8 @@ function getStateCounties(fip,select)
     strategies: [new OpenLayers.Strategy.Fixed()],                
     protocol: new OpenLayers.Protocol.HTTP({
     url: url,
-    format: new OpenLayers.Format.GeoJSON()
+    format: new OpenLayers.Format.GeoJSON(),
+    renderers: ["Canvas", "SVG", "VML"]
     
     })
 	});
