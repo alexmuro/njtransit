@@ -28,11 +28,10 @@ function listRoutes()
 		{
 			if($(this).data('route') == gtfs.features[i].data.route)
 				{
-					//console.log($(this).data('route')+' = '+gtfs.features[i].data.route)
 					gtfs_select.select(gtfs.features[i]);	
-
 				}
 		}
+		gtfsSelect.redraw();
 		$(this).css('background-color','#0f0');
 	});
 
@@ -40,4 +39,6 @@ function listRoutes()
 		$(this).css('background-color',routeColors[$(this).data('order')]);
 		gtfs_select.unselectAll()
 	});
+
+
 }

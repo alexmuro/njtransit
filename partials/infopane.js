@@ -30,9 +30,9 @@ $("#census_tab").live("click", function() {
 		loadCensusPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
 		$(this).addClass('selected');
-		$("#sf1").val(5);
+		$("#sf1").val(sf1var[1]);
 		$("#color").val(1);
-		$("#sf1").val(0);
+		$("#sf1").val(sf1var[0]);
     gtfs_select.destroy();
     census_select = new OpenLayers.Control.SelectFeature([stateCounties],{
       selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},

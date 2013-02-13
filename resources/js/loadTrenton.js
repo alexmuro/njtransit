@@ -1,29 +1,8 @@
 function loadTrentonLayers()
 {
-
     var cdata = 'P0010001';
-    //map.fractionalZoom = true;
-    var fip = 34;//Starting State
-    
-    /*   
-    var vectorlayer = new OpenLayers.Layer.Vector("Taz", {
-    strategies: [new OpenLayers.Strategy.Fixed()],                
-    protocol: new OpenLayers.Protocol.HTTP({
-    url: 'data/taz.json',
-    format: new OpenLayers.Format.GeoJSON()
-    })
-    });
-    map.addLayer(vectorlayer);
-    vectorlayer.events.register("loadend", vectorlayer, function (e) {
-       
-         quant = getLayerAttribute(vectorlayer,'SUM_OccH20');
-         vectorlayer.styleMap = getStyle('SUM_OccH20',3,quant);
-         vectorlayer.redraw();
-         activelayer = vectorlayer;
-    }); 
-    */
-       url = "data/states/34/trentonBG.json";
-
+    url = "data/states/34/trentonBG.json";
+    //url = "data/taz.json";
     
     stateCounties = new OpenLayers.Layer.Vector('Zones', {
     eventListeners:{
@@ -45,13 +24,22 @@ function loadTrentonLayers()
     
     map.addLayer(stateCounties);
     stateCounties.events.register("loadend", stateCounties, function (e) {
-        $('#sf1').val(0);
-         quant = getLayerAttribute(stateCounties,sf1var[$('#sf1').val()]);
-         stateCounties.styleMap = getStyle(sf1var[$('#sf1').val()],$("#color").val(),quant);
-         stateCounties.redraw();
+        
          activelayer = stateCounties;
          map.zoomToExtent(stateCounties.getDataExtent());
-         //map.maxExtent(stateCounties.getDataExtent());
+         data = stateCounties.features[0].data
+         $.each(data, function(index, value) {
+              console.log('index')
+              if((index[0] == 'P' || index[0] == 'B') && value != 'null'){  
+                $('#sf1')
+                 .append($('<option>', {index : index })
+                 .text(index)); 
+               }
+          });
+         $('#sf1').val(cdata);
+         quant = getLayerAttribute(stateCounties,$('#sf1').val());
+         stateCounties.styleMap = getStyle($('#sf1').val(),$("#color").val(),quant);
+         stateCounties.redraw();
     });
 
     url = "data/gtfs/trenton.json";
@@ -76,14 +64,11 @@ function loadTrentonLayers()
     map.addLayer(gtfs);
     gtfs.events.register("loadend", countiesSelect, function (e) {
           quant = getLayerAttribute(gtfs,'num_trips');
-          //console.log(quant);
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           gtfs.redraw();
-          map.setOptions({restrictedExtent: new OpenLayers.Bounds(-8395289.8769294,4831878.0185459,-8256480.2335828,4936749.6213385)});        
+                  
     });
  
     //setZoomEnd();
-    map.events.register("moveend", map, function() {
-      console.log(map.getExtent());
-    });
+    map.setOptions({restrictedExtent: new OpenLayers.Bounds(-8395289.8769294,4831878.0185459,-8256480.2335828,4936749.6213385)});
 }

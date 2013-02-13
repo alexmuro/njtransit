@@ -6,9 +6,11 @@ function getLayerAttribute(layer,attribute)
 	  {  	
     	if(attribute == 'num_trips'){
       	quant[layer.features[i]['data']['route']] = parseInt(layer.features[i]['data'][attribute]);
-    	//quant[layer.features[i]['data']['TAZ2008']] = parseInt(layer.features[i]['data'][attribute]);
- 		 	}
+    	 	}
   		else{
+	  		//for taz file rendering
+	  		//quant[layer.features[i]['data']['TAZ2008']] = parseInt(layer.features[i]['data'][attribute]);
+ 		
 	  		quant[layer.features[i]['data']['GEO_ID']] = parseInt(layer.features[i]['data'][attribute]);
 	  	}
 	  }
