@@ -83,7 +83,7 @@ function loadTrentonLayers()
         eventListeners:{
         'featureselected':function(evt){
             var feature = evt.feature;
-            console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
+            //console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
             //document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
         },
         'featureunselected':function(evt){
@@ -127,16 +127,6 @@ function loadTrentonLayers()
     gtfsSelect.styleMap =  getGTFSStyle();
     map.addLayer(gtfsSelect);
     gtfsSelect.redraw();
-
-    selectlayerer = new OpenLayers.Control.SelectFeature([selectlayer,gtfsSelect],{
-                    
-                    clickout: false, toggle: false,
-                    multiple: false, hover: true,
-                    toggleKey: "ctrlKey", // ctrl key removes from selection
-                    multipleKey: "shiftKey" // shift key adds to selection
-    });
-    map.addControl(selectlayerer);
-    selectlayerer.activate();
-
+    
     //setZoomEnd();
 }

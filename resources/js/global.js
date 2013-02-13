@@ -5,6 +5,7 @@ var quant = {};
 var activelayer,selectlayer;
 var usBounds;
 var selectlayerer,tractselectlayerer,bgselectlayerer;
+var gtfs_select, census_select;
 var counties, states,countyTracts;
 var stateCounties,countiesSelect,tractSelect;
 var gtfs,gtfsSelect;
