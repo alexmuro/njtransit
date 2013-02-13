@@ -1,13 +1,14 @@
 function getStyle(cdata,color,quant)
 {
 var cchoice =color;
-var colors =[['#F1EEF6','#ECE7F2','#D0D1E6','#A6BDDB','#74A9CF','#3690C0','#0570B0','#034E7B'],
+var colors =[['#D73027','#F46D43','#FDAE61','#FEE08B','#D9EF8B','#A6D96A','#66BD63','#1A9850'],
+              ['#F1EEF6','#ECE7F2','#D0D1E6','#A6BDDB','#74A9CF','#3690C0','#0570B0','#034E7B'],
               ['#F7FCF0','#E0F3DB','#CCEBC5','#A8DDB5','#7BCCC4','#4EB3D3','#2B8CBE','#08589E'],
               ['#66C2A5','#FC8D62','#8DA0CB','#E78AC3','#A6D854','#FFD92F','#E5C494','#B3B3B3'],
               ['#FFFFCC','#FFEDA0','#FED976','#FEB24C','#FD8D3C','#FC4E2A','#E31A1C','#B10026'],
               ['#FFF7F3','#FDE0DD','#FCC5C0','#FA9FB5','#F768A1','#DD3497','#AE017E','#7A0177'],
-              ['#FFFFFF','#F0F0F0','#D9D9D9','#BDBDBD','#969696','#737373','#525252','#252525'],
-              ['#D73027','#F46D43','#FDAE61','#FEE08B','#D9EF8B','#A6D96A','#66BD63','#1A9850']];
+              ['#FFFFFF','#F0F0F0','#D9D9D9','#BDBDBD','#969696','#737373','#525252','#252525']
+              ];
 
 //console.log(quant);
 //console.log(pv.values(quant))
@@ -125,7 +126,7 @@ return new OpenLayers.StyleMap(style);
 
 function getBusRouteStyle(route)
 {
-var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788'];
+var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a'];
 
 var routes = ['89','110','117','149','150','151','152','153','155','156','157','158','159','160','160','162','163'];
  //console.log(routes[0]+" "+routeColors[0])
@@ -141,7 +142,7 @@ var style = new OpenLayers.Style(
         strokeWidth: 2,
         strokeColor:'#333',
         fillColor: "#0033cc",
-        fillOpacity: ".4",
+        fillOpacity: "1.",
     },
     // the second argument will include all rules
     {

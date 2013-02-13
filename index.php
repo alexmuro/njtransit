@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="style.css" type="text/css">
 
         <!--<script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>-->
-        
+         <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
         <script src="resources/js/countyDataLayer.js"></script>
         <script src="resources/js/getFilter.js"></script> 
         <script src="resources/js/getStateCounties.js"></script>

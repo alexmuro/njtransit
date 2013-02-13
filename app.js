@@ -11,20 +11,28 @@
  *  ----------
  *  Create all kinds of tree nodes.
  */
+ 
+ /* Cloudmade Styles
+  * 86367 - black and wite
+  * 84168
+  * 
+ */
     var map = 1
      var urls = [[
     "http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
     ],[
-    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png",
-    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png",
-    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86367/256/${z}/${x}/${y}.png"
+    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png",
+    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png",
+    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png"
     ],
-    ["http://a.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
-        "http://b.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
-        "http://c.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png",
-        "http://d.tiles.mapbox.com/v3/mapbox.mapbox-streets/${z}/${x}/${y}.png"]
+    [ 
+      "http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+      "http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+      "http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+      "http://otile4.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png"
+    ]
     ];
     //console.log(urls);
 
@@ -32,9 +40,41 @@
 map = new OpenLayers.Map({
 
     layers: [
-       new OpenLayers.Layer.XYZ("Cloud Made", urls[map], {
+       new OpenLayers.Layer.Google(
+                "Google Terrain",{
+                    type: google.maps.MapTypeId.TERRAIN,
+                    animationEnabled: false,
+                transitionEffect: "resize"
+            }
+            ),
+        new OpenLayers.Layer.Google(
+                "Google Streets", // the default
+                {numZoomLevels: 20,
+                animationEnabled: false,
+                transitionEffect: "resize"}
+            ),
+            new OpenLayers.Layer.Google(
+                "Google Hybrid",
+                {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
+                animationEnabled: false,
+                transitionEffect: "resize"}
+            ),
+            new OpenLayers.Layer.Google(
+                "Google Satellite",
+                {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
+                animationEnabled: false,
+                transitionEffect: "resize"}
+            ),
+            new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
-        })
+            }),
+            new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
+             transitionEffect: "resize", buffer: 2, sphericalMercator: true
+            }),
+               new OpenLayers.Layer.XYZ("MapQuest", urls[2], {
+             transitionEffect: "resize", buffer: 2, sphericalMercator: true
+            })
+
     ],
     controls: [
         new OpenLayers.Control.Navigation({
@@ -196,4 +236,5 @@ Ext.onReady(function() {
     });
 });
 loadTrentonLayers();
+
 //loadCensusLayers();
