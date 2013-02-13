@@ -79,8 +79,11 @@ function loadTrentonLayers()
           //console.log(quant);
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           gtfs.redraw();
-          map.setOptions({restrictedExtent: gtfs.getDataExtent()});        
+          map.setOptions({restrictedExtent: new OpenLayers.Bounds(-8395289.8769294,4831878.0185459,-8256480.2335828,4936749.6213385)});        
     });
-
+ 
     //setZoomEnd();
+    map.events.register("moveend", map, function() {
+      console.log(map.getExtent());
+    });
 }

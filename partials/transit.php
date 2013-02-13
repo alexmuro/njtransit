@@ -5,8 +5,6 @@
 	border:1px solid;
 }
 
-
-
 </style>
 
 <h1 id="title">Transit</h1>
