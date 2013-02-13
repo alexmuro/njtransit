@@ -15,7 +15,7 @@
  /* Cloudmade Styles
   * 86367 - black and wite
   * 84168
-  * 
+  * 9202
  */
     var map = 1
      var urls = [[
@@ -23,9 +23,9 @@
     "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
     "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
     ],[
-    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png",
-    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png",
-    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/9202/256/${z}/${x}/${y}.png"
+    "http://a.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86564/256/${z}/${x}/${y}.png",
+    "http://b.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86564/256/${z}/${x}/${y}.png",
+    "http://c.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/86564/256/${z}/${x}/${y}.png"
     ],
     [ 
       "http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
@@ -40,6 +40,9 @@
 map = new OpenLayers.Map({
 
     layers: [
+      new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
+            transitionEffect: "resize", buffer: 2, sphericalMercator: true
+            }),
        new OpenLayers.Layer.Google(
                 "Google Terrain",{
                     type: google.maps.MapTypeId.TERRAIN,
@@ -65,9 +68,6 @@ map = new OpenLayers.Map({
                 animationEnabled: false,
                 transitionEffect: "resize"}
             ),
-            new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
-            transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            }),
             new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
@@ -82,7 +82,7 @@ map = new OpenLayers.Map({
                 enableKinetic: true
             }
         }),
-        new OpenLayers.Control.PanZoom(),
+        new OpenLayers.Control.Zoom(),
         new OpenLayers.Control.Attribution()
     ]
     

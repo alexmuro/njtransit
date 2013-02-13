@@ -227,6 +227,24 @@ var style = new OpenLayers.Style(
                 symbolizer: {   strokeColor: routeColors[12]}}),
             new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[13]}),
+                symbolizer: {   strokeColor: routeColors[13]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[14]}),
+                symbolizer: {   strokeColor: routeColors[14]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: route, 
+                    value: routes[15]}),
+                symbolizer: {   strokeColor: routeColors[15]}}),
+            new OpenLayers.Rule({
+                filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.OR_EQUAL_TO,
                     property: 'num_trips', 
                     value: 1}),
