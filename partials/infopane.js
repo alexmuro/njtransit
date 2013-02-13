@@ -5,13 +5,21 @@ $(document).ready(function(){
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-      census_select = new OpenLayers.Control.SelectFeature([selectlayer],{              
+      census_select = new OpenLayers.Control.SelectFeature([stateCounties],{   
+      selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
+                          OpenLayers.Feature.Vector.style["select"]),           
       clickout: false, toggle: false,
       multiple: false, hover: true,
       toggleKey: "ctrlKey", // ctrl key removes from selection
       multipleKey: "shiftKey" // shift key adds to selection
       });
       map.addControl(census_select);
+      census_select.onBeforeSelect = function(feature) {
+        this.selectStyle.strokeColor ="#fff";
+        this.selectStyle.fillColor ="#00f";
+        this.selectStyle.strokeWidth = 4;
+        this.selectStyle.fillOpacity = ".37";
+      };
       census_select.activate();
     },
   })
@@ -26,13 +34,21 @@ $("#census_tab").live("click", function() {
 		$("#color").val(1);
 		$("#sf1").val(0);
     gtfs_select.destroy();
-    census_select = new OpenLayers.Control.SelectFeature([selectlayer],{              
+    census_select = new OpenLayers.Control.SelectFeature([stateCounties],{
+      selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
+                          OpenLayers.Feature.Vector.style["select"]),             
       clickout: false, toggle: false,
       multiple: false, hover: true,
       toggleKey: "ctrlKey", // ctrl key removes from selection
       multipleKey: "shiftKey" // shift key adds to selection
     });
     map.addControl(census_select);
+    census_select.onBeforeSelect = function(feature) {
+        this.selectStyle.strokeColor ="#fff";
+        this.selectStyle.fillColor ="#00f";
+        this.selectStyle.strokeWidth = 4;
+        this.selectStyle.fillOpacity = ".37";
+      };
     census_select.activate();
 	} 
 });
@@ -43,13 +59,18 @@ $("#transit_tab").live("click", function() {
 		$("#tab_nav").find('.selected').removeClass('selected');
 		$(this).addClass('selected');
     census_select.destroy();
-    gtfs_select = new OpenLayers.Control.SelectFeature([gtfsSelect],{      
-      clickout: false, toggle: false,
-      multiple: false, hover: true,
-      toggleKey: "ctrlKey", // ctrl key removes from selection
-      multipleKey: "shiftKey" // shift key adds to selection
-    });
+    gtfs_select = new OpenLayers.Control.SelectFeature([gtfs], {
+                          selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
+                          OpenLayers.Feature.Vector.style["select"]),
+                          clickout: false, toggle: false,
+                          multiple: false, hover: true
+              });
+
     map.addControl(gtfs_select);
+    gtfs_select.onBeforeSelect = function(feature) {
+        this.selectStyle.strokeColor ="#0f0";
+        this.selectStyle.strokeWidth = 8;
+    };
     gtfs_select.activate();
 	} 
 

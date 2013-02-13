@@ -21,7 +21,7 @@ function loadTrentonLayers()
          vectorlayer.redraw();
          activelayer = vectorlayer;
     }); 
-    */   
+    */
        url = "data/states/34/trentonBG.json";
 
     
@@ -54,30 +54,6 @@ function loadTrentonLayers()
          //map.maxExtent(stateCounties.getDataExtent());
     });
 
-    countiesSelect = new OpenLayers.Layer.Vector('select', {
-    eventListeners:{
-        'featureselected':function(evt){
-            var feature = evt.feature;
-            document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
-        },
-        'featureunselected':function(evt){
-            var feature = evt.feature; 
-         }   
-        }, 
-    strategies: [new OpenLayers.Strategy.Fixed()],                
-    protocol: new OpenLayers.Protocol.HTTP({
-    url: url,
-    format: new OpenLayers.Format.GeoJSON(),
-    renderers: ["Canvas", "SVG", "VML"]
-    })
-    });
-    selectlayer = countiesSelect;
-    map.addLayer(selectlayer);
-    countiesSelect.events.register("loadend", countiesSelect, function (e) {
-          countiesSelect.styleMap = getMultiStyle();
-    }); 
-    countiesSelect.styleMap =  getMultiStyle();
-
     url = "data/gtfs/trenton.json";
     gtfs = new OpenLayers.Layer.Vector('GTFS', { 
         eventListeners:{
@@ -106,27 +82,5 @@ function loadTrentonLayers()
          
     });
 
-    gtfsSelect = new OpenLayers.Layer.Vector('GTFS Select', {
-    eventListeners:{
-        'featureselected':function(evt){
-            var feature = evt.feature;
-            //console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
-            //document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
-        },
-        'featureunselected':function(evt){
-            var feature = evt.feature; 
-         }   
-        }, 
-    strategies: [new OpenLayers.Strategy.Fixed()],                
-    protocol: new OpenLayers.Protocol.HTTP({
-    url: url,
-    format: new OpenLayers.Format.GeoJSON(),
-    renderers: ["Canvas", "SVG", "VML"]
-    })
-    });
-    gtfsSelect.styleMap =  getGTFSStyle();
-    map.addLayer(gtfsSelect);
-    gtfsSelect.redraw();
-    
     //setZoomEnd();
 }
