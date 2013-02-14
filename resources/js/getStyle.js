@@ -341,14 +341,14 @@ function getMultiStyle()
 {
     var styles = new OpenLayers.StyleMap({
         "default": {
-            strokeWidth: .5,
+            strokeWidth: 0,
             strokeColor:'#000',
             fillColor: "#fff",
             fillOpacity: ".1" 
         },
         "select": {
              strokeColor: "#fff",
-             fillColor: "#fff",
+             fillColor: "#00f",
             strokeWidth: 4,
             fillOpacity: ".37" 
         }

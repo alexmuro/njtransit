@@ -17,6 +17,7 @@ function getCountyTracts(fip,county,name)
                 geoString += '"' +selectlayer.selectedFeatures[i].attributes.GEO_ID+'",'
             }
             geoString += ']';
+            console.log(geoString);
             document.getElementById("selectedFeatures").value =geoString;
         },
         'featureunselected':function(evt){

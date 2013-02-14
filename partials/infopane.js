@@ -9,7 +9,7 @@ $(document).ready(function(){
       selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
                           OpenLayers.Feature.Vector.style["select"]),           
       clickout: false, toggle: false,
-      multiple: false, hover: true,
+      multiple: true, hover: false,
       toggleKey: "ctrlKey", // ctrl key removes from selection
       multipleKey: "shiftKey" // shift key adds to selection
       });
