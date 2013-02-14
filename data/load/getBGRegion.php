@@ -117,8 +117,6 @@ foreach($inputTracts as $tract)
   //echo $geotract.' '.$tracts[0].' '.in_array($geoid, $tracts).'<br>';
       for($var = 0;$var < $length-4;$var++)
       { 
-        //echo 'cdata '.$geoid.' '.$handles[$sources[$source]][$var].' '.$cdata[$cursor][$var].'<br>';
-        
         $geoSort[$geoid]['properties'][$handles[$sources[$source]][$var]] = $cdata[$cursor][$var];
         
       }

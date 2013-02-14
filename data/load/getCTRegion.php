@@ -67,13 +67,13 @@ foreach($counties as $county)
         //echo  $cdata[$cursor][0];
     }
 }
-
+$source = 1;
 foreach($counties as $county)
 {
     //echo "FipsCode: $fipscode <br>";
     $vars = 'B00001_001E,B00002_001E,B23001_001E,B25044_003E,B25044_004E,B25119_001E,B08006_008E,B08006_009E,B08006_011E,B08006_001E,B08011_001E,B08012_001E,B08013_001E,B08014_001E,B08015_001E,B08016_001E,B08017_001E,B08018_001E,B08101_001E,B08119_001E,B08121_001E,B08122_001E,B08124_001E,B08126_001E,B08128_001E,B08130_001E,B08132_001E,B08133_001E,B08137_001E,B08141_001E,B08202_001E,B08301_001E,B08302_001E,B19001_001E,B99080_001E,B99081_001E,B08014_003E,B08014_002E,B08014_005E,B08014_006E,B08014_007E,B08141_001E,B08141_001E,B08141_003E,B08141_004E,B08141_005E';
     $var = $handles[$sources[$source]][$var];
-    $jURL = 'http://api.census.gov/data/2010/'.$sources[1].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=block+group:*&in=state:'.$fip.'+county:'.$countyfip.'+tract:'.$tractfip;
+    $jURL = 'http://api.census.gov/data/2010/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=block+group:*&in=state:'.$fip.'+county:'.$countyfip.'+tract:'.$tractfip;
 
     //echo $jURL."<br>";
     $cdata = curl_download($jURL);

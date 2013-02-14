@@ -29,7 +29,7 @@ function loadTrentonLayers()
          map.zoomToExtent(stateCounties.getDataExtent());
          data = stateCounties.features[0].data
          $.each(data, function(index, value) {
-              console.log('index')
+              //console.log(index)
               if((index[0] == 'P' || index[0] == 'B') && value != 'null'){  
                 $('#sf1')
                  .append($('<option>', {index : index })
