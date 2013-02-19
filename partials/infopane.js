@@ -31,27 +31,15 @@ $("#census_tab").live("click", function() {
 		$("#sf1").val(sf1var[1]);
 		$("#color").val(1);
 		$("#sf1").val(sf1var[0]);
-    gtfs_select.destroy();
-    census_select = new OpenLayers.Control.SelectFeature([stateCounties],{
-      selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
-                          OpenLayers.Feature.Vector.style["select"]),             
-      clickout: false, toggle: false,
-      multiple: false, hover: true,
-      toggleKey: "ctrlKey", // ctrl key removes from selection
-      multipleKey: "shiftKey" // shift key adds to selection
-    });
-    map.addControl(census_select);
-    census_select.onBeforeSelect = function(feature) {
-        this.selectStyle.strokeColor ="#fff";
-        this.selectStyle.fillColor ="#00f";
-        this.selectStyle.strokeWidth = 4;
-        this.selectStyle.fillOpacity = ".37";
-      };
-    census_select.activate();
+    if(gtfs_select != 'undefined')
+    {
+      load_census_select()
+    }
 	} 
 });
 
-$("#transit_tab").live("click", function() { 
+$("#transit_tab").live("click", function() {
+  console.log('transit tab clicked') 
 	if(!$(this).hasClass('selected')){
 		loadTransitPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
@@ -74,11 +62,16 @@ $("#transit_tab").live("click", function() {
 
 });
 $("#graphing_tab").live("click", function() { 
-	if(!$(this).hasClass('selected')){
+  if(!$(this).hasClass('selected')){
 		loadGraphingPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
 		$(this).addClass('selected')
-	} 
+    if(typeof gtfs_select != 'undefined')
+    {
+      load_census_select()
+    }
+
+	}
 });
 
 function loadCensusPane()
@@ -90,7 +83,8 @@ function loadCensusPane()
     success: function(data){
       $('#content').html(data);
     },
-  });	
+  });
+  graphing = false;	
 }
 
 function loadTransitPane()
@@ -102,7 +96,8 @@ function loadTransitPane()
     success: function(data){
       $('#content').html(data);
     },
-	});		
+	});
+  graphing = false;
 }
 
 function loadGraphingPane()
@@ -114,5 +109,27 @@ function loadGraphingPane()
     success: function(data){
       $('#content').html(data);
     },
-  });		
+  });
+  graphing = true;		
+}
+
+function load_census_select()
+{
+  gtfs_select.destroy();
+    census_select = new OpenLayers.Control.SelectFeature([stateCounties],{
+      selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
+                          OpenLayers.Feature.Vector.style["select"]),             
+      clickout: false, toggle: false,
+      multiple: false, hover: true,
+      toggleKey: "ctrlKey", // ctrl key removes from selection
+      multipleKey: "shiftKey" // shift key adds to selection
+    });
+    map.addControl(census_select);
+    census_select.onBeforeSelect = function(feature) {
+        this.selectStyle.strokeColor ="#fff";
+        this.selectStyle.fillColor ="#00f";
+        this.selectStyle.strokeWidth = 4;
+        this.selectStyle.fillOpacity = ".37";
+      };
+    census_select.activate();
 }

@@ -1,14 +1,25 @@
 function loadTrentonLayers()
 {
     var cdata = 'P0010001';
-    url = "data/states/34/trentonBG.json";
+    url = "data/states/34/trentonCT.json";
     //url = "data/taz.json";
     
     stateCounties = new OpenLayers.Layer.Vector('Zones', {
     eventListeners:{
         'featureselected':function(evt){
             var feature = evt.feature;
-            document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
+            if(graphing==false)
+            {
+                document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
+            }
+            if(graphing == true)
+            {
+              console.log(feature.attributes.GEO_ID)
+              state = feature.attributes.GEO_ID[9]+feature.attributes.GEO_ID[10];
+              county = feature.attributes.GEO_ID[11]+feature.attributes.GEO_ID[12]+feature.attributes.GEO_ID[13];
+              tract = feature.attributes.GEO_ID[14]+feature.attributes.GEO_ID[15]+feature.attributes.GEO_ID[16]+feature.attributes.GEO_ID[17]+feature.attributes.GEO_ID[18]+feature.attributes.GEO_ID[19];
+              get_data(state,county,tract,vars,source);
+            }
         },
         'featureunselected':function(evt){
             var feature = evt.feature; 

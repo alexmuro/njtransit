@@ -2,6 +2,7 @@
 //GLOBAL VARIABLES
 //----------------
 var quant = {};
+var graphing =false;
 var activelayer,selectlayer;
 var usBounds;
 var selectlayerer,tractselectlayerer,bgselectlayerer;
