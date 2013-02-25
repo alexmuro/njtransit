@@ -72,7 +72,7 @@ function loadTrentonLayers()
     renderers: ["Canvas", "SVG", "VML"]
     })
     });
-    map.addLayer(gtfs);
+    //map.addLayer(gtfs);
     gtfs.events.register("loadend", countiesSelect, function (e) {
           quant = getLayerAttribute(gtfs,'num_trips');
           gtfs.styleMap =  getBusRouteStyle("route",quant);
