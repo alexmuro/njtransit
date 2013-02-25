@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style>
 
-.graphs {
+.income_graph {
   font: 10px sans-serif;
 }
 
@@ -29,7 +29,7 @@ var key = '?key=564db01afc848ec153fa77408ed72cad68191211'
 var base = 'http://api.census.gov/data/2010/'+source
 var query = '&get='+vars+'&for=tract:'+tract+'&in=county:'+county+'+state:'+state;
 var url = base+key+query;
-//console.log(url);
+
 
 var jqxhr = $.ajax(url)
     .done(function(data) { process_data(data)  })
@@ -40,20 +40,22 @@ var jqxhr = $.ajax(url)
 
 function process_data(input)
 {
-	console.log(input);
 	var output = [];
 	for(i = 1; i<17; i++)
 	{
 		output.push({income: input[0][i], count: input[1][i]});
 	}
-	console.log(output);
     draw_donut(output);
 }
+
+
+
 
 function draw_donut(data){
 	var width = 300,
     height = 300,
     radius = Math.min(width, height) / 2;
+
 
 	var color = d3.scale.ordinal()
 	    .range(['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a']);
@@ -66,33 +68,53 @@ function draw_donut(data){
 	    .sort(null)
 	    .value(function(d) { return d.count; });
 
-	var svg = d3.select(".graphs").append("svg")
+	svg = d3.select('.income_graph svg');
+
+	if (svg.empty()){
+		var svg = d3.select(".income_graph").append("svg")
 	    .attr("width", width)
 	    .attr("height", height)
 	  	.append("g")
 	    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+	path = svg.selectAll("path")
+    .data(pie(data))
+  .enter().append("path")
+    .attr("fill", function(d, i) { return color(i); })
+    .attr("d", arc)
+    .each(function(d) { this._current = d; });
+
+
+	  }	
 
 
 	  data.forEach(function(d) {
 	    d.count = +d.count;
 	  });
 
-	  var g = svg.selectAll(".arc")
-	      .data(pie(data))
-	    .enter().append("g")
-	      .attr("class", "arc");
+  path = path.data(pie(data)); // update the data
+  path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
 
-	  g.append("path")
-	      .attr("d", arc)
-	      .style("fill", function(d) { return color(d.data.income); });
-
-	  g.append("text")
+	  path.append("text")
 	      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
 	      .attr("dy", ".35em")
 	      .style("text-anchor", "middle")
-	      .text(function(d) { return d.data.income; });
+      .text(function(d) { return d.data.income; });
+
+
+function arcTween(a) {
+  var i = d3.interpolate(this._current, a);
+  this._current = i(0);
+  return function(t) {
+    return arc(i(t));
+  };
+}
+
 
 }
 
 </script>
-<div class="graphs"></div>
+<h2>Income Distrobution</h2>
+<div class="income_graph"></div>
+<h2>Transportation to Work</h2>
+<div class="transport_graph"></div>
