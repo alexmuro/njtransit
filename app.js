@@ -43,6 +43,7 @@ map = new OpenLayers.Map({
        new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
+       /*
        new OpenLayers.Layer.Google(
                 "Google Terrain",{
                     type: google.maps.MapTypeId.TERRAIN,
@@ -67,7 +68,7 @@ map = new OpenLayers.Map({
                 {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
                 animationEnabled: false,
                 transitionEffect: "resize"}
-            ),
+            ),*/
             new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
@@ -77,12 +78,8 @@ map = new OpenLayers.Map({
 
     ],
     controls: [
-        new OpenLayers.Control.Navigation({
-            dragPanOptions: {
-                enableKinetic: true
-            }
-        }),
-        new OpenLayers.Control.Zoom(),
+        new OpenLayers.Control.Navigation(),
+        new OpenLayers.Control.PanZoomBar(),
         new OpenLayers.Control.Attribution()
     ]
     
@@ -235,5 +232,5 @@ Ext.onReady(function() {
         }
     });
 });
-loadTrentonLayers();
-//loadCensusLayers();
+//loadTrentonLayers();
+loadCensusLayers();

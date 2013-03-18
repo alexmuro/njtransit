@@ -50,69 +50,6 @@ function process_data(input)
 
 
 
-
-function draw_donut(data){
-	var width = 300,
-    height = 300,
-    radius = Math.min(width, height) / 2;
-
-
-	var color = d3.scale.ordinal()
-	    .range(['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a']);
-
-	var arc = d3.svg.arc()
-	    .outerRadius(radius - 10)
-	    .innerRadius(radius - 70);
-
-	var pie = d3.layout.pie()
-	    .sort(null)
-	    .value(function(d) { return d.count; });
-
-	svg = d3.select('.income_graph svg');
-
-	if (svg.empty()){
-		var svg = d3.select(".income_graph").append("svg")
-	    .attr("width", width)
-	    .attr("height", height)
-	  	.append("g")
-	    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-	path = svg.selectAll("path")
-    .data(pie(data))
-  .enter().append("path")
-    .attr("fill", function(d, i) { return color(i); })
-    .attr("d", arc)
-    .each(function(d) { this._current = d; });
-
-
-	  }	
-
-
-	  data.forEach(function(d) {
-	    d.count = +d.count;
-	  });
-
-  path = path.data(pie(data)); // update the data
-  path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
-
-	  path.append("text")
-	      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-	      .attr("dy", ".35em")
-	      .style("text-anchor", "middle")
-      .text(function(d) { return d.data.income; });
-
-
-function arcTween(a) {
-  var i = d3.interpolate(this._current, a);
-  this._current = i(0);
-  return function(t) {
-    return arc(i(t));
-  };
-}
-
-
-}
-
 </script>
 <h2>Income Distrobution</h2>
 <div class="income_graph"></div>

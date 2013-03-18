@@ -1,9 +1,11 @@
 //----------------
 //GLOBAL VARIABLES
 //----------------
+var currentZone = -1;
 var quant = {};
 var graphing =false;
-var activelayer,selectlayer;
+var activelayer;
+var selectlayer = []; 
 var usBounds;
 var selectlayerer,tractselectlayerer,bgselectlayerer;
 var gtfs_select, census_select;
@@ -21,14 +23,3 @@ var acsvar = ['B00001_001E','B00002_001E','B23001_001E','B25044_003E','B25044_00
 
 
 
-$("#sf1").live("change",function() {
-       
-        quant = getLayerAttribute(activelayer,$(this).val());
-        activelayer.styleMap = getStyle($(this).val(),$("#color").val(),quant);
-        activelayer.redraw();
-    });
-
-$("#color").live("change",function() {
-        activelayer.styleMap = getStyle($('#sf1').val(),$(this).val(),quant);
-        activelayer.redraw();
-    });

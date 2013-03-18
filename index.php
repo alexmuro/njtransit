@@ -3,7 +3,7 @@
         <title>Avail Census Viewer</title>
         
         <script src="openlayers/lib/OpenLayers.js"></script>
-        <script type="text/javascript" src="resources/js/jquery-1.4.4.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript" src="resources/js/ext-base.js"></script>
         <script type="text/javascript" src="resources/js/ext-all.js"></script>
         <link rel="stylesheet" type="text/css" href="resources/css/ext-all.css"/>
@@ -16,6 +16,7 @@
         <script src="resources/js/getFilter.js"></script> 
         <script src="resources/js/getStateCounties.js"></script>
         <script src="resources/js/getCountyTracts.js"></script> 
+        <script src="resources/js/getCountyTractsTopo.js"></script> 
         <script src="resources/js/getTrackBlockGroups.js"></script>  
         <script src="resources/js/helper_functions.js"></script>
         <script src="resources/js/protodata32.min.js"></script>
@@ -29,7 +30,6 @@
         <script src="resources/js/getJson.js"></script>
         <script src="resources/js/addBusRoute.js"></script>
         <script src="resources/js/onZoomEnd.js"></script>
-        <script src="resources/js/loadTrenton.js"></script>
         <script src="resources/js/gtfsController.js"></script>
         <script src="partials/infopane.js"></script>
 
@@ -43,7 +43,6 @@
             <?php
                 include "config/db.php"; 
                 include "partials/infopane.php";
-                //include "gtfs/loadGTFS.php";
             ?>
             </div>
         </div>

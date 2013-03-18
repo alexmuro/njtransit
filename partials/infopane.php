@@ -31,7 +31,8 @@
 
 
 <div id='tab_nav'>
-    <div id='census_tab' class='nav_button selected'>Census</div> 
+    <div id='census_tab' class='nav_button selected'>Zone Select</div> 
+    <div id='census_tab' class='nav_button'>Census</div> 
     <div id='transit_tab' class='nav_button'>Transit</div>
     <div id='graphing_tab' class='nav_button'>Graphing</div>
 </div>

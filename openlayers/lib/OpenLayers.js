@@ -346,6 +346,7 @@
                 "OpenLayers/Format/Text.js",
                 "OpenLayers/Format/JSON.js",
                 "OpenLayers/Format/GeoJSON.js",
+                "OpenLayers/Format/TopoJSON.js",
                 "OpenLayers/Format/WMC.js",
                 "OpenLayers/Format/WMC/v1.js",
                 "OpenLayers/Format/WMC/v1_0_0.js",

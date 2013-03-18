@@ -4,7 +4,7 @@
 
     data:  <span id="data" class='display'></span><br>
     <span id="countydata" class='display'></span>
-    <!--<textarea id='selectedFeatures'></textarea>-->
+    <textarea id='selectedFeatures'></textarea>
 </div>
 <h1 id="title">Census</h1>
 <div id="censusControl">
@@ -26,3 +26,4 @@ include "legend.php";
 </script>
 
 
+zz

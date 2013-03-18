@@ -291,9 +291,9 @@ function getDefaultStyle(type)
     var styles = new OpenLayers.StyleMap({
         "default": {
             strokeWidth: 1,
-            strokeColor:'#fff',
+            strokeColor:'#000',
             fillColor: "#fff",
-            fillOpacity: ".1" 
+            fillOpacity: "0.0" 
         },
         "select": {
              strokeColor: "#fff",
@@ -337,7 +337,7 @@ function getGTFSStyle()
  return styles;
 }
 
-function getMultiStyle()
+function getMultiStyle(color)
 {
     var styles = new OpenLayers.StyleMap({
         "default": {
@@ -348,9 +348,9 @@ function getMultiStyle()
         },
         "select": {
              strokeColor: "#fff",
-             fillColor: "#00f",
-            strokeWidth: 4,
-            fillOpacity: ".37" 
+             fillColor: color,
+            strokeWidth: 0,
+            fillOpacity: ".47" 
         }
     });
     

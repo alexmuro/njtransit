@@ -1,29 +1,18 @@
+
+
+
 $(document).ready(function(){
   $.ajax({
-    url: 'partials/census.php',
+    url: 'partials/zone_select.php',
     async:false,
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-      census_select = new OpenLayers.Control.SelectFeature([stateCounties],{   
-      selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
-                          OpenLayers.Feature.Vector.style["select"]),           
-      clickout: false, toggle: false,
-      multiple: false, hover: true,
-      });
-      map.addControl(census_select);
-      census_select.onBeforeSelect = function(feature) {
-        this.selectStyle.strokeColor ="#fff";
-        this.selectStyle.fillColor ="#00f";
-        this.selectStyle.strokeWidth = 4;
-        this.selectStyle.fillOpacity = ".37";
-      };
-      census_select.activate();
     },
   })
 });
 
-$("#census_tab").live("click", function() { 
+$("#census_tab").on("click", function() { 
 	if(!$(this).hasClass('selected')){
 		loadCensusPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
@@ -33,12 +22,23 @@ $("#census_tab").live("click", function() {
 		$("#sf1").val(sf1var[0]);
     if(gtfs_select != 'undefined')
     {
-      load_census_select()
+      load_census_select();
+      $("#sf1").on("change",function() {
+       
+        quant = getLayerAttribute(activelayer,$(this).val());
+        activelayer.styleMap = getStyle($(this).val(),$("#color").val(),quant);
+        activelayer.redraw();
+    });
+    $("#color").on("change",function() {
+        activelayer.styleMap = getStyle($('#sf1').val(),$(this).val(),quant);
+        activelayer.redraw();
+    });
+
     }
 	} 
 });
 
-$("#transit_tab").live("click", function() {
+$("#transit_tab").on("click", function() {
   console.log('transit tab clicked') 
 	if(!$(this).hasClass('selected')){
 		loadTransitPane();
@@ -61,7 +61,7 @@ $("#transit_tab").live("click", function() {
 	} 
 
 });
-$("#graphing_tab").live("click", function() { 
+$("#graphing_tab").on("click", function() { 
   if(!$(this).hasClass('selected')){
 		loadGraphingPane();
 		$("#tab_nav").find('.selected').removeClass('selected');
@@ -132,4 +132,53 @@ function load_census_select()
         this.selectStyle.fillOpacity = ".37";
       };
     census_select.activate();
+}
+
+function load_zone_select()
+{
+  fip =34;
+    
+  select0 = getCountyTractsTopo(fip,'none','0');
+  select0.styleMap = getMultiStyle('#00f');
+  select1 = getCountyTractsTopo(fip,'none','1');
+  select1.styleMap = getMultiStyle('#0f0');
+  select2 = getCountyTractsTopo(fip,'none','2');
+  select2.styleMap = getMultiStyle('#f00');
+  select3 = getCountyTractsTopo(fip,'none','3');  
+  select3.styleMap = getMultiStyle('#f0f');
+  map.addLayers([select0,select1,select2,select3]);
+
+  select0.events.register("loadend", select0, function(e){
+    createSelection(e,0);
+   });
+  select1.events.register("loadend", select0, function(e){
+    createSelection(e,1);
+  });
+  select2.events.register("loadend", select0, function(e){
+    createSelection(e,2);
+  });
+  select3.events.register("loadend", select0, function(e){
+    createSelection(e,3);
+  });
+
+  function createSelection (e,zone){
+
+
+        $.ajax({
+          type: "POST",
+          url: "data/get/getZone.php",
+          data: {  geo_type: "ct", current_zone:zone }
+          })
+          .done(function( msg ) {
+            data= JSON.parse(msg);
+            for (var i = 0; i < data.length; i++){
+                var feat = e.object.getFeaturesByAttribute("GEO_ID",data[i])[0];
+                feat.renderIntent = 'select';
+                e.object.selectedFeatures.push(feat);
+            }
+            e.object.redraw();
+        });  
+
+  }
+
 }
