@@ -6,8 +6,8 @@
   var someGeom = map.getExtent().transform(proj900913  , projWGS84 );
   //console.log(map.getProjection());
   //console.log(someGeom);
-  var jURL =  'data/load/getGTFSLayerID.php?nelat='+someGeom.top+'&nelon='+someGeom.right+'&swlat='+someGeom.bottom+'&swlon='+someGeom.left;  
-  //console.log('loading bus route:... \n' + jURL);
+  var jURL =  'data/get/getGTFSLayerID.php?nelat='+someGeom.top+'&nelon='+someGeom.right+'&swlat='+someGeom.bottom+'&swlon='+someGeom.left;  
+  console.log('loading bus route:... \n' + jURL);
   $.ajax({
         url:  jURL,
         dataType: "json",
@@ -16,11 +16,14 @@
         success: function(data) {
             console.log(data.length)
             console.log(data);
-            /*for (x in data)
+            var routes = '['
+            for (x in data)
             {
-                console.log(data[x]["shape_id"]); 
-            }*/
-        
+                routes += data[x]["shape_id"]+','; 
+            }
+            routes =routes.slice(0,-1);
+            routes +=']';
+            console.log(routes);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             //console.error("XMLHttpRequest="+XMLHttpRequest.responseText+"\ntextStatus="+textStatus+"\nerrorThrown="+errorThrown);

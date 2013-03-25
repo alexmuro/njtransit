@@ -73,10 +73,12 @@ function loadTrentonLayers()
     })
     });
     //map.addLayer(gtfs);
-    gtfs.events.register("loadend", countiesSelect, function (e) {
+    gtfs.events.register("loadend", gtfs, function (e) {
           quant = getLayerAttribute(gtfs,'num_trips');
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           gtfs.redraw();
+          console.log("gtfs data extent");
+          console.log(gtfs.getDataExtent())   
                   
     });
  

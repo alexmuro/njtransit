@@ -58,7 +58,7 @@ OpenLayers.Format.TopoJSON = OpenLayers.Class(OpenLayers.Format.JSON, {
               topo_geom = topo.geometries;
             }
             else if(typeof topo.coordinates != 'undefined'){
-              //topo_geom = topo.coordinates;
+              topo_geom = topo.coordinates;
             }
             //console.log('57 topo geom'+topo_geom);
             for (_i = 0, _len = topo_geom.length; _i < _len; _i++) {

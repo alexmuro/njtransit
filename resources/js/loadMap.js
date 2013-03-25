@@ -18,6 +18,6 @@ function loadCensusLayers()
     });
 
  load_zone_select();
-   
+ //setZoomEnd();
 
 }

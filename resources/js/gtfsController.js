@@ -1,4 +1,4 @@
-function listRoutes()
+function listRoutes(zone)
 {
 	//console.log(listRoutes);
 	//console.log(gtfs);
@@ -17,8 +17,8 @@ function listRoutes()
 	var i = 0;
 	$.each(routes, function(index, value) {
 		if(value == 1){
-			//console.log('style="background-color:'+routeColors[i]+';"')
-  		$('#route_list').append('<div data-order='+i+' data-route='+index+' class=route_listing style="background-color:'+routeColors[i]+';" >'+index+'</div>');
+			console.log('#'+zone+' .gtfs_listing')
+  		$('#'+zone+' .gtfs_listing').append('<div data-order='+i+' data-route='+index+' class=route_listing style="background-color:'+routeColors[i]+';" >'+index+'</div>');
   		i++;
 		}
 	});
