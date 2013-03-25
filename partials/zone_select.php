@@ -1,26 +1,14 @@
-<style>
-.zone:hover{
-    background-color: #efefef;
-}
 
-.route_listing{
-  float:left;
-  padding:7px;
-  border:1px solid;
-}
-
-
-</style>
 <script>
 $('.zone').on('click',function(){
     $('.selected_zone')
-        .css('background-color','#fff')
+        .css('border','0px')
         .removeClass('selected_zone');
     $(this)
-        .css('background-color',$(this).data('color'))
+        .css('border','2px solid '+$(this).data('color'))
         .addClass('selected_zone');
     setSelector($(this).data('color'),$(this).data('id'));
-    loadGTFS($(this).data('id'),$(this).attr('id'))
+    //loadGTFS($(this).data('id'),$(this).attr('id'))
 });
 
 
@@ -97,24 +85,55 @@ function setSelector(color,id)
 }
 </script>
 
+<style>
+.zone:hover{
+    background-color: #efefef;
+}
+
+.route_listing{
+  /*float:left;
+  padding:7px;*/
+  border:1px solid;
+}
+
+.color_select{
+  float:left;
+  padding:7px;
+  border:1px solid;
+  margin-right: 3px
+}
+</style>
+
 <h1 id="title">Zone Select</h1>
 
 <button id="uplevel" onclick='upOneLevel()' class='x-btn'>Zoom To Full State</button>
 
 <div id="zone1" class="zone" data-id='0' data-color='#00f' style="padding:15px;">
-    <h3 id="title">Large Urban Area - Newark</h1>
+    <h3 id="title"><div class='color_select' style="background-color:#0ff"></div>
+    Large Urban Area - Newark
+    </h3>
     <div class = 'gtfs_listing'></div>
 </div>
 <div id="zone2" class="zone" data-id='1' data-color='#0f0' style="padding:15px;">
-    <h3 id="title"> Small Urban Area – Paterson</h1> 
+    <h3 id="title"> 
+      <div class='color_select' style="background-color:#0f0"></div>
+      Small Urban Area – Paterson
+    </h3> 
     <div class = 'gtfs_listing'></div>     
 </div>
 <div id="zone3" class="zone" data-id='2' data-color='#f00'style="padding:15px;">
-    <h3 id="title">South Jersey Urban Center – Atlantic City</h1>
+
+    <h3 id="title">
+      <div class='color_select' style="background-color:#f00"></div>
+      South Jersey Urban Center – Atlantic City
+    </h3>
     <div class = 'gtfs_listing'></div>    
 </div>
 <div id="zone4" class="zone" data-id='3' data-color='#f0f' style="padding:15px;"s>
-    <h3 id="title"> Intercity NJ Market – Philadelphia</h1>
+    <h3 id="title"> 
+      <div class='color_select' style="background-color:#f0f"></div>
+      Intercity NJ Market – Philadelphia
+    </h3>
     <div class = 'gtfs_listing'></div>     
 </div>
 
