@@ -1,14 +1,15 @@
-
 <script>
+
 $('.zone').on('click',function(){
-    $('.selected_zone')
+  $('.selected_zone .gtfs_listing').html('');
+  $('.selected_zone')
         .css('border','0px')
         .removeClass('selected_zone');
     $(this)
         .css('border','2px solid '+$(this).data('color'))
         .addClass('selected_zone');
     setSelector($(this).data('color'),$(this).data('id'));
-    //loadGTFS($(this).data('id'),$(this).attr('id'))
+    loadGTFS($(this).data('id'),$(this).attr('id'))
 });
 
 
@@ -109,7 +110,7 @@ function setSelector(color,id)
 <button id="uplevel" onclick='upOneLevel()' class='x-btn'>Zoom To Full State</button>
 
 <div id="zone1" class="zone" data-id='0' data-color='#00f' style="padding:15px;">
-    <h3 id="title"><div class='color_select' style="background-color:#0ff"></div>
+    <h3 id="title"><div class='color_select' style="background-color:#00f"></div>
     Large Urban Area - Newark
     </h3>
     <div class = 'gtfs_listing'></div>

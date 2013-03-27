@@ -16,13 +16,34 @@ function listRoutes(zone)
 	
 	var i = 0;
 	$.each(routes, function(index, value) {
+		
+		route_string = '<div data-order='+i+' data-route='+index+' class=route_listing style="background-color:'+routeColors[i]+';" >';
+		route_string += '<input type="checkbox" data-route='+index+' checked>'
+		route_string += +index+'</div>'
+  		
+
 		if(value == 1){
-			console.log('#'+zone+' .gtfs_listing')
-  		$('#'+zone+' .gtfs_listing').append('<div data-order='+i+' data-route='+index+' class=route_listing style="background-color:'+routeColors[i]+';" >'+index+'</div>');
+			//console.log('#'+zone+' .gtfs_listing')
+  		$('#'+zone+' .gtfs_listing')
+  		.append(route_string);
   		i++;
 		}
 	});
 
+	$('.gtfs_listing input').on('click',function(){
+		//console.log('check / uncheck')
+		//console.log($(this).data('route'));
+		console.log($(this).attr("checked"));
+		for(i=0;i<gtfs.features.length;i++)
+		{
+			if($(this).data('route') == gtfs.features[i].data.route)
+				{
+					console.log($(this).data('route'));	
+				}
+		}
+	});
+
+	/*
 	$('.route_listing').live('mouseover',function(){
 		for(i=0;i<gtfs.features.length;i++)
 		{
@@ -34,11 +55,13 @@ function listRoutes(zone)
 		gtfsSelect.redraw();
 		$(this).css('background-color','#0f0');
 	});
+	
 
 	$('.route_listing').live('mouseout',function(){
 		$(this).css('background-color',routeColors[$(this).data('order')]);
 		gtfs_select.unselectAll()
 	});
+	*/
 
 
 }
