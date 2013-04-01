@@ -4,6 +4,7 @@ function listRoutes(zone)
 	//console.log(gtfs);
 	routes= []
 
+	$('#zone'+zone+' .zone_content').html('');
 	for(i=0;i<gtfs.features.length;i++)
 	{
 		routes[gtfs.features[i].data.route] = 1;
@@ -24,15 +25,15 @@ function listRoutes(zone)
 
 		if(value == 1){
 			//console.log('#'+zone+' .gtfs_listing')
-  		$('#'+zone+' .gtfs_listing')
+  		$('#zone'+zone+' .zone_content')
   		.append(route_string);
   		i++;
 		}
 	});
 
-	$('.gtfs_listing input').on('click',function(){
-		//console.log('check / uncheck')
-		//console.log($(this).data('route'));
+	$('.zone_content input').on('click',function(){
+		console.log('check / uncheck')
+		console.log($(this).data('route'));
 		console.log($(this).attr("checked"));
 		for(i=0;i<gtfs.features.length;i++)
 		{

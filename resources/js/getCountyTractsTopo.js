@@ -24,6 +24,7 @@ function getCountyTractsTopo(fip,county,name)
             }).done(function( msg ) {
                  //console.log( "Data Saved"+msg );
             });
+            $('#zone'+name+' .zone_content').html(zoneInfoPane(activelayer.selectedFeatures));
             
             
         },
@@ -43,6 +44,7 @@ function getCountyTractsTopo(fip,county,name)
             }).done(function( msg ) {
                  //console.log( "Data Saved" );
             });
+            $('#zone'+name+' .zone_content').html(zoneInfoPane(activelayer.selectedFeatures));
             
          }   
         }, 
