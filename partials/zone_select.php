@@ -102,7 +102,7 @@ function loadGTFS(id,zone)
           map.raiseLayer(gtfs,map.layers.length)
           gtfs.redraw();
           //map.zoomToExtent(gtfs.getDataExtent());
-          //listRoutes(zone);
+          listRoutes(id);
           
 
     });

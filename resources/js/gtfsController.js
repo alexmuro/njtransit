@@ -4,6 +4,7 @@ function listRoutes(zone)
 	//console.log(gtfs);
 	routes= []
 
+	console.log('#zone'+zone+' .zone_content');
 	$('#zone'+zone+' .zone_content').html('');
 	for(i=0;i<gtfs.features.length;i++)
 	{
