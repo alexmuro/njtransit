@@ -19,7 +19,7 @@ function listRoutes(zone)
 	var i = 0;
 	$.each(routes, function(index, value) {
 		
-		route_string = '<div data-order='+i+' data-route='+index+' class=route_listing style="background-color:'+routeColors[i]+';" >';
+		route_string = '<div data-order='+i+' data-route='+index+' class="route_listing" style="background-color:'+routeColors[9]+';" >';
 		route_string += '<input type="checkbox" data-route='+index+' checked>'
 		route_string += +index+'</div>'
   		
@@ -45,8 +45,9 @@ function listRoutes(zone)
 		}
 	});
 
-	/*
-	$('.route_listing').live('mouseover',function(){
+	
+	$('.route_listing').on('mouseover',function(){
+		console.log('route listing mouse over');
 		for(i=0;i<gtfs.features.length;i++)
 		{
 			if($(this).data('route') == gtfs.features[i].data.route)
@@ -54,16 +55,16 @@ function listRoutes(zone)
 					gtfs_select.select(gtfs.features[i]);	
 				}
 		}
-		gtfsSelect.redraw();
+		//gtfsSelect.redraw();
 		$(this).css('background-color','#0f0');
 	});
 	
 
-	$('.route_listing').live('mouseout',function(){
-		$(this).css('background-color',routeColors[$(this).data('order')]);
+	$('.route_listing').on('mouseout',function(){
+		$(this).css('background-color',routeColors[9]);
 		gtfs_select.unselectAll()
 	});
-	*/
+	
 
 
 }
