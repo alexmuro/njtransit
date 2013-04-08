@@ -126,7 +126,7 @@ return new OpenLayers.StyleMap(style);
 
 function getBusRouteStyle(route)
 {
-var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a'];
+var routeColors =['#9E0142','#D53E4F','#F46D43','#F03B20','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a'];
 
 var routes = ['89','110','117','149','150','151','152','153','155','156','157','158','159','160','160','162','163'];
  //console.log(routes[0]+" "+routeColors[0])
@@ -145,104 +145,13 @@ var style = new OpenLayers.Style(
         fillOpacity: "1.",
     },
     // the second argument will include all rules
-    {
-        rules: [
+    {rules: [
             new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: 'route', 
-                    value: routes[0]}),
-                symbolizer: {   strokeColor: routeColors[0]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[1]}),
-                symbolizer: {   strokeColor: routeColors[1]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[2]}),
-                symbolizer: {   strokeColor: routeColors[2]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[3]}),
+                    property: 'include', 
+                    value: 1}),
                 symbolizer: {   strokeColor: routeColors[3]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[4]}),
-                symbolizer: {   strokeColor: routeColors[4]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[5]}),
-                symbolizer: {   strokeColor: routeColors[5]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[6]}),
-                symbolizer: {   strokeColor: routeColors[6]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[7]}),
-                symbolizer: {   strokeColor: routeColors[7]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[8]}),
-                symbolizer: {   strokeColor: routeColors[8]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[9]}),
-                symbolizer: {   strokeColor: routeColors[9]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[10]}),
-                symbolizer: {   strokeColor: routeColors[10]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[11]}),
-                symbolizer: {   strokeColor: routeColors[11]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[12]}),
-                symbolizer: {   strokeColor: routeColors[12]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[13]}),
-                symbolizer: {   strokeColor: routeColors[13]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[14]}),
-                symbolizer: {   strokeColor: routeColors[14]}}),
-            new OpenLayers.Rule({
-                filter: new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: route, 
-                    value: routes[15]}),
-                symbolizer: {   strokeColor: routeColors[15]}}),
             new OpenLayers.Rule({
                 filter: new OpenLayers.Filter.Comparison({
                     type: OpenLayers.Filter.Comparison.OR_EQUAL_TO,

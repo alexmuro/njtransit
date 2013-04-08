@@ -43,7 +43,6 @@ map = new OpenLayers.Map({
        new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
-       /*
        new OpenLayers.Layer.Google(
                 "Google Terrain",{
                     type: google.maps.MapTypeId.TERRAIN,
@@ -68,7 +67,7 @@ map = new OpenLayers.Map({
                 {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
                 animationEnabled: false,
                 transitionEffect: "resize"}
-            ),*/
+            ),
             new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),

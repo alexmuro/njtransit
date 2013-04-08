@@ -25,7 +25,7 @@ function loadZone(zone){
   map.zoomToExtent(bounds,false);
 
   //load zone info and navigation
-  $('#zone'+zone+' .zone_nav').append('<div id="demo_nav_'+zone+'" data-zone="'+zone+'" class="nav_button selected">Demographics</div>');
+  $('#zone'+zone+' .zone_nav').append('<div id="demo_nav_'+zone+'" data-zone="'+zone+'" class="nav_button selected">Census Tracts</div>');
   $('#zone'+zone+' .zone_nav').append('<div id="gtfs_nav_'+zone+'" data-zone="'+zone+'" class="nav_button">GTFS</div><br><br>');
   $('#zone'+zone+' .zone_content').html(zoneInfoPane(fts));
 
@@ -74,7 +74,7 @@ function loadGTFS(id,zone)
       map.removeLayer(gtfs.destroy());
    }
 
-    urls = ["data/gtfs/newark.json","data/gtfs/patterson.json","data/gtfs/atlantic_city.json","data/gtfs/philly.json"];
+    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city_route.json","data/gtfs/philly_route.json"];
     url = urls[id];
 
     gtfs = new OpenLayers.Layer.Vector('GTFS', { 
@@ -155,7 +155,7 @@ function setSelector(color,id)
 .zone{
   overflow: auto; 
 }
-.zone:hover{
+.zone_top:hover{
     background-color: #efefef;
 }
 

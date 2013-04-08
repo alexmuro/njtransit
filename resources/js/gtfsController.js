@@ -10,8 +10,8 @@ function listRoutes(zone)
 	{
 		routes[gtfs.features[i].data.route] = 1;
 	}
-	console.log(routes);
-
+	
+	//console.loggtfs.features[0].data
 
 	var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a'];
 
@@ -20,7 +20,7 @@ function listRoutes(zone)
 	$.each(routes, function(index, value) {
 		
 		route_string = '<div data-order='+i+' data-route='+index+' class="route_listing" style="background-color:'+routeColors[9]+';" >';
-		route_string += '<input type="checkbox" data-route='+index+' checked>'
+		route_string += '<input type="checkbox" data-route='+index+'>'
 		route_string += +index+'</div>'
   		
 
@@ -34,27 +34,32 @@ function listRoutes(zone)
 
 	$('.zone_content input').on('click',function(){
 		console.log('check / uncheck')
-		console.log($(this).data('route'));
-		console.log($(this).attr("checked"));
+		//console.log($(this).data('route'));
+		var val = 0;
+		if($(this)[0].checked){
+			val =1;
+		}
 		for(i=0;i<gtfs.features.length;i++)
 		{
 			if($(this).data('route') == gtfs.features[i].data.route)
 				{
-					console.log($(this).data('route'));	
+					gtfs.features[i].attributes.include = val;
 				}
 		}
+		gtfs.redraw();
 	});
 
 	
 	$('.route_listing').on('mouseover',function(){
 		console.log('route listing mouse over');
-		for(i=0;i<gtfs.features.length;i++)
+		routes = gtfs.getFeaturesByAttribute('route',String($(this).data('route')));
+		for(i=0; i<routes.length;i++)
 		{
-			if($(this).data('route') == gtfs.features[i].data.route)
-				{
-					gtfs_select.select(gtfs.features[i]);	
-				}
+			//console.log(route);
+			gtfs_select.select(routes[i]);	
 		}
+		//gtfs_select.select();	
+				
 		//gtfsSelect.redraw();
 		$(this).css('background-color','#0f0');
 	});
