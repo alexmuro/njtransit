@@ -1,4 +1,10 @@
+
 <script>
+$.fn.filterByData = function(prop, val) {
+    return this.filter(
+        function() { return $(this).data(prop)==val; }
+    );
+}
 
 $('.zone_top').on('click',function(){
   if(!$(this).hasClass('selected_zone')){
@@ -113,17 +119,21 @@ function loadGTFS(id,zone)
             data= JSON.parse(msg);
           
             for(i=0;i<gtfs.features.length;i++){
-              if($.inArray(gtfs.features[i].attributes.route,data) > 0){
+              //console.log(gtfs.features[i].attributes.route);
+              //console.log($.inArray(gtfs.features[i].attributes.route,data));
+              if($.inArray(gtfs.features[i].attributes.route,data) >= 0){
+                
+                  console.log('eureka');
                   gtfs.features[i].attributes.include = 1;
-                  
                 }
             }
-            listRoutes(id);
             gtfs.redraw();
+            listRoutes(id);
+            
         });
         for(i=0;i<data.length;i++)
         {
-          console.log(data[i]);
+          $('.zone_content input').filterByData('route',data[i]).attr('checked','checked');
         }  
 
     });

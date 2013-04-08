@@ -23,12 +23,11 @@ function listRoutes(zone)
 		route_string += '<input type="checkbox" data-route='+index+'>';
 		route_string += +index+'</div>'
   		
-
 		if(value == 1){
 			//console.log('#'+zone+' .gtfs_listing')
-  		$('#zone'+zone+' .zone_content')
-  		.append(route_string);
-  		i++;
+	  		$('#zone'+zone+' .zone_content')
+	  		.append(route_string);
+	  		i++;
 		}
 	});
 
