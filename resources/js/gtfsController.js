@@ -20,7 +20,7 @@ function listRoutes(zone)
 	$.each(routes, function(index, value) {
 		
 		route_string = '<div data-order='+i+' data-route='+index+' class="route_listing" style="background-color:'+routeColors[9]+';" >';
-		route_string += '<input type="checkbox" data-route='+index+'>'
+		route_string += '<input type="checkbox" data-route='+index+'>';
 		route_string += +index+'</div>'
   		
 
@@ -35,6 +35,7 @@ function listRoutes(zone)
 	$('.zone_content input').on('click',function(){
 		console.log('check / uncheck')
 		//console.log($(this).data('route'));
+		var routes = '[';
 		var val = 0;
 		if($(this)[0].checked){
 			val =1;
@@ -46,6 +47,21 @@ function listRoutes(zone)
 					gtfs.features[i].attributes.include = val;
 				}
 		}
+		var routes = '[';
+		$('.zone_content input').each(function(){
+			if($(this)[0].checked){	
+				routes += '"'+$(this).data('route')+'",';
+			}
+		});
+		routes = routes.slice(0,-1) + "]";
+		$.ajax({
+         	type: "POST",
+            url: "data/update/updateZone.php",
+            data: { geo_string: routes, geo_type: "routes",current_zone:currentZone }
+            }).done(function( msg ) {
+                 //console.log( "Data Saved"+msg );
+            });
+		//console.log(routes);
 		gtfs.redraw();
 	});
 
@@ -55,12 +71,8 @@ function listRoutes(zone)
 		routes = gtfs.getFeaturesByAttribute('route',String($(this).data('route')));
 		for(i=0; i<routes.length;i++)
 		{
-			//console.log(route);
 			gtfs_select.select(routes[i]);	
 		}
-		//gtfs_select.select();	
-				
-		//gtfsSelect.redraw();
 		$(this).css('background-color','#0f0');
 	});
 	

@@ -74,7 +74,7 @@ function loadGTFS(id,zone)
       map.removeLayer(gtfs.destroy());
    }
 
-    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city_route.json","data/gtfs/philly_route.json"];
+    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city.json","data/gtfs/philly_route.json"];
     url = urls[id];
 
     gtfs = new OpenLayers.Layer.Vector('GTFS', { 
@@ -102,8 +102,29 @@ function loadGTFS(id,zone)
           map.raiseLayer(gtfs,map.layers.length)
           gtfs.redraw();
           //map.zoomToExtent(gtfs.getDataExtent());
-          listRoutes(id);
           
+          $.ajax({
+          type: "POST",
+          url: "data/get/getZone.php",
+          async: false,
+          data: {  geo_type: 'routes', current_zone:currentZone }
+          })
+          .done(function( msg ) {
+            data= JSON.parse(msg);
+          
+            for(i=0;i<gtfs.features.length;i++){
+              if($.inArray(gtfs.features[i].attributes.route,data) > 0){
+                  gtfs.features[i].attributes.include = 1;
+                  
+                }
+            }
+            listRoutes(id);
+            gtfs.redraw();
+        });
+        for(i=0;i<data.length;i++)
+        {
+          console.log(data[i]);
+        }  
 
     });
     gtfs_select = new OpenLayers.Control.SelectFeature([gtfs], {
