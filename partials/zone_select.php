@@ -17,9 +17,11 @@ $('.zone_top').on('click',function(){
           .css('border','2px solid '+$(this).data('color'))
           .addClass('selected_zone');
       setSelector($(this).data('color'),$(this).data('id'));
+      hideGTFS($(this).data('id'));
       loadZone($(this).data('id'));
   }
 });
+
 
 function loadZone(zone){
 
@@ -50,6 +52,7 @@ function loadZone(zone){
     if(!$(this).hasClass('selected')){
         $('#gtfs_nav_'+$(this).data('zone')).removeClass('selected');
         $(this).addClass('selected');
+        hideGTFS($(this).data('zone'));
         $('#zone'+$(this).data('zone')+' .zone_content').html(zoneInfoPane(map.getLayersByName($(this).data('zone'))[0].selectedFeatures))
     }
   });
@@ -72,26 +75,39 @@ function zoneInfoPane(fts)
   return output;
 }
 
+
+function hideGTFS(id){
+  if(typeof gtfs != 'undefined'){
+    gtfs.setVisibility(false);
+     map.raiseLayer(gtfs,(map.layers.length-1)*-1);
+  }
+}
+
 function loadGTFS(id,zone)
 {
   console.log('load gtfs'+id+' '+zone)
   
-    if(typeof gtfs != 'undefined'){
-      map.removeLayer(gtfs.destroy());
-   }
-
+  if(typeof gtfs_layers[id] != 'undefined'){
+    console.log('back on');
+    gtfs = gtfs_layers[id];
+    gtfs.display(true);
+    map.raiseLayer(gtfs,map.layers.length);
+    listRoutes(id);
+  }
+  else
+  {
     urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city.json","data/gtfs/philly_route.json"];
     url = urls[id];
 
-    gtfs = new OpenLayers.Layer.Vector('GTFS', { 
-        eventListeners:{
+    current_gtfs = new OpenLayers.Layer.Vector('GTFS_'+id, {
+    eventListeners:{
         'featureselected':function(evt){
             var feature = evt.feature;
-            //console.log(feature.attributes.id+" "+feature.attributes.route+" "+feature.attributes.num_trips )
-            //document.getElementById("data").innerHTML = "<div >Tract:" + feature.attributes.NAME+" "+feature.attributes.LSAD +" <br>Geo ID: " + feature.attributes.GEO_ID+" <br>Pop: " + addCommas(feature.attributes.P0010001)+"</div>";
+            $('.route_listing').find("[data-route='" +feature.data.route+ "']").parent().css('background-color','#0f0');
         },
         'featureunselected':function(evt){
-            var feature = evt.feature; 
+            var feature = evt.feature;
+            $('.route_listing').find("[data-route='" +feature.data.route+ "']").parent().css('background-color','#3288BD');
          }   
         },
     strategies: [new OpenLayers.Strategy.Fixed()],                
@@ -101,8 +117,11 @@ function loadGTFS(id,zone)
     renderers: ["Canvas", "SVG", "VML"]
     })
     });
-    map.addLayer(gtfs);
-    gtfs.events.register("loadend", gtfs, function (e) {
+    gtfs = current_gtfs;
+    gtfs_layers[id] = current_gtfs;
+    map.addLayer(current_gtfs);
+    current_gtfs.events.register("loadend", current_gtfs, function (e) {
+          
           quant = getLayerAttribute(gtfs,'num_trips');
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           map.raiseLayer(gtfs,map.layers.length)
@@ -119,16 +138,12 @@ function loadGTFS(id,zone)
             data= JSON.parse(msg);
           
             for(i=0;i<gtfs.features.length;i++){
-              //console.log(gtfs.features[i].attributes.route);
-              //console.log($.inArray(gtfs.features[i].attributes.route,data));
               if($.inArray(gtfs.features[i].attributes.route,data) >= 0){
-                
-                  console.log('eureka');
                   gtfs.features[i].attributes.include = 1;
                 }
             }
             gtfs.redraw();
-            listRoutes(id);
+            listRoutes(id)
             
         });
         for(i=0;i<data.length;i++)
@@ -150,7 +165,7 @@ function loadGTFS(id,zone)
         this.selectStyle.strokeWidth = 8;
     };
     gtfs_select.activate();
-  
+  }
 }
 
 
@@ -205,37 +220,48 @@ function setSelector(color,id)
 </style>
 
 <h1 id="title">Zone Select</h1>
-
 <button id="uplevel" onclick='ZoomToFullState()' class='x-btn'>Zoom To Full State</button>
+<?php
+ $zone_color = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00'];
 
-<div id="zone0" class="zone_top" data-id='0' data-color='#00f' style="padding:15px;">
-    <h3 id="title"><div class='color_select' style="background-color:#00f"></div>
+?>
+
+<div id="zone0" class="zone_top" data-id='0' data-color='<?php echo $zone_color[0];?>' style="padding:15px;">
+    <h3 id="title"><div class='color_select' style="background-color:<?php echo $zone_color[0];?>"></div>
     Large Urban Area - Newark
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div> 
 </div>
-<div id="zone1" class="zone_top" data-id='1' data-color='#0f0' style="padding:15px;">
+<div id="zone1" class="zone_top" data-id='1' data-color='<?php echo $zone_color[1];?>' style="padding:15px;">
     <h3 id="title"> 
-      <div class='color_select' style="background-color:#0f0"></div>
+      <div class='color_select' style="background-color:<?php echo $zone_color[1];?>"></div>
       Small Urban Area – Paterson
     </h3> 
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>    
 </div>
-<div id="zone2" class="zone_top" data-id='2' data-color='#f00'style="padding:15px;">
+<div id="zone2" class="zone_top" data-id='2' data-color='<?php echo $zone_color[2];?>' style="padding:15px;">
 
     <h3 id="title">
-      <div class='color_select' style="background-color:#f00"></div>
+      <div class='color_select' style="background-color:<?php echo $zone_color[2];?>"></div>
       South Jersey Urban Center – Atlantic City
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>  
 </div>
-<div id="zone3" class="zone_top" data-id='3' data-color='#f0f' style="padding:15px;"s>
+<div id="zone3" class="zone_top" data-id='3' data-color='<?php echo $zone_color[3];?>' style="padding:15px;"s>
     <h3 id="title"> 
-      <div class='color_select' style="background-color:#f0f"></div>
+      <div class='color_select' style="background-color:<?php echo $zone_color[3];?>"></div>
       Intercity NJ Market – Philadelphia
+    </h3>
+    <div class = 'zone_nav'></div>
+    <div class = 'zone_content'></div>     
+</div>
+<div id="zone4" class="zone_top" data-id='4' data-color='<?php echo $zone_color[4];?>' style="padding:15px;"s>
+    <h3 id="title"> 
+      <div class='color_select' style="background-color:<?php echo $zone_color[4];?>"></div>
+      Suburban Center – Princeton - West Windsor - Plainsboro
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>     

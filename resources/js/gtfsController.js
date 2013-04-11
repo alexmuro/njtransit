@@ -1,3 +1,4 @@
+
 function listRoutes(zone)
 {
 	//console.log(listRoutes);
@@ -66,7 +67,6 @@ function listRoutes(zone)
 
 	
 	$('.route_listing').on('mouseover',function(){
-		console.log('route listing mouse over');
 		routes = gtfs.getFeaturesByAttribute('route',String($(this).data('route')));
 		for(i=0; i<routes.length;i++)
 		{

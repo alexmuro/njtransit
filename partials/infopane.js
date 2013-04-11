@@ -137,15 +137,16 @@ function load_census_select()
 function load_zone_select()
 {
   fip =34;
+  var zone_color = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00']
     
   select0 = getCountyTractsTopo(fip,'none','0');
-  select0.styleMap = getMultiStyle('#00f');
+  select0.styleMap = getMultiStyle(zone_color[0]);
   select1 = getCountyTractsTopo(fip,'none','1');
-  select1.styleMap = getMultiStyle('#0f0');
+  select1.styleMap = getMultiStyle(zone_color[1]);
   select2 = getCountyTractsTopo(fip,'none','2');
-  select2.styleMap = getMultiStyle('#f00');
+  select2.styleMap = getMultiStyle(zone_color[2]);
   select3 = getCountyTractsTopo(fip,'none','3');  
-  select3.styleMap = getMultiStyle('#f0f');
+  select3.styleMap = getMultiStyle(zone_color[3]);
   map.addLayers([select0,select1,select2,select3]);
 
   select0.events.register("loadend", select0, function(e){
