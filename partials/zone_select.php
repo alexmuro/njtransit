@@ -1,4 +1,6 @@
-
+<?php
+error_reporting(E_ALL);
+?>
 <script>
 $.fn.filterByData = function(prop, val) {
     return this.filter(
@@ -223,7 +225,6 @@ function setSelector(color,id)
 <button id="uplevel" onclick='ZoomToFullState()' class='x-btn'>Zoom To Full State</button>
 <?php
  $zone_color = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00'];
-
 ?>
 
 <div id="zone0" class="zone_top" data-id='0' data-color='<?php echo $zone_color[0];?>' style="padding:15px;">
