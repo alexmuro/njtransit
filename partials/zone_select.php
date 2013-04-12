@@ -1,6 +1,4 @@
-<?php
-error_reporting(E_ALL);
-?>
+
 <script>
 $.fn.filterByData = function(prop, val) {
     return this.filter(
@@ -227,41 +225,41 @@ function setSelector(color,id)
  $zone_color = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00'];
 ?>
 
-<div id="zone0" class="zone_top" data-id='0' data-color='<?php echo $zone_color[0];?>' style="padding:15px;">
-    <h3 id="title"><div class='color_select' style="background-color:<?php echo $zone_color[0];?>"></div>
+<div id="zone0" class="zone_top" data-id='0' data-color='#E41A1C' style="padding:15px;">
+    <h3 id="title"><div class='color_select' style="background-color:#E41A1C"></div>
     Large Urban Area - Newark
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div> 
 </div>
-<div id="zone1" class="zone_top" data-id='1' data-color='<?php echo $zone_color[1];?>' style="padding:15px;">
+<div id="zone1" class="zone_top" data-id='1' data-color='#377EB8' style="padding:15px;">
     <h3 id="title"> 
-      <div class='color_select' style="background-color:<?php echo $zone_color[1];?>"></div>
+      <div class='color_select' style="background-color:#377EB8"></div>
       Small Urban Area – Paterson
     </h3> 
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>    
 </div>
-<div id="zone2" class="zone_top" data-id='2' data-color='<?php echo $zone_color[2];?>' style="padding:15px;">
+<div id="zone2" class="zone_top" data-id='2' data-color='#4DAF4A' style="padding:15px;">
 
     <h3 id="title">
-      <div class='color_select' style="background-color:<?php echo $zone_color[2];?>"></div>
+      <div class='color_select' style="background-color:#4DAF4A"></div>
       South Jersey Urban Center – Atlantic City
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>  
 </div>
-<div id="zone3" class="zone_top" data-id='3' data-color='<?php echo $zone_color[3];?>' style="padding:15px;"s>
+<div id="zone3" class="zone_top" data-id='3' data-color='#984EA3' style="padding:15px;"s>
     <h3 id="title"> 
-      <div class='color_select' style="background-color:<?php echo $zone_color[3];?>"></div>
+      <div class='color_select' style="background-color:#984EA3"></div>
       Intercity NJ Market – Philadelphia
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>     
 </div>
-<div id="zone4" class="zone_top" data-id='4' data-color='<?php echo $zone_color[4];?>' style="padding:15px;"s>
+<div id="zone4" class="zone_top" data-id='4' data-color='#FF7F00' style="padding:15px;"s>
     <h3 id="title"> 
-      <div class='color_select' style="background-color:<?php echo $zone_color[4];?>"></div>
+      <div class='color_select' style="background-color:#FF7F00"></div>
       Suburban Center – Princeton - West Windsor - Plainsboro
     </h3>
     <div class = 'zone_nav'></div>
