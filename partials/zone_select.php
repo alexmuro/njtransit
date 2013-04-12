@@ -221,9 +221,7 @@ function setSelector(color,id)
 
 <h1 id="title">Zone Select</h1>
 <button id="uplevel" onclick='ZoomToFullState()' class='x-btn'>Zoom To Full State</button>
-<?php
- $zone_color = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00'];
-?>
+
 
 <div id="zone0" class="zone_top" data-id='0' data-color='#E41A1C' style="padding:15px;">
     <h3 id="title"><div class='color_select' style="background-color:#E41A1C"></div>
