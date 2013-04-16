@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Avail Census Viewer</title>
+        <title>Avail Zone Selector</title>
         
         <script src="openlayers/lib/OpenLayers.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
