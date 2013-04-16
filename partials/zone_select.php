@@ -96,7 +96,9 @@ function loadGTFS(id,zone)
     gtfs = gtfs_layers[id];
     gtfs.setVisibility(true);
     map.raiseLayer(gtfs,map.layers.length);
+    selector.deactivate();
     listRoutes(id);
+    gtfs.redraw();
   }
   else
   {
