@@ -1,5 +1,7 @@
 
 <script>
+
+
 $.fn.filterByData = function(prop, val) {
     return this.filter(
         function() { return $(this).data(prop)==val; }
@@ -37,6 +39,7 @@ function loadZone(zone){
   $('#zone'+zone+' .zone_nav').append('<div id="gtfs_nav_'+zone+'" data-zone="'+zone+'" class="nav_button">GTFS</div><br><br>');
   $('#zone'+zone+' .zone_content').html(zoneInfoPane(fts));
 
+
   $('#gtfs_nav_'+zone).on('click',function(zone){
     if(!$(this).hasClass('selected')){
         //console.log('#zone'+$(this).data('zone')+' .zone_content');
@@ -54,6 +57,7 @@ function loadZone(zone){
         $(this).addClass('selected');
         hideGTFS($(this).data('zone'));
         $('#zone'+$(this).data('zone')+' .zone_content').html(zoneInfoPane(map.getLayersByName($(this).data('zone'))[0].selectedFeatures))
+        setSelector(zoneColors[$(this).data('zone')],$(this).data('zone'));
     }
   });
 
@@ -90,7 +94,7 @@ function loadGTFS(id,zone)
   if(typeof gtfs_layers[id] != 'undefined'){
     console.log('back on');
     gtfs = gtfs_layers[id];
-    gtfs.display(true);
+    gtfs.setVisibility(true);
     map.raiseLayer(gtfs,map.layers.length);
     listRoutes(id);
   }
@@ -218,6 +222,7 @@ function setSelector(color,id)
   margin-right: 3px
 }
 </style>
+ 
 
 <h1 id="title">Zone Select</h1>
 <button id="uplevel" onclick='ZoomToFullState()' class='x-btn'>Zoom To Full State</button>

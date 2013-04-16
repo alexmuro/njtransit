@@ -6,6 +6,7 @@ var quant = {};
 var graphing =false;
 var activelayer;
 var selectlayer = []; 
+var zoneColors = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00'];
 var usBounds;
 var selectlayerer,tractselectlayerer,bgselectlayerer;
 var gtfs_select, census_select;
