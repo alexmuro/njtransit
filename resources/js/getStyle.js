@@ -199,7 +199,7 @@ function getDefaultStyle(type)
 {
     var styles = new OpenLayers.StyleMap({
         "default": {
-            strokeWidth: 1,
+            strokeWidth: .5,
             strokeColor:'#000',
             fillColor: "#fff",
             fillOpacity: "0.0" 
@@ -222,7 +222,18 @@ function getDefaultStyle(type)
             fillOpacity: "0" 
             }
         });
-    } 
+    }else if(type === 'thick')
+    {
+        styles =  new OpenLayers.StyleMap({
+        "default": {
+            strokeWidth: 2.5,
+            strokeColor:'#000',
+            fillColor: "#fff",
+            fillOpacity: "0.0",
+            strokeDashstyle : "dashdot"
+        }
+    }); 
+    }
 
  return styles;
 }
@@ -237,7 +248,6 @@ function getGTFSStyle()
         },
         "select": {
              strokeColor: "#0f0",
-            strokeWidth: 4,
             strokeOpacity: ".7" 
         }
     });

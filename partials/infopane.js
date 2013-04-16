@@ -147,20 +147,26 @@ function load_zone_select()
   select2.styleMap = getMultiStyle(zone_color[2]);
   select3 = getCountyTractsTopo(fip,'none','3');  
   select3.styleMap = getMultiStyle(zone_color[3]);
-  map.addLayers([select0,select1,select2,select3]);
+  select4 = getCountyTractsTopo(fip,'none','4');  
+  select4.styleMap = getMultiStyle(zone_color[4]);
+  map.addLayers([select0,select1,select2,select3,select4]);
 
   select0.events.register("loadend", select0, function(e){
     createSelection(e,0);
    });
-  select1.events.register("loadend", select0, function(e){
+  select1.events.register("loadend", select1, function(e){
     createSelection(e,1);
   });
-  select2.events.register("loadend", select0, function(e){
+  select2.events.register("loadend", select2, function(e){
     createSelection(e,2);
   });
-  select3.events.register("loadend", select0, function(e){
+  select3.events.register("loadend", select3, function(e){
     createSelection(e,3);
   });
+  select4.events.register("loadend", select4, function(e){
+    createSelection(e,4);
+  });
+
 
   function createSelection (e,zone){
 

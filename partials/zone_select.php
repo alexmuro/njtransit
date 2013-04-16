@@ -112,7 +112,7 @@ function loadGTFS(id,zone)
   }
   else
   {
-    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city.json","data/gtfs/philly_route.json"];
+    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city.json","data/gtfs/philly_route.json","data/gtfs/princeton_route.json"];
     url = urls[id];
 
     current_gtfs = new OpenLayers.Layer.Vector('GTFS_'+id, {
@@ -174,11 +174,13 @@ function loadGTFS(id,zone)
 
 
 function ZoomToFullState(){
+  /*3-16
   $('.selected_zone .zone_nav').html('');
   $('.selected_zone .zone_content').html('');
   $('.selected_zone')
         .css('border','0px')
         .removeClass('selected_zone');
+        */
   var bbox = new OpenLayers.Bounds(-8411257.7538454, 4711437.6979671, -8225840.1138238,5065205.2814741);
   map.zoomToExtent(bbox);
 }  
@@ -194,7 +196,6 @@ function setGTFSSelector(){
   map.addControl(gtfs_select);
   gtfs_select.onBeforeSelect = function(feature) {
       this.selectStyle.strokeColor ="#0f0";
-      this.selectStyle.strokeWidth = 8;
   };
   gtfs_select.activate();
 }
@@ -230,6 +231,13 @@ function setSelector(color,id)
   padding:7px;*/
   border:1px solid;
 }
+.zone_top{
+  padding:15px;
+  font-size: 10px;
+}
+.selected_zone:hover{
+   background-color: #fff;
+}
 
 .color_select{
   float:left;
@@ -237,21 +245,27 @@ function setSelector(color,id)
   border:1px solid;
   margin-right: 3px
 }
+.x-btn{
+  margin-left:15px;
+  outline: none;
+  background-color: #fff;
+  padding:3px;
+}
+.x-btn:hover{
+  background-color: #efefef;
+}
 </style>
  
+<button id="uplevel" onclick='ZoomToFullState()' class='x-btn' >Zoom To Full State</button>
 
-<h1 id="title">Zone Select</h1>
-<button id="uplevel" onclick='ZoomToFullState()' class='x-btn'>Zoom To Full State</button>
-
-
-<div id="zone0" class="zone_top" data-id='0' data-color='#E41A1C' style="padding:15px;">
+<div id="zone0" class="zone_top" data-id='0' data-color='#E41A1C' >
     <h3 id="title"><div class='color_select' style="background-color:#E41A1C"></div>
     Large Urban Area - Newark
     </h3>
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div> 
 </div>
-<div id="zone1" class="zone_top" data-id='1' data-color='#377EB8' style="padding:15px;">
+<div id="zone1" class="zone_top" data-id='1' data-color='#377EB8' >
     <h3 id="title"> 
       <div class='color_select' style="background-color:#377EB8"></div>
       Small Urban Area – Paterson
@@ -259,7 +273,7 @@ function setSelector(color,id)
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>    
 </div>
-<div id="zone2" class="zone_top" data-id='2' data-color='#4DAF4A' style="padding:15px;">
+<div id="zone2" class="zone_top" data-id='2' data-color='#4DAF4A'>
 
     <h3 id="title">
       <div class='color_select' style="background-color:#4DAF4A"></div>
@@ -268,7 +282,7 @@ function setSelector(color,id)
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>  
 </div>
-<div id="zone3" class="zone_top" data-id='3' data-color='#984EA3' style="padding:15px;"s>
+<div id="zone3" class="zone_top" data-id='3' data-color='#984EA3'>
     <h3 id="title"> 
       <div class='color_select' style="background-color:#984EA3"></div>
       Intercity NJ Market – Philadelphia
@@ -276,7 +290,7 @@ function setSelector(color,id)
     <div class = 'zone_nav'></div>
     <div class = 'zone_content'></div>     
 </div>
-<div id="zone4" class="zone_top" data-id='4' data-color='#FF7F00' style="padding:15px;"s>
+<div id="zone4" class="zone_top" data-id='4' data-color='#FF7F00'>
     <h3 id="title"> 
       <div class='color_select' style="background-color:#FF7F00"></div>
       Suburban Center – Princeton - West Windsor - Plainsboro

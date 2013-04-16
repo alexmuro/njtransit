@@ -183,7 +183,7 @@ Ext.onReady(function() {
         layout: "fit",
         hideBorders: true,
         closeAction: "hide",
-        width: 300,
+        width: 250,
         height: 400,
         title: "Tree Configuration",
         items: [{
@@ -230,7 +230,7 @@ Ext.onReady(function() {
                 collapsible: true,
                 collapseMode: "mini",
                 split: true,
-                width: 300
+                width: 250
             }]
         }
     });
