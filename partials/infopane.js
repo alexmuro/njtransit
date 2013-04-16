@@ -169,8 +169,6 @@ function load_zone_select()
 
 
   function createSelection (e,zone){
-
-
         $.ajax({
           type: "POST",
           url: "data/get/getZone.php",
@@ -185,7 +183,6 @@ function load_zone_select()
             }
             e.object.redraw();
         });  
-
   }
 
 }
