@@ -7,6 +7,7 @@
         <script type="text/javascript" src="resources/js/ext-base.js"></script>
         <script type="text/javascript" src="resources/js/ext-all.js"></script>
         <link rel="stylesheet" type="text/css" href="resources/css/ext-all.css"/>
+         <link rel="stylesheet" type="text/css" href="resources/css/blue/style.css"/>
         <script type="text/javascript" src="resources/js/GeoExt.js"></script>
         <link rel="stylesheet" href="style.css" type="text/css">
 
@@ -31,6 +32,7 @@
         <script src="resources/js/addBusRoute.js"></script>
         <script src="resources/js/onZoomEnd.js"></script>
         <script src="resources/js/gtfsController.js"></script>
+        <script src="resources/js/jquery.tablesorter.min.js"></script>
         <script src="partials/infopane.js"></script>
 
 

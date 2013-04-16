@@ -119,11 +119,11 @@ function loadGTFS(id,zone)
     eventListeners:{
         'featureselected':function(evt){
             var feature = evt.feature;
-            $('.route_listing').find("[data-route='" +feature.data.route+ "']").parent().css('background-color','#0f0');
+            $('.route_listing').find("[data-route='" +feature.data.route+ "']").closest('tr').children('td, th').addClass('currentGTFS');
         },
         'featureunselected':function(evt){
             var feature = evt.feature;
-            $('.route_listing').find("[data-route='" +feature.data.route+ "']").parent().css('background-color','#3288BD');
+            $('.route_listing').find("[data-route='" +feature.data.route+ "']").closest('tr').children('td, th').removeClass('currentGTFS');
          }   
         },
     strategies: [new OpenLayers.Strategy.Fixed()],                
@@ -226,11 +226,10 @@ function setSelector(color,id)
     background-color: #efefef;
 }
 
-.route_listing{
-  /*float:left;
-  padding:7px;*/
-  border:1px solid;
+.currentGTFS{
+  background-color: #0f0 !important;
 }
+
 .zone_top{
   padding:15px;
   font-size: 10px;

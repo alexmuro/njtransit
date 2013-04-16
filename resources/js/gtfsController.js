@@ -17,20 +17,40 @@ function listRoutes(zone)
 	var routeColors =['#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#FFFFBF','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2','#2D004B','#542788','#7E4DA4','#ccc','#5a5a5a'];
 
 	
-	var i = 0;
+	var x = 0;
+	route_string = '<table id="zone'+zone+'_table" class="route_table tablesorter"><thead><th>Route</th><th>Trips</th><th># Shapes</th></tr></thead><tbody>';
 	$.each(routes, function(index, value) {
-		
-		route_string = '<div data-order='+i+' data-route='+index+' class="route_listing" style="background-color:'+routeColors[9]+';" >';
-		route_string += '<input type="checkbox" data-route='+index+'>';
-		route_string += +index+'</div>'
-  		
-		if(value == 1){
-			//console.log('#'+zone+' .gtfs_listing')
-	  		$('#zone'+zone+' .zone_content')
-	  		.append(route_string);
-	  		i++;
+		num_trips = 0;
+		num_shapes = 0
+		routes = gtfs.getFeaturesByAttribute('route',String(index));
+		for(i=0; i<routes.length;i++)
+		{
+			num_trips += routes[i].data.num_trips*1;
+			num_shapes++;	
 		}
+		if(value == 1){
+			if(x%2 === 1){
+				route_string += '<tr data-order='+x+' data-route='+index+' class="route_listing odd"><td>';
+			}else{
+				route_string += '<tr data-order='+x+' data-route='+index+' class="route_listing"><td>';
+			}
+			route_string += '<div  style="padding:3px">';
+			route_string += '<input type="checkbox" data-route='+index+'> ';
+			route_string += +index+'</div>';
+			route_string += '</td><td> ';
+			route_string +=  num_trips;
+			route_string += '</td><td> ';
+			route_string +=  num_shapes;
+			route_string += ' </td></tr>';
+			x++;
+		}
+		
 	});
+	route_string +='</tbody></table>';
+	$('#zone'+zone+' .zone_content')
+	  		.append(route_string);
+
+	 $('#zone'+zone+'_table').tablesorter(); 
 
 	$('.zone_content input').on('click',function(){
 		console.log('check / uncheck')
@@ -72,12 +92,12 @@ function listRoutes(zone)
 		{
 			gtfs_select.select(routes[i]);	
 		}
-		$(this).css('background-color','#0f0');
+		$(this).addClass('currentGTFS');
 	});
 	
 
 	$('.route_listing').on('mouseout',function(){
-		$(this).css('background-color',routeColors[9]);
+		$(this).removeClass('currentGTFS');
 		gtfs_select.unselectAll();
 		gtfs.redraw();
 	});
