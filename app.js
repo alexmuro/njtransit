@@ -43,20 +43,20 @@ map = new OpenLayers.Map({
        new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
-       /*
+       
        new OpenLayers.Layer.Google(
                 "Google Terrain",{
                     type: google.maps.MapTypeId.TERRAIN,
                     animationEnabled: false,
                 transitionEffect: "resize"
-            }
-            ),
+            }),
+       /*
         new OpenLayers.Layer.Google(
                 "Google Streets", // the default
                 {numZoomLevels: 20,
                 animationEnabled: false,
                 transitionEffect: "resize"}
-            ),
+            ),*/
             new OpenLayers.Layer.Google(
                 "Google Hybrid",
                 {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
@@ -69,13 +69,13 @@ map = new OpenLayers.Map({
                 animationEnabled: false,
                 transitionEffect: "resize"}
             ),
+            /*
             new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
-*/
                new OpenLayers.Layer.XYZ("MapQuest", urls[2], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            })
+            })*/
 
     ],
     controls: [
@@ -103,10 +103,11 @@ Ext.onReady(function() {
     // using OpenLayers.Format.JSON to create a nice formatted string of the
     // configuration for editing it in the UI
     var treeConfig = [{
-        nodeType: "gx_baselayercontainer"
-    }, {
+        nodeType: "gx_baselayercontainer",
+        expanded: true
+    }/*, {
         nodeType: "gx_overlaylayercontainer",
-        expanded: true,
+        expanded: false,
         // render the nodes inside this container with a radio button,
         // and assign them the group "foo".
         loader: {
@@ -115,7 +116,7 @@ Ext.onReady(function() {
                 uiProvider: "layernodeui"
             }
         }
-    }
+    }*/
     ];
     // The line below is only needed for this example, because we want to allow
     // interactive modifications of the tree configuration using the
@@ -166,14 +167,15 @@ Ext.onReady(function() {
             }
         },
         rootVisible: false,
-        lines: false,
+        lines: false
+        /*,
         bbar: [{
             text: "Show/Edit Tree Config",
             handler: function() {
                 treeConfigWin.show();
                 Ext.getCmp("treeconfig").setValue(treeConfig);
             }
-        }]
+        }]*/
     });
 
     // dialog for editing the tree configuration

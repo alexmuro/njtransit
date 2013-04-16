@@ -78,7 +78,8 @@ function listRoutes(zone)
 
 	$('.route_listing').on('mouseout',function(){
 		$(this).css('background-color',routeColors[9]);
-		gtfs_select.unselectAll()
+		gtfs_select.unselectAll();
+		gtfs.redraw();
 	});
 	
 

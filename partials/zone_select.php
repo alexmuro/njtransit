@@ -18,6 +18,9 @@ $('.zone_top').on('click',function(){
       $(this)
           .css('border','2px solid '+$(this).data('color'))
           .addClass('selected_zone');
+      if(typeof selector != 'undefined'){
+       selector.deactivate();
+      }
       setSelector($(this).data('color'),$(this).data('id'));
       hideGTFS($(this).data('id'));
       loadZone($(this).data('id'));
@@ -99,6 +102,12 @@ function loadGTFS(id,zone)
     selector.deactivate();
     listRoutes(id);
     gtfs.redraw();
+    for(i=0;i<gtfs.features.length;i++)
+        {
+          if(gtfs.features[i].attributes.include === 1){
+            $('.zone_content input').filterByData('route',gtfs.features[i].attributes.route).attr('checked','checked');
+          }
+        }
   }
   else
   {
