@@ -105,7 +105,7 @@ Ext.onReady(function() {
     var treeConfig = [{
         nodeType: "gx_baselayercontainer",
         expanded: true
-    }/*, {
+    }, {
         nodeType: "gx_overlaylayercontainer",
         expanded: false,
         // render the nodes inside this container with a radio button,
@@ -116,7 +116,7 @@ Ext.onReady(function() {
                 uiProvider: "layernodeui"
             }
         }
-    }*/
+    }
     ];
     // The line below is only needed for this example, because we want to allow
     // interactive modifications of the tree configuration using the

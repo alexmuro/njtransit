@@ -76,7 +76,7 @@ function zoneInfoPane(fts)
     total_population += fts[i].data.P0010001*1;
     total_area += fts[i].data.CENSUSAREA*1.0;
   }
-  output+="Census Tracks Selected: "+i+"</br>";
+  output+="Census Tracts Selected: "+i+"</br>";
   output+="Total Population of Area: "+addCommas(total_population)+"</br>"
   output+="Total Area: "+addCommas(total_area.toFixed(2))+" mi<sup>2</sup></br>"
   return output;
