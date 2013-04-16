@@ -107,7 +107,8 @@ function loadGTFS(id,zone)
           if(gtfs.features[i].attributes.include === 1){
             $('.zone_content input').filterByData('route',gtfs.features[i].attributes.route).attr('checked','checked');
           }
-        }
+      }
+      setGTFSSelector();
   }
   else
   {
@@ -167,19 +168,7 @@ function loadGTFS(id,zone)
         }  
 
     });
-    gtfs_select = new OpenLayers.Control.SelectFeature([gtfs], {
-                          selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
-                          OpenLayers.Feature.Vector.style["select"]),
-                          clickout: false, toggle: false,
-                          multiple: false, hover: true
-              });
-
-    map.addControl(gtfs_select);
-    gtfs_select.onBeforeSelect = function(feature) {
-        this.selectStyle.strokeColor ="#0f0";
-        this.selectStyle.strokeWidth = 8;
-    };
-    gtfs_select.activate();
+    setGTFSSelector();
   }
 }
 
@@ -193,6 +182,22 @@ function ZoomToFullState(){
   var bbox = new OpenLayers.Bounds(-8411257.7538454, 4711437.6979671, -8225840.1138238,5065205.2814741);
   map.zoomToExtent(bbox);
 }  
+
+function setGTFSSelector(){
+  gtfs_select = new OpenLayers.Control.SelectFeature([gtfs], {
+                    selectStyle: OpenLayers.Util.extend({fill: true, stroke: true},
+                    OpenLayers.Feature.Vector.style["select"]),
+                    clickout: false, toggle: false,
+                    multiple: false, hover: true
+        });
+
+  map.addControl(gtfs_select);
+  gtfs_select.onBeforeSelect = function(feature) {
+      this.selectStyle.strokeColor ="#0f0";
+      this.selectStyle.strokeWidth = 8;
+  };
+  gtfs_select.activate();
+}
 
 function setSelector(color,id)
 {
