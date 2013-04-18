@@ -3,13 +3,15 @@ function listRoutes(zone)
 {
 	//console.log(listRoutes);
 	//console.log(gtfs);
-	routes= []
+	routes= {}
 
-	console.log('#zone'+zone+' .zone_content');
 	$('#zone'+zone+' .zone_content').html('');
 	for(i=0;i<gtfs.features.length;i++)
 	{
-		routes[gtfs.features[i].data.route] = 1;
+
+		if(typeof gtfs.features[i].data.route_name != 'undefined'){
+			routes[gtfs.features[i].data.route] = String(gtfs.features[i].data.route_name.replace(/['"]/g,""));
+		}
 	}
 	
 	//console.loggtfs.features[0].data
@@ -20,6 +22,7 @@ function listRoutes(zone)
 	var x = 0;
 	route_string = '<table id="zone'+zone+'_table" class="route_table tablesorter"><thead><th>Route</th><th>Trips</th><th># Shapes</th></tr></thead><tbody>';
 	$.each(routes, function(index, value) {
+		//console.log(index+" "+value)
 		num_trips = 0;
 		num_shapes = 0
 		routes = gtfs.getFeaturesByAttribute('route',String(index));
@@ -28,7 +31,7 @@ function listRoutes(zone)
 			num_trips += routes[i].data.num_trips*1;
 			num_shapes++;	
 		}
-		if(value == 1){
+		if(typeof value != 'undefined'){
 			if(x%2 === 1){
 				route_string += '<tr data-order='+x+' data-route='+index+' class="route_listing odd"><td>';
 			}else{
@@ -36,7 +39,7 @@ function listRoutes(zone)
 			}
 			route_string += '<div  style="padding:3px">';
 			route_string += '<input type="checkbox" data-route='+index+'> ';
-			route_string += +index+'</div>';
+			route_string += +String(value)+'</div>';
 			route_string += '</td><td> ';
 			route_string +=  num_trips;
 			route_string += '</td><td> ';
@@ -53,7 +56,7 @@ function listRoutes(zone)
 	 $('#zone'+zone+'_table').tablesorter(); 
 
 	$('.zone_content input').on('click',function(){
-		console.log('check / uncheck')
+		//console.log('check / uncheck')
 		//console.log($(this).data('route'));
 		var routes = '[';
 		var val = 0;
@@ -101,7 +104,4 @@ function listRoutes(zone)
 		gtfs_select.unselectAll();
 		gtfs.redraw();
 	});
-	
-
-
 }

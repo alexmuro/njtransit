@@ -31,7 +31,8 @@
 
 
 <div id='tab_nav'>
-    <div id='census_tab' class='nav_button selected'>Zone Select</div> 
+    <div id='census_tab' class='nav_button selected'>Zone Select</div>
+    <div style='float:right;display:block; padding-right:12px;padding-top:5px;'><b><a href="help/">?</a></b></div>
     <!--
     <div id='census_tab' class='nav_button'>Census</div> 
     <div id='transit_tab' class='nav_button'>Transit</div>

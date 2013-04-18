@@ -45,12 +45,10 @@ function loadZone(zone){
 
   $('#gtfs_nav_'+zone).on('click',function(zone){
     if(!$(this).hasClass('selected')){
-        //console.log('#zone'+$(this).data('zone')+' .zone_content');
         $('#demo_nav_'+$(this).data('zone')).removeClass('selected');
         $(this).addClass('selected');
-       // $('#zone'+$(this).data('zone')+' .zone_content').html("GTFS INFO")
-       $('#zone'+$(this).data('zone')+' .zone_content').html('<center><img src=resources/images/loading.gif><center>');
-       loadGTFS($(this).data('zone'),$(this).attr('id'))
+        $('#zone'+$(this).data('zone')+' .zone_content').html('<center><img src=resources/images/loading.gif><center>');
+        loadGTFS($(this).data('zone'),$(this).attr('id'))
     }
   });
 
@@ -92,10 +90,7 @@ function hideGTFS(id){
 
 function loadGTFS(id,zone)
 {
-  console.log('load gtfs'+id+' '+zone)
-  
   if(typeof gtfs_layers[id] != 'undefined'){
-    console.log('back on');
     gtfs = gtfs_layers[id];
     gtfs.setVisibility(true);
     map.raiseLayer(gtfs,map.layers.length);
@@ -112,7 +107,7 @@ function loadGTFS(id,zone)
   }
   else
   {
-    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city.json","data/gtfs/philly_route.json","data/gtfs/princeton_route.json"];
+    urls = ["data/gtfs/newark_route.json","data/gtfs/patterson_route.json","data/gtfs/atlantic_city_route.json","data/gtfs/philly_route.json","data/gtfs/princeton_route.json"];
     url = urls[id];
 
     current_gtfs = new OpenLayers.Layer.Vector('GTFS_'+id, {
@@ -142,7 +137,6 @@ function loadGTFS(id,zone)
           gtfs.styleMap =  getBusRouteStyle("route",quant);
           map.raiseLayer(gtfs,map.layers.length)
           gtfs.redraw();
-          //map.zoomToExtent(gtfs.getDataExtent());
           
           $.ajax({
           type: "POST",
@@ -174,13 +168,6 @@ function loadGTFS(id,zone)
 
 
 function ZoomToFullState(){
-  /*3-16
-  $('.selected_zone .zone_nav').html('');
-  $('.selected_zone .zone_content').html('');
-  $('.selected_zone')
-        .css('border','0px')
-        .removeClass('selected_zone');
-        */
   var bbox = new OpenLayers.Bounds(-8411257.7538454, 4711437.6979671, -8225840.1138238,5065205.2814741);
   map.zoomToExtent(bbox);
 }  
@@ -202,7 +189,6 @@ function setGTFSSelector(){
 
 function setSelector(color,id)
 {
-  console.log(map.controls);
   currentlayer = map.getLayersByName(id)[0];
   currentlayer.styleMap = getMultiStyle(color)
   selector = new OpenLayers.Control.SelectFeature([currentlayer],{
@@ -256,6 +242,7 @@ function setSelector(color,id)
 </style>
  
 <button id="uplevel" onclick='ZoomToFullState()' class='x-btn' >Zoom To Full State</button>
+
 
 <div id="zone0" class="zone_top" data-id='0' data-color='#E41A1C' >
     <h3 id="title"><div class='color_select' style="background-color:#E41A1C"></div>
