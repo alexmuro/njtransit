@@ -30,14 +30,14 @@ class db {
           $this->mysql_host = 'localhost';
           $this->mysql_username = 'root';
           $this->mysql_password = '';
-          $this->mysql_database = 'njtransit';
+          $this->mysql_database = 'njtransit_dev';
         }
         else
         {
-          $this->mysql_host = 'localhost';
-          $this->mysql_username = 'root';
+          $this->mysql_host = '54.225.96.255';
+          $this->mysql_username = 'njtransit';
           $this->mysql_password = 'am1238wk';
-          $this->mysql_database = 'njtransit';
+          $this->mysql_database = 'njtransit_dev';
         }
       $this->conn = mysql_connect($this->mysql_host, $this->mysql_username, $this->mysql_password)
        or die ("Could not connect: x " . mysql_error() ." ". $this->mysql_host);
