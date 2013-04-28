@@ -168,14 +168,6 @@ Ext.onReady(function() {
         },
         rootVisible: false,
         lines: false
-        /*,
-        bbar: [{
-            text: "Show/Edit Tree Config",
-            handler: function() {
-                treeConfigWin.show();
-                Ext.getCmp("treeconfig").setValue(treeConfig);
-            }
-        }]*/
     });
 
     // dialog for editing the tree configuration
@@ -235,5 +227,4 @@ Ext.onReady(function() {
         }
     });
 });
-//loadTrentonLayers();
 loadCensusLayers();

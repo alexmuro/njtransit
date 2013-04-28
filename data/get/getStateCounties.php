@@ -35,7 +35,7 @@ if(!$nodata)
         $var = $handles[$sources[$source]][$var];
         $jURL = 'http://api.census.gov/data/2010/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=county:*&in=state:'.$fipscode;
 
-        echo $jURL;
+        //echo $jURL;
         $cdata = curl_download($jURL);
         //echo $cdata;
         $foo =  utf8_encode($cdata);
