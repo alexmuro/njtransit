@@ -47,7 +47,7 @@ function loadZone(zone){
     if(!$(this).hasClass('selected')){
         $('#demo_nav_'+$(this).data('zone')).removeClass('selected');
         $(this).addClass('selected');
-        $('#zone'+$(this).data('zone')+' .zone_content').html('<center><img src=resources/images/loading.gif><center>');
+        $('#zone'+$(this).data('zone')+' .zone_content').html('<center><img src=/resources/images/loading.gif><center>');
         loadGTFS($(this).data('zone'),$(this).attr('id'))
     }
   });
