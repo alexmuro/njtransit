@@ -5,6 +5,6 @@
     <body>
         Welcome to Avail Transit Demand Modeling.<br>
         <a href='zone_select/'>Zone Select</a>
-        <a href='models/?id=2'>Atlantic City Model</a>
+        <a href='model/?id=2'>Atlantic City Model</a>
     </body>
 </html>
