@@ -2,10 +2,10 @@
 $zone_id = $_GET['zone'];
 $path = "../zones/$zone_id/";
 if(makeDir($path)){
-	$curl_url = "http://localhost/zone/data/get/getCTRegion.php?zone=".$zone_id;
+	$curl_url = "http://".$_SERVER['SERVER_NAME']."/data/get/getCTRegion.php?zone=".$zone_id;
 	curl_file($curl_url,$path,'ct.json');
 
-  $curl_url = "http://localhost/zone/data/get/getGTFSbyRoute.php?zone=".$zone_id;
+  $curl_url = "http://".$_SERVER['SERVER_NAME']."/data/get/getGTFSbyRoute.php?zone=".$zone_id;
   curl_file($curl_url,$path,'gtfs.json');
 }
 else{
