@@ -70,6 +70,8 @@ function curl_download($Url){
     // OK cool - then let's create a new cURL resource handle
      $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, $Url);
+   curl_setopt($ch, CURLOPT_USERPWD, "am3081:am1238wk");
+   curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY );
    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
    $output = curl_exec($ch);
 
