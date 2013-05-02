@@ -8,7 +8,7 @@ $source = 0;
 $fips = 34;
 $counties = ["001","003","005","007","009","011","013","015","017","019","021","023","025","027","029","031","033","035","037","039","041"];
 
-include '/config/db.php'; 
+include '../../config/db.php'; 
 $test = new db();
 $inscon = $test->connect();
 $sql = "select ct from zones where id = $zone_id";
