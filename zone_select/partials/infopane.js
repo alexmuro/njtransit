@@ -108,7 +108,7 @@ function loadGraphingPane()
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-    },
+    }
   });
   graphing = true;		
 }
