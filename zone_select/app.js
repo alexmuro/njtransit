@@ -44,12 +44,12 @@ map = new OpenLayers.Map({
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
             }),
        
-       new OpenLayers.Layer.Google(
-                "Google Terrain",{
-                    type: google.maps.MapTypeId.TERRAIN,
-                    animationEnabled: false,
-                transitionEffect: "resize"
-            }),
+       // new OpenLayers.Layer.Google(
+       //          "Google Terrain",{
+       //              type: google.maps.MapTypeId.TERRAIN,
+       //              animationEnabled: false,
+       //          transitionEffect: "resize"
+       //      }),
 
        /*
         new OpenLayers.Layer.Google(
@@ -59,25 +59,25 @@ map = new OpenLayers.Map({
                 transitionEffect: "resize"}
             ),*/
 
-            new OpenLayers.Layer.Google(
-                "Google Hybrid",
-                {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
-                animationEnabled: false,
-                transitionEffect: "resize"}
-            ),
-            new OpenLayers.Layer.Google(
-                "Google Satellite",
-                {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
-                animationEnabled: false,
-                transitionEffect: "resize"}
-            ),
+            // new OpenLayers.Layer.Google(
+            //     "Google Hybrid",
+            //     {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
+            //     animationEnabled: false,
+            //     transitionEffect: "resize"}
+            // ),
+            // new OpenLayers.Layer.Google(
+            //     "Google Satellite",
+            //     {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
+            //     animationEnabled: false,
+            //     transitionEffect: "resize"}
+            // ),
             /*
             new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
             transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            }),
+            }),*/
                new OpenLayers.Layer.XYZ("MapQuest", urls[2], {
              transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            })*/
+            })
 
     ],
     controls: [
