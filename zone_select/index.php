@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="/resources/css/style.css" >
         
         <script src="/openlayers/lib/OpenLayers.js"></script>
+        <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
         <script src="/resources/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/resources/js/ext-base.js"></script>
         <script type="text/javascript" src="/resources/js/ext-all.js"></script>

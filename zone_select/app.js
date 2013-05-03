@@ -40,53 +40,43 @@
 map = new OpenLayers.Map({
 
     layers: [
-       new OpenLayers.Layer.XYZ("Open Street Map", urls[0], {
-             transitionEffect: "resize", buffer: 2, sphericalMercator: true
+       new OpenLayers.Layer.XYZ(
+            "Open Street Map", 
+             urls[0], {transitionEffect: "resize", buffer: 2, sphericalMercator: true}
+             ),
+       new OpenLayers.Layer.Google(
+                "Google Terrain",{
+                    type: google.maps.MapTypeId.TERRAIN,
+                    animationEnabled: false,
+                transitionEffect: "resize"
             }),
-       
-       // new OpenLayers.Layer.Google(
-       //          "Google Terrain",{
-       //              type: google.maps.MapTypeId.TERRAIN,
-       //              animationEnabled: false,
-       //          transitionEffect: "resize"
-       //      }),
-
-       /*
         new OpenLayers.Layer.Google(
-                "Google Streets", // the default
+                "Google Streets", 
                 {numZoomLevels: 20,
                 animationEnabled: false,
                 transitionEffect: "resize"}
-            ),*/
-
-            // new OpenLayers.Layer.Google(
-            //     "Google Hybrid",
-            //     {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
-            //     animationEnabled: false,
-            //     transitionEffect: "resize"}
-            // ),
-            // new OpenLayers.Layer.Google(
-            //     "Google Satellite",
-            //     {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
-            //     animationEnabled: false,
-            //     transitionEffect: "resize"}
-            // ),
-            /*
-            new OpenLayers.Layer.XYZ("Custom Map", urls[map], {
-            transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            }),*/
-               new OpenLayers.Layer.XYZ("MapQuest", urls[2], {
-             transitionEffect: "resize", buffer: 2, sphericalMercator: true
-            })
+            ),
+            new OpenLayers.Layer.Google(
+                "Google Hybrid",
+                {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20,
+                animationEnabled: false,
+                transitionEffect: "resize"}
+            ),
+            new OpenLayers.Layer.Google(
+                "Google Satellite",
+                {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22,
+                animationEnabled: false,
+                transitionEffect: "resize"}
+            )
 
     ],
     controls: [
         new OpenLayers.Control.Navigation(),
         new OpenLayers.Control.PanZoomBar(),
         new OpenLayers.Control.Attribution()
-    ]
-    
+    ]    
 });
+
 Ext.onReady(function() {
     // create a map panel with some layers that we will show in our layer tree
     // below.
@@ -99,33 +89,14 @@ Ext.onReady(function() {
     zoom: 8    
     });
 
-    // create our own layer node UI class, using the TreeNodeUIEventMixin
     var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI, new GeoExt.tree.TreeNodeUIEventMixin());
         
-    // using OpenLayers.Format.JSON to create a nice formatted string of the
-    // configuration for editing it in the UI
     var treeConfig = [{
         nodeType: "gx_baselayercontainer",
         expanded: true
-    }/*, {
-        nodeType: "gx_overlaylayercontainer",
-        expanded: false,
-        // render the nodes inside this container with a radio button,
-        // and assign them the group "foo".
-        loader: {
-            baseAttrs: {
-                radioGroup: "foo",
-                uiProvider: "layernodeui"
-            }
-        }
-    }*/
-    ];
-    // The line below is only needed for this example, because we want to allow
-    // interactive modifications of the tree configuration using the
-    // "Show/Edit Tree Config" button. Don't use this line in your code.
+    }];
     treeConfig = new OpenLayers.Format.JSON().write(treeConfig, true);
 
-    // create the tree with the configuration from above
     tree = new Ext.tree.TreePanel({
         border: true,
         region: "east",
@@ -146,8 +117,6 @@ Ext.onReady(function() {
             })
         ],
         loader: new Ext.tree.TreeLoader({
-            // applyLoader has to be set to false to not interfer with loaders
-            // of nodes further down the tree hierarchy
             applyLoader: false,
             uiProviders: {
                 "layernodeui": LayerNodeUI
