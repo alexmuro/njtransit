@@ -7,7 +7,7 @@ function countyDataLayer(dataname,dataurl,layer)
             strokeWidth: 1,
             strokeColor:'#333',
             fillColor: "#0033cc",
-            fillOpacity: ".7",
+            fillOpacity: ".7"
         },
         // the second argument will include all rules
         {

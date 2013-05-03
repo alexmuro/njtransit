@@ -8,7 +8,7 @@ $(document).ready(function(){
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-    },
+    }
   })
 });
 

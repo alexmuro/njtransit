@@ -18,16 +18,7 @@ var quantile = pv.Scale.quantile()
 
 getLegend(colors[color],quantile.quantiles());
 
-var style = new OpenLayers.Style(
-    // the first argument is a base symbolizer
-    // all other symbolizers in rules will extend this one
-    {
-        strokeWidth: 0,
-        strokeColor:'#333',
-        fillColor: "#0033cc",
-        fillOpacity: ".7",
-    },
-    // the second argument will include all rules
+var style = new OpenLayers.Style({strokeWidth: 0,strokeColor:'#333',fillColor: "#0033cc",fillOpacity: ".7"},
     {
         rules: [
             new OpenLayers.Rule({

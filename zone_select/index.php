@@ -15,8 +15,7 @@
         <script type="text/javascript" src="/resources/js/GeoExt.js"></script>
         <script src="/resources/js/protodata32.min.js"></script>
         <script src="/resources/js/jquery.tablesorter.min.js"></script>
-  
-        <script src="/map_functions/countyDataLayer.js"></script>
+
         <script src="/map_functions/getFilter.js"></script> 
         <script src="/map_functions/getStateCounties.js"></script>
         <script src="/map_functions/getCountyTracts.js"></script> 
