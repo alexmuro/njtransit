@@ -1,6 +1,3 @@
-
-
-
 $(document).ready(function(){
   $.ajax({
     url: 'partials/zone_select.php',
