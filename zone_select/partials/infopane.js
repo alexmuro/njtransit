@@ -95,7 +95,7 @@ function loadTransitPane()
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-    },
+    }
 	});
   graphing = false;
 }
