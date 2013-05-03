@@ -1,14 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Avail TMD - Zone Selector</title>
+        <title>Avail TDM - Zone Selector</title>
         
 
         <link rel="stylesheet" type="text/css" href="/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="/resources/css/blue/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/resources/css/style.css" >
         
         <script src="/openlayers/lib/OpenLayers.js"></script>
         <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="/resources/js/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="/resources/js/ext-base.js"></script>
         <script type="text/javascript" src="/resources/js/ext-all.js"></script>
         <script type="text/javascript" src="/resources/js/GeoExt.js"></script>

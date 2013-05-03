@@ -1,13 +1,18 @@
-function getCensusVariableName(key, xmlFile){
-	var output
-	$.ajax( xmlFile )
-		.done(function(data) {  
+function getCensusVariableName(keys, xmlFile){
+
+	var retVariableNames = [];	
+	$.ajax({ url:xmlFile, async:false} )
+		.done(function(data) { 
+				var output = [];
 				$(data).find("apivariables").each(
-				function (index, element){
+					function (index, element){
 					$(element).find("concept").each(function (index, element){
 						$(element).find("variable").each(function(index, element){
-							if($(element).attr("name") == key){
-								output = $(element).text();
+
+							for(i in keys){
+								if($(element).attr("name") == keys[i]){
+									retVariableNames[keys[i]] = ($(element).attr("concept")+':'+$(element).text());
+								}
 							}
 						});
 					});
@@ -15,8 +20,9 @@ function getCensusVariableName(key, xmlFile){
 				});
 
 
-
 				})
-		.fail(function(e) { console.log(e); });
-		return output
+	.fail(function(e) { console.log(e); });
+
+	return retVariableNames;
+
 }

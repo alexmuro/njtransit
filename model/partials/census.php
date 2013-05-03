@@ -12,7 +12,6 @@
         <b>Select a variable to display</b><br>
         <select id="sf1" style='border-color:red;'>
          <option value="99" selected></option>
-         <option value="P0010001">Total Population</option>
          
         </select>
     </div>       

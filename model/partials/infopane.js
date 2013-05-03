@@ -22,18 +22,6 @@ $(document).ready(function(){
     },
   })
 
-$("#sf1").on("change",function() {
-       
-        quant = getLayerAttribute(activelayer,$(this).val());
-        activelayer.styleMap = getStyle($(this).val(),$("#color").val(),quant);
-        activelayer.redraw();
-    });
-
-$("#color").on("change",function() {
-        activelayer.styleMap = getStyle($('#sf1').val(),$(this).val(),quant);
-        activelayer.redraw();
-    });
-
 
 
 $("#census_tab").on("click", function() { 
@@ -99,25 +87,7 @@ function loadCensusPane()
     success: function(data){
       $('#content').html(data);
       data = activelayer.features[0].data
-         $.each(data, function(index, value) {
-              //console.log(index)
-              if((index[0] == 'P' || index[0] == 'B') && value != 'null'){  
-                $('#sf1')
-                 .append($('<option>', {index : index })
-                 .text(index)); 
-               }
-          });
-         $("#sf1").on("change",function() {
-       
-        quant = getLayerAttribute(activelayer,$(this).val());
-        activelayer.styleMap = getStyle($(this).val(),$("#color").val(),quant);
-        activelayer.redraw();
-    });
-
-$("#color").on("change",function() {
-        activelayer.styleMap = getStyle($('#sf1').val(),$(this).val(),quant);
-        activelayer.redraw();
-    });
+      loadCensusSelect(data);
          
     },
   });

@@ -10,3 +10,11 @@ function addCommas(nStr)
     }
     return x1 + x2;
 }
+
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
+}

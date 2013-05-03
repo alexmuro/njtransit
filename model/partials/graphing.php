@@ -55,8 +55,8 @@ function process_data(input,div)
 function draw_donut(data,div){
 
   //console.log('draw donut')
-  var width = 150,
-    height = 150,
+  var width = 300,
+    height = 300,
     radius = Math.min(width, height) / 2;
 
     var colors = [];
@@ -119,12 +119,23 @@ function print_legend(data,div,color)
 {
   var xml = '/data/acs_5yr_2011_var.xml';
   var legend_div = div+'_legend';
-  console.log('print legend'+legend_div+data.length);
-  
+  //console.log('print legend'+legend_div+data.length);
+  var acs5 = [];
+         var z =0;
+         data.forEach(function(d) {
+            if(d.name[0] == 'B'){ 
+              acs5[z] = d.name;
+              z++;
+            } 
+          });
+
+  var acsnames = getCensusVariableName(acs5, '/data/acs_5yr_2011_var.xml');
+  //console.log(acsnames);
+
  for(i=0; i<data.length; i++)
  {
   $('#'+legend_div).append('<div style="Float:left;background-color:'+color[i]+'; width: 10px; height: 10px;"></div>');
-  $('#'+legend_div).append(data[i].name+'</br>'); 
+  $('#'+legend_div).append(acsnames[data[i].name]+'</br>'); 
   //$('#'+legend_div).append(getCensusVariableName(data[i].name, xml)+'</br>');
   }
 
@@ -148,10 +159,10 @@ function print_legend(data,div,color)
 
 </div>
 
-<h2>Transportation to Work</h2>
+<!-- <h2>Transportation to Work</h2>
 <div class='graph_container' style='width:400px;height:300px;'>
   <div style= "float:left;font-size:75%;" id="transport_graph_legend"></div>
 <div id="transport_graph"  style="float:left;">
-</div>
+</div> -->
 
 </div>
