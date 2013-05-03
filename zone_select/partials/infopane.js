@@ -82,7 +82,7 @@ function loadCensusPane()
     dataType: 'html',
     success: function(data){
       $('#content').html(data);
-    },
+    }
   });
   graphing = false;	
 }

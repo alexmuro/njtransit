@@ -133,7 +133,7 @@ var style = new OpenLayers.Style(
         strokeWidth: 2,
         strokeColor:'#333',
         fillColor: "#0033cc",
-        fillOpacity: "1.",
+        fillOpacity: "1."
     },
     // the second argument will include all rules
     {rules: [
