@@ -11,8 +11,7 @@
 }
 
 </style>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src='/njtransit/resources/js/d3.v3.min.js'></script>
+<script src='../resources/js/d3.v3.min.js'></script>
 <script>
 
 //var url = 'http://api.census.gov/data/2010/'.$sources[0].

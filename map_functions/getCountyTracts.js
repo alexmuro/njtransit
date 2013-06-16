@@ -3,7 +3,7 @@ function getCountyTracts(fip,county,name)
     var url = "/data/load/getCountyTracts.php?fip="+fip+"&county="+county;
     if(fip == 34)
     {
-       url = "/data/states/34/census_tracts_sf1.json";
+       url = "../data/states/34/census_tracts_sf1.json";
     }
     
     var vectorlayer = new OpenLayers.Layer.Vector(name, {

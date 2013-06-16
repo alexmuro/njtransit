@@ -39,7 +39,7 @@ class db {
           $this->mysql_password = 'am1238wk';
           $this->mysql_database = 'njtransit';
         }
-      $this->conn = mysql_connect($this->mysql_host, $this->mysql_username, $this->mysql_password)
+      $this->conn = mysql_pconnect($this->mysql_host, $this->mysql_username, $this->mysql_password)
        or die ("Could not connect: x " . mysql_error() ." ". $this->mysql_host);
     
     mysql_select_db($this->mysql_database);

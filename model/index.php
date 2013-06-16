@@ -45,7 +45,7 @@
         <div id="desc">
             <div style="height:100%;overflow:auto;">
             <?php
-                include "/config/db.php"; 
+                include "../config/db.php"; 
                 include "partials/infopane.php";
             ?>
             </div>

@@ -224,7 +224,7 @@ function getDefaultStyle(type)
             strokeDashstyle : "dashdot"
         }
     }); 
-    }
+}
 
  return styles;
 }
