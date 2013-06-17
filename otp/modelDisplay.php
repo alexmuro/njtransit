@@ -19,8 +19,18 @@
 <aside>
 <p>
 <br>
+Zone
+<select id ='zone_select'>
+  <option value="0">Newark</option>
+  <option value="1">Patterson</option>
+  <option value="2" selected>Atlantic City</option>
+  <option value="3" >Greater Philadelphia</option>
+  <option value="4" >Princeton</option>  	
+</select>
+
+
 Model Run
-<select id ='orig_or_dest'>
+<select id='run_select'>
   <option value="29">29</option>
   <option value="dest_fips">Incoming Flows</option>
 </select>
@@ -32,22 +42,25 @@ Model Run
 <script src="../resources/js/jquery-1.9.1.min.js"></script>
 <script>
 	console.log('starting');
-	$.ajax({url:"/data/get/getModelOutput.php",
-			data:{run_id:29},
-			method:"POST"
-	})
-	.done(function(data) {
-			 data = JSON.parse(data);
-			 console.log(data);
-			 displayRoutes(data.routes);
-			 displayTrips(data.trips);
-			 displayBoardingStops(data.boarding);
-			 displayAlightingStops(data.alighting);
-	})
-	.fail(function() { console.log("error") });
-
+	function loadData(run){
+		$.ajax({url:"/data/get/getModelOutput.php",
+				data:{run_id:run},
+				method:"POST",
+				dataType:'json'
+		})
+		.done(function(data) {
+	
+				 console.log(data);
+				 
+				 displayRoutes(data.routes);
+				 displayTrips(data.trips);
+				 displayBoardingStops(data.boarding);
+				 displayAlightingStops(data.alighting);
+		})
+		.fail(function() { console.log("error") });
+	}
 	function displayRoutes(data){
-		tableHead = "<table class='model_table'><tr><th>Route</th><th># of Riders</th></tr><tbody>";
+		tableHead = "<table class='model_table'><tr><th>Route</th><th>Riders</th></tr><tbody>";
 		tableBody = '';
 		tableFoot = "</tbody></table>";
 		$.each(data,function(i,d){
@@ -57,7 +70,7 @@ Model Run
 
 	}
 	function displayTrips(data){
-		tableHead = "<table class='model_table'><tr><th>Route</th><th>Trip</th<th># of Riders</th></tr><tbody>";
+		tableHead = "<table class='model_table'><tr><th>Route</th><th>Trip</th<th>Riders</th></tr><tbody>";
 		tableBody = '';
 		tableFoot = "</tbody></table>";
 		$.each(data,function(i,d){
@@ -67,7 +80,7 @@ Model Run
 
 	}
 	function displayBoardingStops(data){
-		tableHead = "<table class='model_table'><tr><th>Stop</th><th># Boarding</th></tr><tbody>";
+		tableHead = "<table class='model_table'><tr><th>Stop</th><th>Boarding</th></tr><tbody>";
 		tableBody = '';
 		tableFoot = "</tbody></table>";
 		$.each(data,function(i,d){
@@ -77,7 +90,7 @@ Model Run
 
 	}
 	function displayAlightingStops(data){
-		tableHead = "<table class='model_table'><tr><th>Stop</th><th># Alighting</th></tr><tbody>";
+		tableHead = "<table class='model_table'><tr><th>Stop</th><th>Alighting</th></tr><tbody>";
 		tableBody = '';
 		tableFoot = "</tbody></table>";
 		$.each(data,function(i,d){
@@ -86,12 +99,38 @@ Model Run
 		$('#output').append(tableHead+tableBody+tableFoot);
 
 	}
+	function loadModelRuns(zone){
+		$('#run_select')
+    	.find('option')
+    	.remove()
+    	.end();
+
+		$.ajax({url:'/data/get/getModelRuns.php',data:{zone_id:zone},method:'POST',dataType:'json'})
+  		.done(function(data){
+  			
+  			$.each(data.zones,function(i,d){
+		  		$('#run_select')
+		         .append($("<option></option>")
+		         .attr("value",d.id)
+		         .text(d.id)); 
+    		});
+    	});
+	}
   
   $(function(){
-    $('select').on('change',function(){
-    	console.log('t');
+    loadData(29);
+  	loadModelRuns($('#zone_select').val());
+  	});
+
+    $('#zone_select').on('change',function(){
+    	loadModelRuns($('#zone_select').val());
   	})
-})
+
+  	$('#run_select').on('change',function(){
+  		$('#output').html("");
+    	loadData($('#run_select').val());
+  	})
+
 </script>
 
 
