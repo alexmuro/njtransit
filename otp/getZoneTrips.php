@@ -9,7 +9,7 @@ var transitModel = {
 	 	
 		$.ajax({
 				url:'../data/create/model_run.php',
-				data:{zone_id:this.zone},
+				data:{zone_id:transitModel.zone},
 				method: 'POST'
 				})
 		.done(function(data) {
@@ -22,7 +22,7 @@ var transitModel = {
 		
 		$.ajax({
 				url:url,
-				data:{geo_type:'ct',current_zone:1},
+				data:{geo_type:'ct',current_zone:transitModel.zone},
 				dataType:'json',
 				method: 'POST'
 				})
@@ -186,7 +186,7 @@ var transitModel = {
 		// $('body').append(trip_row);
 	}
 }
-transitModel.zone = 0;
+transitModel.zone = 2;
 transitModel.run();
 
 function getRandomInt (min, max) {
