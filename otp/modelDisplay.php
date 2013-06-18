@@ -57,7 +57,7 @@ Model Run
 				 displayBoardingStops(data.boarding);
 				 displayAlightingStops(data.alighting);
 		})
-		.fail(function() { console.log("error") });
+		.fail(function(e) { console.log(e.responseText) });
 	}
 	function displayRoutes(data){
 		tableHead = "<table class='model_table'><tr><th>Route</th><th>Riders</th></tr><tbody>";
@@ -121,7 +121,8 @@ Model Run
 		         .attr("value",d.id)
 		         .text(d.id)); 
     		});
-    	});
+    	})
+    	.fail(function(e) { console.log(e.responseText) });
 	}
   
   $(function(){
