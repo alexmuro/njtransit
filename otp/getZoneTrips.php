@@ -186,7 +186,7 @@ var transitModel = {
 		// $('body').append(trip_row);
 	}
 }
-transitModel.zone = 2;
+transitModel.zone = 4;
 transitModel.run();
 
 function getRandomInt (min, max) {

@@ -51,7 +51,7 @@ Model Run
 		.done(function(data) {
 	
 				 console.log(data);
-				 
+				 displayTotals(data.totalTrips,data.totalBusTrips);
 				 displayRoutes(data.routes);
 				 displayTrips(data.trips);
 				 displayBoardingStops(data.boarding);
@@ -99,6 +99,9 @@ Model Run
 		$('#output').append(tableHead+tableBody+tableFoot);
 
 	}
+	function displayTotals(totalTrips,totalBusTrips){
+		$('#output').append(totalTrips[0].count+' people took '+totalBusTrips[0].count+' tranist trips.<br>');
+	}
 	function loadModelRuns(zone){
 		$('#run_select')
     	.find('option')
@@ -108,6 +111,10 @@ Model Run
 		$.ajax({url:'/data/get/getModelRuns.php',data:{zone_id:zone},method:'POST',dataType:'json'})
   		.done(function(data){
   			
+  			$('#run_select')
+		         .append($("<option></option>")
+		         .attr("value",0)
+		         .text('-')); 	
   			$.each(data.zones,function(i,d){
 		  		$('#run_select')
 		         .append($("<option></option>")
@@ -118,7 +125,7 @@ Model Run
 	}
   
   $(function(){
-    loadData(29);
+    loadData(31);
   	loadModelRuns($('#zone_select').val());
   	});
 
