@@ -34,17 +34,17 @@
  		$data['trips'][] = $row;
  	}
 
- 	$sql = "select count(1) as count from model_trips where run_id = $run_id";
- 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
- 	//$data['sql'] = $sql;
- 	while($row = mysql_fetch_assoc($rs)){
- 		$data['totalTrips'][] = $row;
- 	}
+ 	// $sql = "select count(1) as count from model_trips where run_id = $run_id";
+ 	// $rs=mysql_query($sql) or die($sql." ".mysql_error());
+ 	// //$data['sql'] = $sql;
+ 	// while($row = mysql_fetch_assoc($rs)){
+ 	// 	$data['totalTrips'][] = $row;
+ 	// }
  	
- 	$sql = "select count(1) as count from model_legs where run_id = $run_id and mode = 'BUS'";
- 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
- 	//$data['sql'] = $sql;
- 	while($row = mysql_fetch_assoc($rs)){
- 		$data['totalBusTrips'][] = $row;
- 	}
+ 	// $sql = "select count(1) as count from model_legs where run_id = $run_id and mode = 'BUS'";
+ 	// $rs=mysql_query($sql) or die($sql." ".mysql_error());
+ 	// //$data['sql'] = $sql;
+ 	// while($row = mysql_fetch_assoc($rs)){
+ 	// 	$data['totalBusTrips'][] = $row;
+ 	// }
  	echo json_encode($data);

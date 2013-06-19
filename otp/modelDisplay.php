@@ -3,6 +3,8 @@
 <title>AVAIL </title>
 <style>
 @import url(/resources/css/bostock.css);
+@import url(/resources/css/jquery.dataTables.css);
+@import url(/resources/css/TableTools.css);
 .model_table{
 	float:left;
 	padding:15px;
@@ -14,7 +16,7 @@
   <aside><?php echo date("D M d, Y G:i a"); ?></aside>
 </header>
 
-<h1><span id='heading_commidity'>Atlantic City</span> Transit Model Output</h1>
+<h1><span class='zone_title'></span> Transit Model Output</h1>
 
 <aside>
 <p>
@@ -36,10 +38,12 @@ Model Run
 </select>
 
 <br>
-<p>How many people rode which routes from 7am to 9am in Atlanctic City.</p>
+<p>How many people rode which routes from 7am to 9am in <span class='zone_title'></span>.</p>
 </aside>
 <div id="output"></div>
 <script src="../resources/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.dataTables.min.js"></script>
+<script src='../resources/js/TableTools.min.js'></script>
 <script>
 	console.log('starting');
 	function loadData(run){
@@ -51,54 +55,81 @@ Model Run
 		.done(function(data) {
 	
 				 console.log(data);
-				 displayTotals(data.totalTrips,data.totalBusTrips);
-				 displayRoutes(data.routes);
-				 displayTrips(data.trips);
-				 displayBoardingStops(data.boarding);
-				 displayAlightingStops(data.alighting);
+				 displayCombinedRoutes(combineRoutesTrips(data.routes,data.trips));
+				 displayStops(combineStops(data.boarding,data.alighting));
+
+
 		})
 		.fail(function(e) { console.log(e.responseText) });
 	}
-	function displayRoutes(data){
-		tableHead = "<table class='model_table'><tr><th>Route</th><th>Riders</th></tr><tbody>";
+
+	function combineStops(boarding,alighting){
+		boarding.forEach(function(on_stops){
+		//	console.log("Route:",route);
+			on_stops.off_stop_count = '0';
+			alighting.forEach(function(off_stops,index){
+				if(on_stops.on_stop_id == off_stops.off_stop_id){
+		//			console.log('Trip',trip,index);
+					on_stops.off_stop_count = off_stops.count;
+					alighting.splice(index, 1);
+				}
+			})
+		})
+		console.log(boarding);
+		return boarding;
+	}	
+
+	function combineRoutesTrips(routes,trips){
+		routes.forEach(function(route){
+		//	console.log("Route:",route);
+			route.trips = [];
+			trips.forEach(function(trip,index){
+				if(trip.route == route.route){
+		//			console.log('Trip',trip,index);
+					route.trips.push(trip);
+					trips.splice(index, 1);
+				}
+			})
+		})
+		//console.log(routes);
+		return routes;
+	}
+
+	function displayCombinedRoutes(data){
+		tableHead = "<div class='model_table'><h2>Passengers By Route & Trip Id</h2><table id='routes_table'  width='750px'><thead><tr><th>Route</th> <th>Trip</th><th>#</th></tr></thead><tbody>";
 		tableBody = '';
-		tableFoot = "</tbody></table>";
-		$.each(data,function(i,d){
-			tableBody += '<tr><td>'+d.route+'</td><td>'+d.count+'</td></tr>'
+		tableFoot = "</tbody></table></div>";
+		total = 0;
+		$.each(data,function(index,route){
+			tableBody += '';
+			tableBody += '';
+			route_total = 0;
+			$.each(route.trips,function(i,trip){
+				tableBody += '<tr><td>'+route.route+'</td><td>'+trip.gtfs_trip_id+'</td><td>'+trip.count+'</td></tr>';
+				route_total += trip.count*1;
+			});
+			tableBody += '<tr><td>'+route.route+' </td><td> Total</td><td>'+route_total+'</td></tr>';
+			total += route_total;			
 		});
+		tableBody += '<tfoot><tr><th colspan = 2>Total Trips</th><th>'+total+'</th></tr></tfoot>';
+			
 		$('#output').append(tableHead+tableBody+tableFoot);
+		$('#routes_table').dataTable({"sDom": 'T<"clear">lfrtip',"oTableTools": {"sSwfPath": "../resources/swf/copy_csv_xls_pdf.swf"}});
 
 	}
-	function displayTrips(data){
-		tableHead = "<table class='model_table'><tr><th>Route</th><th>Trip</th<th>Riders</th></tr><tbody>";
+	function displayStops(data){
+
+		tableHead = "<div class='model_table'><h2>Boarding and Alighting by Stop Id</h2><table id='stops_table' width='750px'><thead><tr><th>Stop</th><th>Boarding</th><th>Alighting</th></tr></thead><tbody>";
 		tableBody = '';
-		tableFoot = "</tbody></table>";
+		tableFoot = "</tbody></table></div>";
 		$.each(data,function(i,d){
-			tableBody += '<tr><td>'+d.route+'</td><td>'+d.gtfs_trip_id+'</td><td>'+d.count+'</td></tr>'
+			tableBody += '<tr><td>'+d.on_stop_id+'</td><td class="number_cell">'+d.count+'</td><td class="number_cell">'+d.off_stop_count+'</td></tr>'
 		});
 		$('#output').append(tableHead+tableBody+tableFoot);
+		$('#stops_table').dataTable({"sDom": 'T<"clear">lfrtip',"oTableTools": {"sSwfPath": "../resources/swf/copy_csv_xls_pdf.swf"}});
 
 	}
-	function displayBoardingStops(data){
-		tableHead = "<table class='model_table'><tr><th>Stop</th><th>Boarding</th></tr><tbody>";
-		tableBody = '';
-		tableFoot = "</tbody></table>";
-		$.each(data,function(i,d){
-			tableBody += '<tr><td>'+d.on_stop_id+'</td><td>'+d.count+'</td></tr>'
-		});
-		$('#output').append(tableHead+tableBody+tableFoot);
-
-	}
-	function displayAlightingStops(data){
-		tableHead = "<table class='model_table'><tr><th>Stop</th><th>Alighting</th></tr><tbody>";
-		tableBody = '';
-		tableFoot = "</tbody></table>";
-		$.each(data,function(i,d){
-			tableBody += '<tr><td>'+d.off_stop_id+'</td><td>'+d.count+'</td></tr>'
-		});
-		$('#output').append(tableHead+tableBody+tableFoot);
-
-	}
+	
 	function displayTotals(totalTrips,totalBusTrips){
 		$('#output').append(totalTrips[0].count+' people took '+totalBusTrips[0].count+' tranist trips.<br>');
 	}
@@ -128,9 +159,11 @@ Model Run
   $(function(){
     loadData(31);
   	loadModelRuns($('#zone_select').val());
+  	$('.zone_title').html($('#zone_select').find(":selected").text());
   	});
 
     $('#zone_select').on('change',function(){
+    	$('.zone_title').html($('#zone_select').find(":selected").text());
     	loadModelRuns($('#zone_select').val());
   	})
 
