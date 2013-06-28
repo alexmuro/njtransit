@@ -122,9 +122,14 @@ Model Run
 		tableHead = "<div class='model_table'><h2>Boarding and Alighting by Stop Id</h2><table id='stops_table' width='750px'><thead><tr><th>Stop</th><th>Boarding</th><th>Alighting</th></tr></thead><tbody>";
 		tableBody = '';
 		tableFoot = "</tbody></table></div>";
+		boarding_total = 0;
+		alighting_total = 0;
 		$.each(data,function(i,d){
-			tableBody += '<tr><td>'+d.on_stop_id+'</td><td class="number_cell">'+d.count+'</td><td class="number_cell">'+d.off_stop_count+'</td></tr>'
+			tableBody += '<tr><td>'+d.on_stop_id+'</td><td class="number_cell">'+d.count+'</td><td class="number_cell">'+d.off_stop_count+'</td></tr>';
+			boarding_total += d.count*1;
+			alighting_total += d.off_stop_count*1;
 		});
+		//tableBody += '<tfoot><tr><th>Totals </th><th>'+boarding_total+'</th><th>'+alighting_total+'</th></tr></tfoot>';
 		$('#output').append(tableHead+tableBody+tableFoot);
 		$('#stops_table').dataTable({"sDom": 'T<"clear">lfrtip',"oTableTools": {"sSwfPath": "../resources/swf/copy_csv_xls_pdf.swf"}});
 
