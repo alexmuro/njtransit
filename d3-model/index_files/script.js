@@ -171,7 +171,7 @@ var viz = {
 					.range(['#ED3A2D', '#2e0101']);
 				stops.sizeScale = d3.scale.linear()
 					.domain([stops.min_r,stops.max_r])
-					.range([1,20]);	 
+					.range([3,30]);	 
 				loader.run();
 			},
 			setBounds: function(stopsBy){
