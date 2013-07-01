@@ -15,7 +15,7 @@
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	$model_runs = array();
 	while($row = mysql_fetch_assoc( $rs )){
-		$model_runs[] = $row['id'];
+		$model_runs[] = intval($row['id']);
 	}
 	$output['model_runs'] = $model_runs;
 	

@@ -117,7 +117,7 @@
 	    		console.log(data);
 	    		viz.zone = $('#zone-select').val();
 	    		viz.model = data.model_runs[0];
-	    		viz.centroid = data.centroid;
+	    		viz.centroid = JSON.parse(data.centroid);
 	    		viz.njtransit();
 	    	})
 	    	.fail(function(e){
