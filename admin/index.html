@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+    <head>
+        <meta charset="utf-8">
+        <title>AVAIL TDM Admin - NJTransit</title>
+        <link rel="stylesheet" href="css/app.css"/>
+        <link rel="stylesheet" href="css/custom.css"/>
+
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/lib/html5shiv.js"></script>
+    <![endif]-->
+  
+    </head>
+    <body>  
+        <div ng-include src="'partials/utility/header.html'"></div>
+        <div class="container-fluid" id="main">
+            <div class="row-fluid full-height" id="main-row">
+                <div class="span3  side-nav full-height" ng-include src="'partials/utility/side-nav.html'">
+                <!--Sidebar content-->
+                </div>
+                <div ng-view class="span9 full-height">
+                    <!--Body content-->
+                    Page 1
+                </div>
+            </div>
+        </div>
+    
+
+        <!-- In production use:
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+        -->
+        <script src="js/lib/angular/angular.js"></script>
+        <script src="js/lib/ui-bootstrap-0.4.0.min.js"></script>
+        <!-- In production cat and minify these together -->
+        <script src="js/app.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/filters.js"></script>
+        <script src="js/directives.js"></script>
+    </body>
+</html>
