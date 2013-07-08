@@ -1,43 +1,9 @@
-<ul class="nav nav-list nav-list-vivid">
-            <li class="nav-header"><a href="#">Home</a></li>
+<ul class="nav nav-list nav-list-vivid" ng-controller="NavCtrl">
+      <li class="nav-header"><a href="#">Home</a></li>
 
-            <li class="nav-header">Market Areas</li>
-            <li>
-              <a href="#fakelink">
-                London, United Kingdom
-               
-              </a>
-            </li>
-            <li class="active">
-              <a href="#fakelink">
-                Berlin, Germany
-                
-              </a>
-            </li>
-            <li>
-              <a href="#fakelink">
-                Madrid, Spain
-                
-              </a>
-            </li>
-            <li class="divider"></li>
-            <li class="nav-header">Asia</li>
-            <li>
-              <a href="#fakelink">
-                Shanghai, China
-                
-              </a>
-            </li>
-            <li>
-              <a href="#fakelink">
-                Bombay, India
-                
-              </a>
-            </li>
-            <li>
-              <a href="#fakelink">
-                Karachi, Pakistan
-                
-              </a>
-            </li>
+      <li class="nav-header" >Market Areas</li>
+      <li ng-repeat="market in marketAreas" ng-class="isActiveMarket(market.id)" ><a ng-click="setMarket(market.id)">{{market.name}}</a></li>
+      <li class="divider"></li>
+      <li class="nav-header">Asia</li>
+     
 </ul>
