@@ -9,7 +9,6 @@
 		       	<label>Run Date: <strong>{{dt | date:'shortDate' }}</strong></label>
 		        <div >
 		    		<datepicker ng-model="dt" show-weeks="false" starting-day="1" date-disabled="disabled(date, mode)"  max="'2015-06-22'"></datepicker>
-		    		<p></p>
 				</div>
 			</div>
 			<div class="span2">
@@ -20,17 +19,7 @@
 				<label>AM Peak end:</label>
 				<timepicker ng-model="AMend" hour-step="hstep" minute-step="mstep" show-meridian="!ismeridian"></timepicker>
 			</div>
-			<!-- <div class="span4" style="height:150px">
-				
-			</div>
-			<div class="span2">
-				<label>PM Peak start:</label>
-				<timepicker ng-model="AMstart" hour-step="hstep" minute-step="mstep" show-meridian="!ismeridian"></timepicker>
-			</div>
-			<div class="span2">
-				<label>PM Peak end:</label>
-				<timepicker ng-model="AMend" hour-step="hstep" minute-step="mstep" show-meridian="!ismeridian"></timepicker>
-			</div> -->
+			
 		</div>
 		<div class="row-fluid">
 			<div class="span3">
@@ -38,10 +27,8 @@
 			</div>
 		</div>
 		<div class="row-fluid">
-			<div class="span8" id="model_output">
-				
+			<div class="span8" id="model_output">	
 			</div>
 		</div>
-
 	</div>
 </div>
