@@ -141,7 +141,7 @@ var transitModel = {
 	},
 	processTrip:function(data)
 	{
-		if(typeof data.plan.itineraries != 'undefined'){
+		if(typeof data.plan.itineraries != 'undefined' && data.plan != null){
 			//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 			$.ajax({
 				url:'../data/create/model_trips.php',
