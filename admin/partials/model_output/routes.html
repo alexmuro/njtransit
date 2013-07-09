@@ -1,5 +1,53 @@
-<p>Route Level Analysis</p>
-<p>
-  Showing of 'interpolate' filter:
-  {{ 'Current version is v%VERSION%.' | interpolate }}
-</p>
+<div class="row">
+	<div class="span12">
+		<h3>Route Analysis for Model : {{activeModel.id+' '+activeModel.name}}</h3>
+		<div class="fluid-row">
+			<div class="span3">
+				<div class="mvl pvl">
+
+		            <div class="tabbable tabs-left">
+		            	
+						<ul class="nav nav-tabs nav-append-content">
+		                	<li ng-class="isActiveRoute('')"><a ng-click="setActiveRoute('')">Overview</a></li>
+		                	<li ng-repeat="route in modelData.routes" ng-class="isActiveRoute(route.route)">
+								<a ng-click="setActiveRoute(route.route)">{{ route.route }}</a>
+							</li>
+		        		</ul>
+		   			</div>
+		   		</div>
+		   	</div>
+		   	<div class="span8" ng-show="overview">
+			   	<p><strong>Routes Overview</strong></p>
+			   	<table class="table table-striped">
+	            <tbody><tr>
+	              <th>Rank</th>
+	              <th>Route </th>
+	              <th>Count</th>
+	            </tr>
+	            <tr ng-repeat="trip in modelData.routes ">
+	              <td>{{$index+1}}</td>
+	              <td>{{trip.route}}</td>
+	              <td>{{trip.count}}</td>
+	            </tr>
+	          </tbody></table>
+      		</div>
+		   <div class="span8" ng-show="showroutes">
+			   	<p><strong>Route {{ activeRoute }}</strong></p>
+			   	<table class="table table-striped">
+	            <tbody><tr>
+	              <th>Rank</th>
+	              <th>Route </th>
+	              <th>Trip ID</th>
+	              <th>Count</th>
+	            </tr>
+	            <tr ng-repeat="trip in modelData.trips | filter:{route:activeRoute}">
+	              <td>{{$index+1}}</td>
+	              <td>{{trip.route}}</td>
+	              <td>{{trip.gtfs_trip_id}}</td>
+	              <td>{{trip.count}}</td>
+	            </tr>
+	          </tbody></table>
+		   	</div>
+		</div>
+	</div>
+</div>

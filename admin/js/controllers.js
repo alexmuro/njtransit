@@ -71,7 +71,7 @@ angular.module('myApp.controllers', [])
       }
   		$scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
-        console.log($scope.modelData);
+        //console.log($scope.modelData);
 
         $scope.totalRoutes = $scope.modelData.routes.length;
         $scope.totalTrips = $scope.modelData.trips.length;
@@ -105,6 +105,37 @@ angular.module('myApp.controllers', [])
   .controller('ModelRoutesCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
+      $scope.activeMarket = MarketArea.getMarketArea();
+      $scope.activeModel = MarketArea.getModel();
+      $scope.activeRoute='';
+      $scope.overview = true;
+      $scope.showroutes = false;
+      $scope.getModelOverview =function(){
+        return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
+            return(data);
+        })
+      }
+      $scope.getModelOverview().then(function(data){
+        $scope.modelData = data.data;
+        //console.log($scope.modelData);
+      });
+      
+      $scope.isActiveRoute = function(routeid){
+        return routeid == $scope.activeRoute ? 'active' : '';
+      }
+      $scope.setActiveRoute = function(routeid){
+        $scope.activeRoute = routeid;
+        if($scope.activeRoute == '')
+        {
+         $scope.overview = true;
+         $scope.showroutes = false;
+        }else{
+         $scope.overview = false;
+         $scope.showroutes = true;
+        }
+      }
+      
+
   		
   }])
   .controller('ModelStopsCtrl', ['$scope', '$http','MarketArea',
