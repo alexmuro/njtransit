@@ -41,7 +41,11 @@ angular.module('myApp.controllers', [])
         transitModel.date=datestring;
         transitModel.start_hour = $scope.AMstart.getHours();
         transitModel.end_hour = $scope.AMend.getHours();
-        transitModel.name = $scope.runName;
+        if(typeof  $scope.runName != 'undefined'){
+          transitModel.name = $scope.runName;
+        }else{
+          transitModel.name = "Untitled Model";
+        }
         transitModel.run();
       }
 
@@ -59,7 +63,44 @@ angular.module('myApp.controllers', [])
   .controller('ModelOverviewCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
-  		
+      $scope.activeModel = MarketArea.getModel();
+      $scope.getModelOverview =function(){
+        return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
+            return(data);
+        })
+      }
+  		$scope.getModelOverview().then(function(data){
+        $scope.modelData = data.data;
+        console.log($scope.modelData);
+
+        $scope.totalRoutes = $scope.modelData.routes.length;
+        $scope.totalTrips = $scope.modelData.trips.length;
+        if( $scope.modelData.boarding.length > $scope.modelData.alighting.length ){
+          $scope.activeStops = $scope.modelData.boarding.length;
+        }else{
+           $scope.activeStops = $scope.modelData.alighting.length;
+        }
+         var boardingTotal = 0;
+         $scope.modelData.boarding.forEach(function(stop){
+          boardingTotal += stop.count*1;
+         })
+         $scope.boardingTotal = boardingTotal;
+
+         var alightingTotal = 0;
+         $scope.modelData.alighting.forEach(function(stop){
+          alightingTotal += stop.count*1;
+         })
+         $scope.alightingTotal = alightingTotal;
+
+         var tripsTotal = 0;
+         $scope.modelData.trips.forEach(function(stop){
+          tripsTotal += stop.count*1;
+         })
+         $scope.tripsTotal = tripsTotal;
+
+      });
+
+
   }])
   .controller('ModelRoutesCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
@@ -119,6 +160,7 @@ angular.module('myApp.controllers', [])
 
       $scope.setModel = function(input){
         $scope.activeModel = input;
+        MarketArea.setModel($scope.activeModel);
       }
 
       $scope.setMarket = function(input){

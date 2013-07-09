@@ -7,7 +7,7 @@
 	$inscon = $test->connect();
 
 	$date = array();
-	$sql = "select distinct on_stop_id, count(on_stop_id) as count from model_legs where run_id = $run_id and mode = 'BUS' group by on_stop_id order by count desc";
+	$sql = "select distinct on_stop_id, count(on_stop_id) as count,b.stop_name  from model_legs as a join stops as b on b.stop_id = a.off_stop_id where run_id = $run_id and mode = 'BUS' group by on_stop_id order by count desc";
  	$rs=mysql_query($sql) or die($sql." ".mysql_error());
  	$data = array();
 
@@ -15,7 +15,7 @@
  		$data['boarding'][] = $row;
  	}
 
- 	$sql = "select distinct off_stop_id, count(off_stop_id) as count from model_legs where run_id = $run_id and mode = 'BUS' group by off_stop_id order by count desc";
+ 	$sql = "select distinct off_stop_id, count(off_stop_id) as count, b.stop_name  from model_legs as a join stops as b on b.stop_id = a.off_stop_id where run_id = $run_id and mode = 'BUS' group by off_stop_id order by count desc";
  	$rs=mysql_query($sql) or die($sql." ".mysql_error());
  	while($row = mysql_fetch_assoc($rs)){
  		$data['alighting'][] = $row;

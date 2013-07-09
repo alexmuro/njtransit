@@ -26,10 +26,10 @@ angular.module('myApp.services', [])
             
         },
         getModel: function() {
-            return activeMarket;
+            return activeModel;
         },
         setModel: function(newData) {
-            activeMarket = newData;  
+            activeModel = newData;  
         }
     }
 }]);

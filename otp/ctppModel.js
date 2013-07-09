@@ -18,7 +18,7 @@ var transitModel = {
 				method: 'POST'
 				})
 		.done(function(data) {
-			 $('#model_output').prepend('Model Run:',data)
+			 $('#model_output').prepend('Model Run:'+data+'<br>');
 		  	 transitModel.id = data;  
 		})
 		.fail(function() { console.log("error") });
