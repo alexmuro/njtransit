@@ -1,5 +1,58 @@
-<p>Stop Level Analysis</p>
-<p>
-  Showing of 'interpolate' filter:
-  {{ 'Current version is v%VERSION%.' | interpolate }}
-</p>
+<div class="row">
+	<div class="span12">
+		<h3>Stops Analysis for Model : {{activeModel.id+' '+activeModel.name}}</h3>
+		<div class="fluid-row">
+			<div class="span3">
+				<div class="mvl pvl">
+
+		            <div class="tabbable tabs-left">
+						<ul class="nav nav-tabs nav-append-content">
+		                	<li ng-class="bORa('boarding')"><a ng-click="setDirection('boarding')">Boarding</a></li>
+		                	<li ng-class="bORa('alighting')"><a ng-click="setDirection('alighting')">Alighting</a></li>
+		        		</ul>
+		   			</div><br>
+		   			<input type="text" value="" placeholder="Search" class="span3" ng-model="query">
+		   		</div>
+		   	</div>
+		   	<div class="span8" ng-show="boarding">
+				   	<p><strong>Boarding Stops</strong></P>
+				   	<table class="table table-striped">
+	            <tbody><tr>
+	              <th>Rank</th>
+	              <th>Name</th>
+	              <th>Stop ID</th>
+	              <th>Count</th>
+	            </tr>
+	            <tr ng-repeat="stop in modelData.boarding | filter:query">
+	              <td>{{$index+1}}</td>
+	              <td>{{stop.stop_name}}</td>
+	              <td>{{stop.on_stop_id}}</td>
+	              <td>{{stop.count}}</td>
+	            </tr>
+	          </tbody></table>
+      		</div>
+		   <div class="span8" ng-show="alighting">
+					   	<p><strong>Alighting Stops</strong></P>
+					<table class="table table-striped">
+		            <tbody><tr>
+		              <th>Rank</th>
+		              <th>Name</th>
+		              <th>Stop ID</th>
+		              <th>Count</th>
+		            </tr>
+		            <tr ng-repeat="stop in modelData.alighting | filter:query">
+		              <td>{{$index+1}}</td>
+		              <td>{{stop.stop_name}}</td>
+		              <td>{{stop.off_stop_id}}</td>
+		              <td>{{stop.count}}</td>
+		            </tr>
+		          </tbody>
+		      	</table>
+
+		   	</div>
+		</div>
+	</div>
+</div>
+
+          
+		

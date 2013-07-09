@@ -141,7 +141,36 @@ angular.module('myApp.controllers', [])
   .controller('ModelStopsCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
+      $scope.activeMarket = MarketArea.getMarketArea();
+      $scope.activeMarket = MarketArea.getMarketArea();
+      $scope.activeModel = MarketArea.getModel();
+      $scope.direction='boarding';
+      $scope.boarding = true;
+      $scope.alighting = false;
+      $scope.getModelOverview =function(){
+        return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
+            return(data);
+        })
+      }
+      $scope.getModelOverview().then(function(data){
+        $scope.modelData = data.data;
+        //console.log($scope.modelData);
+      });
   		
+      $scope.bORa = function(routeid){
+        return routeid == $scope.direction ? 'active' : '';
+      }
+      $scope.setDirection = function(routeid){
+        $scope.direction = routeid;
+        if($scope.direction == 'boarding')
+        {
+         $scope.boarding = true;
+         $scope.alighting = false;
+        }else{
+         $scope.boarding = false;
+         $scope.alighting = true;
+        }
+      }
   }])
   .controller('NavCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
