@@ -1,9 +1,42 @@
 <ul class="nav nav-list nav-list-vivid" ng-controller="NavCtrl">
-      <li class="nav-header"><a href="#">Home</a></li>
-
+      
       <li class="nav-header" >Market Areas</li>
-      <li ng-repeat="market in marketAreas" ng-class="isActiveMarket(market.id)" ><a ng-click="setMarket(market.id)">{{market.name}}</a></li>
+      <li ng-repeat="market in marketAreas" ng-class="isActiveMarket(market.id)" ><a ng-click="setMarket(market)">{{market.name}}</a></li>
       <li class="divider"></li>
-      <li class="nav-header">Asia</li>
-     
+      <li class="nav-header">Modeling</li>
+      <li>
+        <a href="/admin/#/mi/run">Run New Model</a>
+      </li>
+      <li>
+        <a href="/admin/#/mi/data">Data Settings</a>
+      </li>
+      <li>
+        <a href="/admin/#/mi/overview">OTP Settings</a
+      </li>
+      <li class="divider"></li>
+      <li class="nav-header">Model Ouput</li>
+      <li class="list_label">Active Model:</li>
+      <li>
+        <div class="btn-group select select-block mbl fluid" class="dropdown">
+          <i class="dropdown-arrow"></i>
+          <button class="btn dropdown-toggle clearfix btn-small btn-primary" data-toggle="dropdown">
+            <span class="filter-option pull-left">{{ activeMarket.id }}</span>&nbsp;<span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" style="overflow-y: auto; min-height: 108px; max-height: 157px;">
+            <li ng-repeat="market in marketAreas" ng-class="isActiveMarket(market.id)" ><a ng-click="setMarket(market)">{{market.id}}</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a href="/admin/#/mo/overview">Model Overview</a>
+      </li>
+      <li>
+        <a href="/admin/#/mo/routes">Route Level Analysis</a>
+      </li>
+      <li>
+        <a href="/admin/#/mo/stops">Stop Level Analysis</a>
+      </li>
+      <li>
+        <a href="/d3-model/?ma={{activeMarket.id}}" target="_blank">Map</a>
+      </li>
 </ul>

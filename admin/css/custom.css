@@ -30,10 +30,23 @@ body, html, .container-fluid 				{ height: 100%;}
 #main 										{height: 100%;padding-left: 0px;}
 #main-row 									{height: 100%;}
 .full-height								{height: 100%; }
+.nav-header                 {background-color: #ecf0f1;color:#34495e;border-right:2px solid #34495e;}
+.header_logo                {height:32px;}
+
 
 .navbar-inner								{-webkit-border-radius: 0px;-moz-border-radius: 0px;border-radius: 0px;}
 .flush										{margin-bottom:0}
-
+.list_label {color: #ecf0f1;
+border-radius: 0;
+font-size: 14px;
+border-radius: 5px;
+font-size: 14.994px;
+font-weight: 700;
+margin-left: -13px;
+margin-right: -13px;
+padding: 6px 13px 8px;
+text-shadow: none;
+}
 .alert {color: #34495e;padding: 16px 45px 16px 30px;text-shadow: none;background-color: #f9f8f3;border: 2px solid #ebece8;font-size: 16px;line-height: 1.53875em;-webkit-border-radius: 6px;-moz-border-radius: 6px;border-radius: 6px;}
 .alert-danger, .alert-error {color: #b94a48;background-color: #f2dede;border-color: #eed3d7;}
 

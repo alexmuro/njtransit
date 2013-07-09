@@ -12,4 +12,18 @@ angular.module('myApp.services', [])
 		username: ''
 	};
 	return sdo;
-}]).value('version', '0.1');
+}]).value('version', '0.1')
+.factory('MarketArea', [function() {
+    var activeMarket = {name: 'Atlantic City',id: 2};
+
+    return {
+        getData: function() {
+            console.log(activeMarket);
+            return activeMarket;
+        },
+        setData: function(newData) {
+            activeMarket = newData;
+            console.log(activeMarket);
+        }
+    }
+}]);

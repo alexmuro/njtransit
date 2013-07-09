@@ -1,5 +1,10 @@
 <script src="../resources/js/jquery-1.9.1.min.js"></script>
 <script>
+<?php 
+	echo json_encode($_GET)
+
+?>
+
 var transitModel = {
 	id:1,
 	zone:1,
@@ -7,10 +12,10 @@ var transitModel = {
 	start_min:0,
 	end_hour:9,
 	end_min:59,
+	date:'6/3/2013',
 	trips:[],
 	run:function()
 	{
-	 	
 		$.ajax({
 				url:'../data/create/model_run.php',
 				data:{zone_id:transitModel.zone},
@@ -120,8 +125,8 @@ var transitModel = {
 		  	min:'QUICK',
 		  	maxWalkDistance:'840',
 		  	walkSpeed:'1.341',
-		  	time:getRandomInt(7,9)+':'+getRandomInt(0,59)+'am',
-		  	date:'6/3/2013',
+		  	time:getRandomInt(transitModel.start_hour,transitModel.end_hour)+':'+getRandomInt(0,59)+'am',
+		  	date: transitModel.date,
 		  	arriveBy:'false',
 		  	itinID:1,
 		  	wheelchair:'false',
@@ -155,41 +160,9 @@ var transitModel = {
 				.fail(function(e) { console.log(e) });
 
 		}
-
-		// header = 'from: '+data.plan.from.geometry+'<br>';
-		// header += 'to: '+ data.plan.to.geometry+'<br>';
-		// header += 'start time: '+trip.startTime+'<br>';
-		// header += 'end time: '+trip.endTime+'<br>';
-		// header += 'walk time: '+trip.walkTime+'<br>';
-		// header += 'transit time: '+trip.transitTime+'<br>';
-		// header += 'transfers :'+trip.transfers+'<br>';
-
-		// $.each(trip.legs,function(index,leg){
-		// header +='<strong>Leg '+index +'</strong><br>';
-		// 	if(leg.mode == "WALK"){
-		// 		header+= 'mode: '+leg.mode+'<br>';
-		// 		header+= 'duration: '+leg.duration+'<br>';
-		// 		header+= 'distance: '+leg.distance+'<br>';
-		// 	}
-		// 	else if(leg.mode == "BUS")
-		// 	{
-		// 		header+= 'mode: '+leg.mode+'<br>';
-		// 		header+= 'duration: '+leg.duration+'<br>';
-		// 		header+= 'distance: '+leg.distance+'<br>';
-		// 		header+= 'route: '+leg.route+'<br>';
-		// 		header+= 'routeId: '+leg.routeId+'<br>';
-		// 		header+= 'tripId: '+leg.tripId+'<br>';
-		// 		header+= 'on stopcode: '+ leg.from.stopCode+'<br>';
-		// 		header+= 'on stopid: '+ leg.from.stopId.id+'<br>';
-		// 		header+= 'off stopcode: '+ leg.to.stopCode+'<br>';
-		// 		header+= 'off stopid: '+ leg.to.stopId.id+'<br>';
-						
-		// 	}
-		// });
-		// trip_row = $('<p/>').html(header);
-		// $('body').append(trip_row);
 	}
 }
+
 transitModel.zone = 4;
 transitModel.run();
 
