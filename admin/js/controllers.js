@@ -6,12 +6,12 @@
 angular.module('myApp.controllers', [])
 .controller('HomeCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('ModelRunCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
       
       //AM Peak Hours
       $scope.AMstart = new Date();
@@ -38,38 +38,42 @@ angular.module('myApp.controllers', [])
         $scope.output ="Running model "+$scope.runName
         //$http({url:'/otp/ctppModel.php',params:{zone:$scope.activeMarket.id,name:$scope.runName,run_date:datestring,start_hour:$scope.AMstart.getHours(),end_hour:$scope.AMend.getHours()},method:"GET"})
         transitModel.zone=$scope.activeMarket.id;
+        transitModel.date=datestring;
+        transitModel.start_hour = $scope.AMstart.getHours();
+        transitModel.end_hour = $scope.AMend.getHours();
+        transitModel.name = $scope.runName;
         transitModel.run();
       }
-      
+
   }])
   .controller('ModelDataCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('ModelOTPCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('ModelOverviewCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('ModelRoutesCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('ModelStopsCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
   .controller('NavCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getData();
+  		$scope.activeMarket = MarketArea.getMarketArea();
   		$scope.marketAreas = [
   			{
   				name: 'Newark',
@@ -93,15 +97,38 @@ angular.module('myApp.controllers', [])
   			}
 
   		];
-  		
+
+      $scope.getModelRuns =function(){
+        return  $http({url:'/data/get/getModelRuns.php',data:{zone_id:$scope.activeMarket.id},method:"POST"}).then(function(data){
+            return(data);
+        })
+      }
+    
+      $scope.getModelRuns().then(function(data){
+        $scope.modelRuns = data.data;
+        $scope.activeModel = $scope.modelRuns[0]; 
+      })
+
   		$scope.isActiveMarket = function(id){
         	return id == $scope.activeMarket.id ? 'active' : '';
       	}
 
+      $scope.isActiveModel = function(id){
+          return id == $scope.activeModel.id ? 'active' : '';
+        }  
+
+      $scope.setModel = function(input){
+        $scope.activeModel = input;
+      }
+
       $scope.setMarket = function(input){
-      		$scope.activeMarket = input;
-      		MarketArea.setData($scope.activeMarket);
-      	}
+    		$scope.activeMarket = input;
+    		MarketArea.setMarketArea($scope.activeMarket);
+        $scope.getModelRuns().then(function(data){
+           $scope.modelRuns = data.data;
+           $scope.activeModel = $scope.modelRuns[0];
+        })
+      }
   }]);
 
 

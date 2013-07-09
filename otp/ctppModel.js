@@ -1,6 +1,7 @@
 var transitModel = {
 	id:1,
     zone:1,
+    name:'',
     start_hour:7,
     start_min:0,
     end_hour:9,
@@ -8,15 +9,16 @@ var transitModel = {
     date:'6/3/2013',
     trips:[],
     totalTrips:0,
+    message:'',
 	run:function()
 	{
 		$.ajax({
 				url:'../data/create/model_run.php',
-				data:{zone_id:transitModel.zone},
+				data:{zone_id:transitModel.zone,name:transitModel.name},
 				method: 'POST'
 				})
 		.done(function(data) {
-			 console.log('Model Run:',data)
+			 $('#model_output').prepend('Model Run:',data)
 		  	 transitModel.id = data;  
 		})
 		.fail(function() { console.log("error") });
@@ -36,7 +38,7 @@ var transitModel = {
 	},
 	getGeoData:function(data)
 	{
-		
+		$('#model_output').prepend('Total tracts:'+data.length);
 		$.each(data,function(index,ct) //For each tract return getTrips
 		{
 			if(index >= 0){
@@ -48,7 +50,7 @@ var transitModel = {
 	getTractTrips:function(state,county,tract)
 	{
 
-		console.log(state,county,tract);
+		$('#model_output').prepend('county:'+county+' tract:'+tract+'<br>');
 		$.ajax({url:'../data/get/getTractTrips.php',
 				method:'POST',
 				data:{state:state,county:county,tract:tract},
@@ -69,17 +71,17 @@ var transitModel = {
 	makeTrips:function (tract)
 	{
 		//console.log(tract);
-		//console.log(tract.tract+'->'+tract.qpowtract+':'+tract.bus_total);
+		$('#model_output').prepend('from:'+tract.tract+'-> to:'+tract.qpowtract+':#num trips:'+tract.bus_total+'<br>');
 		begin_stops = this.getStops(tract.state,tract.county,tract.tract);
 		end_stops = this.getStops(tract.qpowst,tract.qpowco,tract.qpowtract);
-		//console.log('num_trips:',tract.bus_total)
+		$('#model_output').prepend('num_trips:'+tract.bus_total+'<br>')
 		//console.log('orig_stops:',begin_stops.length);
 		//console.log('dest_stops:',end_stops.length);
 		if(begin_stops.length > 0 && end_stops.length > 0 && tract.bus_total*1 >0){
 			for(i=0;i<tract.bus_total*1;i++){
 				begin_stop =  Math.floor(Math.random() * (begin_stops.length ));
 				end_stop =  Math.floor(Math.random() * (end_stops.length ));
-				console.log(begin_stops[begin_stop].lat+','+begin_stops[begin_stop].lon+'->'+end_stops[end_stop].lat+','+end_stops[end_stop].lon);
+				$('#model_output').prepend('['+begin_stops[begin_stop].lat+','+begin_stops[begin_stop].lon+']->['+end_stops[end_stop].lat+','+end_stops[end_stop].lon+']<br>');
 				this.planTrip(begin_stops[begin_stop].lat,begin_stops[begin_stop].lon,end_stops[end_stop].lat,end_stops[end_stop].lon);
 			}
 		}	
@@ -87,7 +89,7 @@ var transitModel = {
 	getStops:function (state,county,tract)
 	{
 		var results = null;
-		console.log(state.substring(1),county,tract)
+		$('#model_output').prepend(state.substring(1),county,tract)
 		$.ajax({url:'../data/get/getTractStops.php',
 				method:'POST',
 				data:{state:state.substring(1),county:county,tract:tract},
@@ -117,7 +119,7 @@ var transitModel = {
 		  	toPlace:to_lat+','+to_lon,
 		  	mode:'TRANSIT,WALK',
 		  	min:'QUICK',
-		  	maxWalkDistance:'840',
+		  	maxWalkDistance:'1000',
 		  	walkSpeed:'1.341',
 		  	time:getRandomInt(transitModel.start_hour,transitModel.end_hour)+':'+getRandomInt(0,59)+'am',
 		  	date: transitModel.date,
@@ -149,7 +151,7 @@ var transitModel = {
 				})
 				.done(function(data) {
 			 
-		  	 			console.log(data);  
+		  	 			$('#model_output').prepend('Inserting Trip ID:'+data+'<br>');  
 				})
 				.fail(function(e) { console.log(e) });
 

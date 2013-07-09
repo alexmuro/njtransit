@@ -15,15 +15,21 @@ angular.module('myApp.services', [])
 }]).value('version', '0.1')
 .factory('MarketArea', [function() {
     var activeMarket = {name: 'Atlantic City',id: 2};
+    var activeModel = {id:'31',name:'null'}
 
     return {
-        getData: function() {
-            console.log(activeMarket);
+        getMarketArea: function() {
             return activeMarket;
         },
-        setData: function(newData) {
+        setMarketArea: function(newData) {
             activeMarket = newData;
-            console.log(activeMarket);
+            
+        },
+        getModel: function() {
+            return activeMarket;
+        },
+        setModel: function(newData) {
+            activeMarket = newData;  
         }
     }
 }]);
