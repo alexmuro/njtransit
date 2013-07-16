@@ -38,12 +38,16 @@
 	              <th>Rank</th>
 	              <th>Route </th>
 	              <th>Trip ID</th>
+	              <th>Trip Headsign</th>
+	              <th>Departure Time</th>
 	              <th>Count</th>
 	            </tr>
 	            <tr ng-repeat="trip in modelData.trips | filter:{route:activeRoute}">
 	              <td>{{$index+1}}</td>
 	              <td>{{trip.route}}</td>
 	              <td>{{trip.gtfs_trip_id}}</td>
+	              <td>{{trip.trip_headsign}}</td>
+	              <td>{{ trip.departure_time}}</td>
 	              <td>{{trip.count}}</td>
 	            </tr>
 	          </tbody></table>

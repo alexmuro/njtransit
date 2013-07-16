@@ -20,7 +20,7 @@
             <tr ng-repeat="stop in modelData.boarding | limitTo:5">
               <td>{{$index+1}}</td>
               <td>{{stop.stop_name}}</td>
-              <td>{{stop.on_stop_id}}</td>
+              <td>{{stop.on_stop_code}}</td>
               <td>{{stop.count}}</td>
             </tr>
           </tbody></table>
@@ -32,12 +32,12 @@
               <th>Rank</th>
               <th>Name</th>
               <th>Stop ID</th>
-              <th>Count</th>
+              <th>Count</th>e_id
             </tr>
             <tr ng-repeat="stop in modelData.alighting |  limitTo:5">
               <td>{{$index+1}}</td>
               <td>{{stop.stop_name}}</td>
-              <td>{{stop.off_stop_id}}</td>
+              <td>{{stop.off_stop_code}}</td>
               <td>{{stop.count}}</td>
             </tr>
           </tbody>

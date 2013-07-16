@@ -6,30 +6,34 @@
 // Demonstrate how to register services
 // In this case it is a simple value service.
 angular.module('myApp.services', [])
-.factory('UserService', [function() {
+.factory('UserService', [function($rootScope) {
 	var sdo = {
 		isLogged: false,
 		username: ''
 	};
 	return sdo;
 }]).value('version', '0.1')
-.factory('MarketArea', [function() {
-    var activeMarket = {name: 'Atlantic City',id: 2};
-    var activeModel = {id:'31',name:'null'}
+.factory('MarketArea', ['$rootScope',
+    function($rootScope) {
+        var activeMarket = {name: 'Atlantic City',id: 2};
+        var activeModel = {id:'31',name:'null'}
 
-    return {
-        getMarketArea: function() {
-            return activeMarket;
-        },
-        setMarketArea: function(newData) {
-            activeMarket = newData;
-            
-        },
-        getModel: function() {
-            return activeModel;
-        },
-        setModel: function(newData) {
-            activeModel = newData;  
+        return {
+            getMarketArea: function() {
+                return activeMarket;
+            },
+            setMarketArea: function(newData) {
+                activeMarket = newData;
+                $rootScope.$broadcast('marketUpdated');
+                
+            },
+            getModel: function() {
+                return activeModel;
+            },
+            setModel: function(newData) {
+                activeModel = newData; 
+                $rootScope.$broadcast('modelUpdated');
+            }
         }
     }
-}]);
+]);

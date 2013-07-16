@@ -13,6 +13,7 @@ angular.module('myApp.controllers', [])
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       
+
       //AM Peak Hours
       $scope.AMstart = new Date();
       $scope.AMstart.setHours(7);
@@ -60,8 +61,8 @@ angular.module('myApp.controllers', [])
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
-  .controller('ModelOverviewCtrl', ['$scope', '$http','MarketArea',
-  	function($scope, $http, MarketArea) {
+  .controller('ModelOverviewCtrl', ['$rootScope','$scope', '$http','MarketArea',
+  	function($rootScope,$scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeModel = MarketArea.getModel();
       $scope.getModelOverview =function(){
@@ -69,10 +70,7 @@ angular.module('myApp.controllers', [])
             return(data);
         })
       }
-  		$scope.getModelOverview().then(function(data){
-        $scope.modelData = data.data;
-        //console.log($scope.modelData);
-
+  		$scope.writePage = function(){
         $scope.totalRoutes = $scope.modelData.routes.length;
         $scope.totalTrips = $scope.modelData.trips.length;
         if( $scope.modelData.boarding.length > $scope.modelData.alighting.length ){
@@ -80,30 +78,41 @@ angular.module('myApp.controllers', [])
         }else{
            $scope.activeStops = $scope.modelData.alighting.length;
         }
-         var boardingTotal = 0;
-         $scope.modelData.boarding.forEach(function(stop){
-          boardingTotal += stop.count*1;
-         })
-         $scope.boardingTotal = boardingTotal;
 
-         var alightingTotal = 0;
-         $scope.modelData.alighting.forEach(function(stop){
-          alightingTotal += stop.count*1;
-         })
-         $scope.alightingTotal = alightingTotal;
+        var boardingTotal = 0;
+        $scope.modelData.boarding.forEach(function(stop){boardingTotal += stop.count*1;})
+        $scope.boardingTotal = boardingTotal;
 
-         var tripsTotal = 0;
-         $scope.modelData.trips.forEach(function(stop){
-          tripsTotal += stop.count*1;
-         })
-         $scope.tripsTotal = tripsTotal;
+        var alightingTotal = 0;
+        $scope.modelData.alighting.forEach(function(stop){alightingTotal += stop.count*1;});
+        $scope.alightingTotal = alightingTotal;
 
+        var tripsTotal = 0;
+        $scope.modelData.trips.forEach(function(stop){tripsTotal += stop.count*1;});
+        $scope.tripsTotal = tripsTotal;
+      }
+
+      $scope.getModelOverview().then(function(data){
+        $scope.modelData = data.data;
+        //console.log($scope.modelData);
+        $scope.writePage();
       });
 
+      $rootScope.$on("modelUpdated", function (event) {
+        $scope.activeMarket = MarketArea.getMarketArea();
+        $scope.activeModel = MarketArea.getModel();
+
+        $scope.getModelOverview().then(function(data){
+          $scope.modelData = data.data;
+          $scope.writePage();
+        });
+      })
 
   }])
-  .controller('ModelRoutesCtrl', ['$scope', '$http','MarketArea',
-  	function($scope, $http, MarketArea) {
+
+
+  .controller('ModelRoutesCtrl', ['$rootScope','$scope', '$http','MarketArea',
+  	function($rootScope,$scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeModel = MarketArea.getModel();
@@ -119,6 +128,15 @@ angular.module('myApp.controllers', [])
         $scope.modelData = data.data;
         //console.log($scope.modelData);
       });
+
+      $rootScope.$on("modelUpdated", function (event) {
+          $scope.activeMarket = MarketArea.getMarketArea();
+          $scope.activeModel = MarketArea.getModel();
+          $scope.getModelOverview().then(function(data){
+            $scope.modelData = data.data;
+        });
+      });
+
       
       $scope.isActiveRoute = function(routeid){
         return routeid == $scope.activeRoute ? 'active' : '';
@@ -138,10 +156,8 @@ angular.module('myApp.controllers', [])
 
   		
   }])
-  .controller('ModelStopsCtrl', ['$scope', '$http','MarketArea',
-  	function($scope, $http, MarketArea) {
-  		$scope.activeMarket = MarketArea.getMarketArea();
-      $scope.activeMarket = MarketArea.getMarketArea();
+  .controller('ModelStopsCtrl', ['$rootScope','$scope', '$http','MarketArea',
+  	function($rootScope,$scope, $http, MarketArea) {
       $scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeModel = MarketArea.getModel();
       $scope.direction='boarding';
@@ -157,6 +173,14 @@ angular.module('myApp.controllers', [])
         //console.log($scope.modelData);
       });
   		
+      $rootScope.$on("modelUpdated", function (event) {
+        $scope.activeMarket = MarketArea.getMarketArea();
+        $scope.activeModel = MarketArea.getModel();
+        $scope.getModelOverview().then(function(data){
+          $scope.modelData = data.data;
+        });
+      });
+
       $scope.bORa = function(routeid){
         return routeid == $scope.direction ? 'active' : '';
       }
@@ -229,6 +253,7 @@ angular.module('myApp.controllers', [])
         $scope.getModelRuns().then(function(data){
            $scope.modelRuns = data.data;
            $scope.activeModel = $scope.modelRuns[0];
+           MarketArea.setModel($scope.activeModel);
         })
       }
   }]);
