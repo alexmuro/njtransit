@@ -107,8 +107,12 @@
 	
 <script type="text/javascript">
 	$(document).ready(function() {
-		viz.zone = 2;
+		viz.zone = 1;
+	    viz.model = 146;
+	    viz.centroid = [-74.17250,40.91278];
 	    viz.njtransit();
+
+
 
 	    $('#zone-select').on('change',function(){
 	    	console.log($('#zone-select').val());

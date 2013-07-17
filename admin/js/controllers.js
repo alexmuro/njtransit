@@ -9,6 +9,7 @@ angular.module('myApp.controllers', [])
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
+
   .controller('ModelRunCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
@@ -23,6 +24,7 @@ angular.module('myApp.controllers', [])
       $scope.AMend.setMinutes(0)
       $scope.hstep = 1;
       $scope.mstep = 15;
+      $scope.message = "";
     
       $scope.today = function() {
         $scope.dt = new Date();
@@ -35,27 +37,24 @@ angular.module('myApp.controllers', [])
 
       $scope.output = "";
       $scope.runModel = function(){
-        var datestring = $scope.dt.getMonth()+"/"+$scope.dt.getDate()+"/"+$scope.dt.getYear();
-        $scope.output ="Running model "+$scope.runName
-        //$http({url:'/otp/ctppModel.php',params:{zone:$scope.activeMarket.id,name:$scope.runName,run_date:datestring,start_hour:$scope.AMstart.getHours(),end_hour:$scope.AMend.getHours()},method:"GET"})
-        transitModel.zone=$scope.activeMarket.id;
-        transitModel.date=datestring;
-        transitModel.start_hour = $scope.AMstart.getHours();
-        transitModel.end_hour = $scope.AMend.getHours();
-        if(typeof  $scope.runName != 'undefined'){
-          transitModel.name = $scope.runName;
-        }else{
-          transitModel.name = "Untitled Model";
-        }
-        transitModel.run();
+        $scope.message = "Model running...."
+        $http({url:'/otp/runModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.method},id:"GET"})
+        .success(function(data) {
+          console.log(data);
+          $scope.message = data.status;
+        }).error(function(e) {
+          console.log(e.responseText);
+        });   
       }
 
   }])
+
   .controller('ModelDataCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
+
   .controller('ModelOTPCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();

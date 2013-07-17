@@ -7,8 +7,8 @@ $test = new db();
 $inscon = $test->connect();
 
 
-$zone_id = $_POST['zone_id'];
-$model_run = $_POST['model_run'];
+$zone_id = $_GET['zone_id'];
+$model_run = $_GET['model_run'];
 $sql = "select routes from zones where id = $zone_id";
 $rs=mysql_query($sql) or die($select."<br><br>".mysql_error());
 $results = array();
