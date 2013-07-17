@@ -133,7 +133,8 @@
 		  	// OK cool - then let's create a new cURL resource handle
 		  	
 		   	$ch = curl_init();
-		   	curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']); 
+		   	$headers = array('Accept: application/json');
+		   	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); 
 			//curl_setopt($ch, CURLOPT_HEADER, 1); 
 		   	curl_setopt($ch, CURLOPT_URL, $Url);
 		   	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -180,4 +181,6 @@
 	if(isset($_GET['date'])){ $name = $_GET['date'];}
 	$model = new transitModel($name,$zone,$date);
 	$model->run();
+	echo "{test:123,";
 	echo json_encode($model->getOutput());
+	echo "}";

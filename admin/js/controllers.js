@@ -43,7 +43,7 @@ angular.module('myApp.controllers', [])
           console.log(data);
           $scope.message = data.status;
         }).error(function(e) {
-          console.log(e.responseText);
+          console.log(e);
         });   
       }
 
