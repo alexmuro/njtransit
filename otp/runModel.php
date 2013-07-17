@@ -49,7 +49,7 @@
      		foreach ($zones as $index => $fips) {
      			if($index >= 0){
 					$this->getTractTrips(substr($fips,9,2),substr($fips,11,3),substr($fips,14,6));
-     				$this->output['census_tracts'][] = $index." ".substr($fips,9,2)." ".substr($fips,11,3)." ".substr($fips,14,6)."<br>";
+     				$this->output['census_tracts'][] = $index." ".substr($fips,9,2)." ".substr($fips,11,3)." ".substr($fips,14,6);
 				}
      		}
      	}
@@ -80,7 +80,7 @@
 			//console.log('dest_stops:',end_stops.length);
 			if(count($begin_stops) > 0 && count($end_stops) > 0 && intval($tract['bus_total']) >0){
 			
-				$this->output['flows'][] = $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'].'<br>';
+				$this->output['flows'][] = $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'];
 				
 				for($i=0;$i<$tract['bus_total']*1;$i++){
 					$begin_stop =  rand(0,count($begin_stops)-1);
