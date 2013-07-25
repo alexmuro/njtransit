@@ -38,7 +38,6 @@
 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 			$row = mysql_fetch_assoc( $rs );
 			$this->parseZones($this->zones = json_decode($row[$this->geo_type]));
-			echo $row[$this->geo_type];
 			$this->output['geodata'] = $row;
 			$this->output['status'] = "FINISHED MODEL RUN:".$this->id;
      	}
@@ -122,7 +121,7 @@
 		  	$otp_url .= "&preferredRoutes:";
 		  	$otp_url .= "&unpreferredRoutes:";
 		  	//echo $otp_url.'<br>';
-		  	//$this->processTrip(json_decode($this->curl_download($otp_url),true));
+		  	$this->processTrip(json_decode($this->curl_download($otp_url),true));
 		}
 
 		private function curl_download($Url){ 

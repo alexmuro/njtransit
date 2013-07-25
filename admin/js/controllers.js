@@ -13,7 +13,7 @@ angular.module('myApp.controllers', [])
   .controller('ModelRunCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
-      
+      console.log($scope.activeMarket);
 
       //AM Peak Hours
       $scope.AMstart = new Date();
@@ -38,7 +38,7 @@ angular.module('myApp.controllers', [])
       $scope.output = "";
       $scope.runModel = function(){
         $scope.message = "Model running...."
-        $http({url:'/otp/runModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.method},id:"GET"})
+        $http({url:'/otp/runModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
         .success(function(data) {
           console.log(data);
           $scope.message = data.status;

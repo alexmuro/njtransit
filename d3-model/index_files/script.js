@@ -30,6 +30,7 @@ var viz = {
 	zone:2,
 	model_run:31,
 	centroid:[-74.465093,39.349667],
+	stopsBy:'on',
     //----------------------------------------------------------------------------------------------------------
    	njtransit  : function() {
 
@@ -167,10 +168,10 @@ var viz = {
 					.range([3,30]);	 
 				loader.run();
 			},
-			setBounds: function(stopsBy){
+			setBounds: function(){
 				stops.data.features.forEach(function(d){
 					r_var = d.properties.on_count;
-					if(stopsBy == 'off'){
+					if(viz.stopsBy == 'off'){
 						r_var = d.properties.off_count;
 					}
 					if(r_var < stops.min_r){

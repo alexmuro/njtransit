@@ -95,9 +95,19 @@
 		<ul id="economic">
 			<li><a href="#" id="toggle-tracts">POVERTY LEVEL &amp;<br>RACIAL BREAKDOWN</a></li>
 		</ul>
-	
+
 		<hr>
-	
+
+		<h2>Display Stops by</h2>
+			<h3>
+				<center>
+					<select id="stops-select">
+						<option value="on" selected>Boarding</option>
+						<option value="off">Alighting</option>
+					</select>
+				</center>
+			</h3>
+		<hr>
 		<h2>Routes</h2>
 		<ul id='routes'>
 		</ul>
@@ -108,6 +118,13 @@
 	
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#stops-select").on('change',function(){
+			viz.stopsBy = $("#stop-select").val();
+			loader.push(viz.njtransit.stops.preload);
+			loader.push(viz.njtransit.stops.load);
+			loader.run();
+		});
+
 		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);
     	$.ajax({url:'../data/get/getZoneforD3.php',data:{zone:<?php echo intval($_GET['ma']);?>},aync:false,dataType:'json',method:"POST"})
     	.done(function(data){
