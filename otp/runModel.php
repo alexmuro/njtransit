@@ -38,8 +38,11 @@
 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 			$row = mysql_fetch_assoc( $rs );
 			$this->parseZones($this->zones = json_decode($row[$this->geo_type]));
+			echo $row[$this->geo_type];
+			$this->output['geodata'] = $row;
 			$this->output['status'] = "FINISHED MODEL RUN:".$this->id;
      	}
+
      	public function getOutput(){
 
      		return $this->output;
@@ -73,11 +76,10 @@
 			$end_stops = $this->getStops($tract['qpowst'],$tract['qpowco'],$tract['qpowtract']);
 			
 			//echo $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'].'<br>';
-		
 			//echo count($begin_stops)." ".count($end_stops)." ".intval($tract['bus_total']).'<br>';;
-
 			//console.log('orig_stops:',begin_stops.length);
 			//console.log('dest_stops:',end_stops.length);
+
 			if(count($begin_stops) > 0 && count($end_stops) > 0 && intval($tract['bus_total']) >0){
 			
 				$this->output['flows'][] = $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'];
@@ -85,7 +87,6 @@
 				for($i=0;$i<$tract['bus_total']*1;$i++){
 					$begin_stop =  rand(0,count($begin_stops)-1);
 					$end_stop =  rand(0,count($end_stops)-1);
-					//$('#model_output').prepend('['+begin_stops[begin_stop].lat+','+begin_stops[begin_stop].lon+']->['+end_stops[end_stop].lat+','+end_stops[end_stop].lon+']<br>');
 					$this->planTrip($begin_stops[$begin_stop]['lat'],$begin_stops[$begin_stop]['lon'],$end_stops[$end_stop]['lat'],$end_stops[$end_stop]['lon']);
 				}
 			}	
@@ -93,7 +94,7 @@
 
 		private function getStops($in_state,$in_county,$in_tract){
 			$in_state = substr($in_state, 1,2);
-			$sql = "select a.stop_id, b.stop_lat as lat,b.stop_lon as lon from stop_fips as a join stops as b on a.stop_id = b.stop_id  where state = '$in_state' and county = '$in_county' and tract = '$in_tract'";
+			$sql = "select a.stop_id, b.stop_lat as lat,b.stop_lon as lon from gtfs_20130712.stop_fips as a join gtfs_20130712.stops as b on a.stop_id = b.stop_id  where state = '$in_state' and county = '$in_county' and tract = '$in_tract'";
  			$rs=mysql_query($sql) or die($sql." ".mysql_error());
  			$data = array();
  			//echo $sql.'<br>';
@@ -121,7 +122,7 @@
 		  	$otp_url .= "&preferredRoutes:";
 		  	$otp_url .= "&unpreferredRoutes:";
 		  	//echo $otp_url.'<br>';
-		  	$this->processTrip(json_decode($this->curl_download($otp_url),true));
+		  	//$this->processTrip(json_decode($this->curl_download($otp_url),true));
 		}
 
 		private function curl_download($Url){ 
@@ -142,6 +143,7 @@
 
 		    return $output;
 		}
+
 		private function processTrip($data){
 			if(count($data['plan']['itineraries']) > 0){
 				//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
