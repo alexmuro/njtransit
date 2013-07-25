@@ -284,6 +284,8 @@ var viz = {
 		    group.selectAll("circle.stop").attr("cy", function(d) {
 		        return projection(d.geometry.coordinates)[1] 
 		    });
+
+		    
 		    // important! assigns the new scale to the zoom mouse behavior
 		    var zoom = d3.behavior.zoom()
 		       .translate(projection.translate())

@@ -7,8 +7,8 @@ $test = new db();
 $inscon = $test->connect();
 
 
-$zone_id = $_GET['zone_id'];
-$model_run = $_GET['model_run'];
+$zone_id = $_POST['zone_id'];
+$model_run = $_POST['model_run'];
 $sql = "select routes from zones where id = $zone_id";
 $rs=mysql_query($sql) or die($select."<br><br>".mysql_error());
 $results = array();
@@ -33,9 +33,9 @@ foreach($routes as $route)
     count(shapes.shape_pt_sequence) as length,
     routes.route_id,
     routes.route_short_name as route_name
-    FROM trips,routes,shapes where shapes.shape_id = trips.shape_id
-    AND trips.route_id = $route
-    AND routes.route_id = $route
+    FROM gtfs_20130712.trips,gtfs_20130712.routes,gtfs_20130712.shapes where shapes.shape_id = trips.shape_id
+    AND trips.route_id = routes.route_id
+    AND routes.route_short_name = $route
     group by trips.shape_id 
     order by length desc,shapes.shape_id
     limit 0,1";
@@ -55,8 +55,8 @@ foreach($routes as $route)
     b.stop_lat as stop_lat,
     b.stop_lon as stop_lon
     from
-        stop_times as a,
-        stops as b
+        gtfs_20130712.stop_times as a,
+        gtfs_20130712.stops as b
     where
     a.stop_id = b.stop_id and a.trip_id = $trip_id";
 
@@ -77,7 +77,7 @@ foreach($routes as $route)
                     a.stop_id as stop_id,
                     count(a.stop_id) as stop_frequency
                     from
-                        stop_times as a
+                        gtfs_20130712.stop_times as a
                     where
                         a.stop_id = ".$row['stop_id']."
                     group by a.stop_id";
@@ -96,7 +96,7 @@ foreach($routes as $route)
                     from
                         model_legs
                     where
-                        (on_stop_id = ".$row['stop_id']." or off_stop_id = ".$row['stop_id'].") and run_id = $model_run";
+                        (on_stop_code = ".$row['stop_code']." or off_stop_code = ".$row['stop_code'].") and run_id = $model_run";
             $gs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
             $gow = mysql_fetch_assoc( $gs );                    
                     

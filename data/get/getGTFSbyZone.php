@@ -21,8 +21,8 @@ $output ['type'] = 'FeatureCollection';
 //Sql call & json encod
 foreach($routes as $route)
 {
-    
-    $sql ="select
+    //echo $route." ";
+    $sql ="SELECT
     trips.shape_id as shapeID,
     trips.route_id as routeID,
     count(distinct trips.trip_id) as numTrips,
@@ -30,18 +30,19 @@ foreach($routes as $route)
     count(shapes.shape_pt_sequence) as length,
     routes.route_id,
     routes.route_short_name as route_name
-    FROM shapes,trips,routes where shapes.shape_id = trips.shape_id
-    AND trips.route_id = $route
-    AND routes.route_id = $route
+    FROM gtfs_20130712.shapes,gtfs_20130712.trips,gtfs_20130712.routes where shapes.shape_id = trips.shape_id
+    AND trips.route_id = routes.route_id
+    AND routes.route_short_name = $route
     group by trips.shape_id 
     order by length desc,shapes.shape_id
     limit 0,1";
+    //echo $sql;
     $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
     $row = mysql_fetch_assoc( $rs );
     $shape_id = $row['shapeID'];
+    //echo $shape_id." ";
 
-
-    $sql = "select
+    $sql = "SELECT
     trips.route_id as routeID,
     count(distinct trips.trip_id) as numTrips,
     count(distinct trips.service_id) numService,
@@ -52,13 +53,13 @@ foreach($routes as $route)
     routes.route_id,
     routes.route_short_name as route_name,
     trips.shape_id
-    FROM shapes,trips,routes where shapes.shape_id = trips.shape_id
+    FROM gtfs_20130712.shapes,gtfs_20130712.trips,gtfs_20130712.routes where shapes.shape_id = trips.shape_id
     AND trips.shape_id = $shape_id
     and trips.route_id = routes.route_id
     group by shapes.shape_id ,shapes.shape_pt_sequence
     order by shapes.shape_id , shapes.shape_pt_sequence";
 
-//echo $sql."<br><br>";
+    //echo $sql."<br><br>";
 
 $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
 

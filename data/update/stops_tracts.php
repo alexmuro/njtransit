@@ -6,7 +6,7 @@
 		
 	$inscon = $test->connect();
 
-	$sql = "SELECT stop_id,stop_lat,stop_lon from stops where stop_id > 41000 and stop_id < 45000";
+	$sql = "SELECT stop_id,stop_lat,stop_lon from gtfs_20130712.stops where stop_id > 40999 and stop_id < 44000";
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	
 	$i = 0;
@@ -30,7 +30,7 @@
   			url: lurl,       
 			success: function(indata, status) {
 				console.log(indata.Block.FIPS);
-			   	$.ajax({url:'/njtransit/data/create/stop_fips.php',
+			   	$.ajax({url:'/data/create/stop_fips.php',
 			   	type:'GET',
 			   	data:{stop:<?php echo $row['stop_id']; ?>,block:indata.Block.FIPS}
 			   	})
