@@ -54,7 +54,20 @@ var viz = {
 			.translate([width/2, height/2]);
 		var path = d3.geo.path()
 			.projection(projection);
-		var colorScale = ["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"];
+
+		var map = new L.Map("viz", {
+  		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
+  		     		zoom: 13
+  		   	})
+			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));
+  		   	//
+  		   	//.addLayer(new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"))
+  			
+  			L.control.scale().addTo(map);
+  			//104129
+
+
+		var colorScale = ["#EAF5DA","#CFE8AC","#9F.C961","#7CAD34","#64961B","#41660A"];
 			
 		var routeID = function(d,i) {
 			return "route-" + d.properties.route.replace(" ","-");
@@ -78,13 +91,10 @@ var viz = {
 				    return projection(d.geometry.coordinates)[1] 
 				});
 		});
-		// var map = new L.Map("map", {
-  		//     		center: [37.8, -96.9],
-  		//     		zoom: 4
-  		//   	})
-  		//   	.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"))
+		
 
-
+  		var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    	g = svg.append("g").attr("class", "leaflet-zoom-hide");	
 		// initialize viz
 		var group = d3.select("#viz").append("svg").attr("width",width).attr("height",height);
 		group.call(zoom).on("mousemove", mousemoved);
@@ -128,19 +138,56 @@ var viz = {
 		var routes = function() {
 
 			
-			data = transitData.getGTFSRoutes(viz.zone);
-			data.features.forEach(function(d,i){
-				$('#routes').append('<li><a href="#" id="toggle-route-'+d.properties.route.replace(" ","-")+'" class="toggle-routes">'+d.properties.route_name.replace("\"","").replace("\"","")+'</a></li>');
-			});
-			group.selectAll("path.route")
-				.data(data.features)
-				.enter()
-				.append("path")
-				.attr("d", path)
+			collection = transitData.getGTFSRoutes(viz.zone);
+			var bounds = d3.geo.bounds(collection),
+     		path = d3.geo.path().projection(project);
+     		var feature = g.selectAll("path.route")
+     			.data(collection.features)
+     			.enter().append("path")
+     			.attr("d", path)
 				.style("fill", "none")
 				.attr("class", "route")
 				.attr("id", routeID)
 				.attr("title", routeName);
+
+     		map.on("viewreset", reset);
+     		map.on("resize",reset);
+  			reset();
+
+  			function reset() {
+				var bottomLeft = project(bounds[0]),
+				topRight = project(bounds[1]);
+
+				svg .attr("width", topRight[0] - bottomLeft[0])
+					.attr("height", bottomLeft[1] - topRight[1])
+					.style("margin-left", bottomLeft[0] + "px")
+					.style("margin-top", topRight[1] + "px");
+
+				g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+			    feature.attr("d", path);
+
+			}
+		  	function project(x) {
+				 //console.log(x);
+				 var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+			 return [point.x, point.y];
+			}
+  			 
+
+
+			collection.features.forEach(function(d,i){
+				$('#routes').append('<li><a href="#" id="toggle-route-'+d.properties.route.replace(" ","-")+'" class="toggle-routes">'+d.properties.route_name.replace("\"","").replace("\"","")+'</a></li>');
+			});
+			// group.selectAll("path.route")
+			// 	.data(data.features)
+			// 	.enter()
+			// 	.append("path")
+			// 	.attr("d", path)
+			// 	.style("fill", "none")
+			// 	.attr("class", "route")
+			// 	.attr("id", routeID)
+			// 	.attr("title", routeName);
 			
 			toggles.init();
 			popup.init();
@@ -195,7 +242,10 @@ var viz = {
 				return stops.colorScaleFreq(d.properties.stop_frequency);
 			},
 			load: function() {
-				group.selectAll("circle.stop")
+
+				var bounds = d3.geo.bounds(stops.data),
+     			path = d3.geo.path().projection(project);
+				var feature = g.selectAll("circle.stop")
 					.data(stops.data.features)
 					.enter()
 					.append("circle")
@@ -203,10 +253,10 @@ var viz = {
 					.attr({
 						r: stops.stopR,
 						cx: function(d,i) { 
-							return projection(d.geometry.coordinates)[0] 
+							return project(d.geometry.coordinates)[0]; 
 						},
 						cy: function(d,i) { 
-							return projection(d.geometry.coordinates)[1] 
+							return project(d.geometry.coordinates)[1]; 
 						},
 						"fill": stops.fillDelay,
 						"stopid": function(d,i) { 
@@ -250,7 +300,41 @@ var viz = {
 							"opacity": .3
 						}, 100);
 						$("#info").hide().html("");
-					})			
+					})
+
+				map.on("viewreset", reset);
+				map.on("resize",function(){
+					console.log('map resized');
+					reset();
+				});
+				reset();
+
+				function reset() {
+					var bottomLeft = project(bounds[0]),
+					topRight = project(bounds[1]);
+
+					svg .attr("width", topRight[0] - bottomLeft[0])
+						.attr("height", bottomLeft[1] - topRight[1])
+						.style("margin-left", bottomLeft[0] + "px")
+						.style("margin-top", topRight[1] + "px");
+
+					g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+				    feature.attr("d", path)
+				    .attr("cx", function(d) {
+				    	return project(d.geometry.coordinates)[0];
+		    		})
+		    		.attr("cy", function(d) {
+		        		return project(d.geometry.coordinates)[1]; 
+		    		});
+				   
+
+				}
+			  	function project(x) {
+					var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+			
+				 	return [point.x, point.y];
+				}		
 				loader.run();
 				$("#loading").fadeOut(1000);
 				
@@ -274,65 +358,7 @@ var viz = {
 		loader.push(stops.load);
 		loader.run();
 
-		// zoom in & out buttons
-	    $("#zoom-in").on("click", function() {
-		    var newScale = projection.scale() + 500000;
-		    projection.scale(newScale);
-		    group.selectAll("path").attr("d", path);
-		    group.selectAll("circle.stop").attr("cx", function(d) {
-		        return projection(d.geometry.coordinates)[0] 
-		    });
-		    group.selectAll("circle.stop").attr("cy", function(d) {
-		        return projection(d.geometry.coordinates)[1] 
-		    });
-
-		    
-		    // important! assigns the new scale to the zoom mouse behavior
-		    var zoom = d3.behavior.zoom()
-		       .translate(projection.translate())
-		       .scale(newScale)
-		       .scaleExtent([1250000,6000000])
-		       .on("zoom", function() {
-		       	projection.translate(d3.event.translate).scale(d3.event.scale);
-		       	group.selectAll("path").attr("d", path);
-		       	group.selectAll("circle.stop").attr("cx", function(d) {
-		       	    return projection(d.geometry.coordinates)[0] 
-		       	});
-		       	group.selectAll("circle.stop").attr("cy", function(d) {
-		       	    return projection(d.geometry.coordinates)[1] 
-		       	});
-		    });
-		    group.call(zoom);
-		});
-
-	    $("#zoom-out").on("click", function() {
-		    var newScale = projection.scale() - 500000;
-		    projection.scale(newScale);
-		    group.selectAll("path").attr("d", path);
-		    group.selectAll("circle.stop").attr("cx", function(d) {
-		        return projection(d.geometry.coordinates)[0] 
-		    });
-		    group.selectAll("circle.stop").attr("cy", function(d) {
-		        return projection(d.geometry.coordinates)[1] 
-		    });
-		    // important! assigns the new scale to the zoom mouse behavior
-		    var zoom = d3.behavior.zoom()
-		       .translate(projection.translate())
-		       .scale(newScale)
-		       .scaleExtent([1250000,6000000])
-		       .on("zoom", function() {
-		       	projection.translate(d3.event.translate).scale(d3.event.scale);
-		       	group.selectAll("path").attr("d", path);
-		       	group.selectAll("circle.stop").attr("cx", function(d) {
-		       	    return projection(d.geometry.coordinates)[0] 
-		       	});
-		       	group.selectAll("circle.stop").attr("cy", function(d) {
-		       	    return projection(d.geometry.coordinates)[1] 
-		       	});
-		    });
-		    group.call(zoom);
-		});
-    },
+	},
     
 };
 
@@ -391,6 +417,7 @@ var transitData = {
 	},
 	getGTFSStops : function(){
 		var output = {};
+		console.log('modelrun', viz.model_run)
 		$.ajax({url:'/data/get/getStopsByZone.php',
 			data:{zone_id:viz.zone,model_run:viz.model_run},
 			method:'POST',
@@ -497,15 +524,9 @@ var toggles = {
 
 };
 
-
-
 //--------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-$(document).ready(function() {
-	
-	//toggles.init();
-});
 $(window).resize(function() {
 	$("#viz svg").width($(window).width());
 	$("#viz svg").height($(window).height());

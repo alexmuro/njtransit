@@ -116,8 +116,11 @@ angular.module('myApp.controllers', [])
       $scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeModel = MarketArea.getModel();
       $scope.activeRoute='';
+      $scope.activeTrip='';
       $scope.overview = true;
       $scope.showroutes = false;
+      $scope.showtrips = false;
+      $scope.tripData ={};
       $scope.getModelOverview =function(){
         return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
             return(data);
@@ -137,11 +140,42 @@ angular.module('myApp.controllers', [])
       });
 
       
+      $scope.isActiveTrip = function(tripid){
+        return tripid == $scope.activeTrip ? 'active' : '';
+      }
+
+      $scope.setActiveTrip = function(tripid){
+        $scope.activeTrip = tripid;
+        if($scope.activeTrip == '')
+        {
+         $scope.overview = false;
+         $scope.showroutes = true;
+         $scope.showtrips = false;
+        }else{
+         $scope.overview = false;
+         $scope.showroutes = false;
+         $scope.showtrips = true;
+         $scope.getTrip(tripid).then(function(data){
+            $scope.tripData = data.data;
+            console.log($scope.tripData);
+         });
+        }
+      }
+      
+      $scope.getTrip =function(tripid){
+        console.log($scope.activeModel.id);
+        return  $http({url:'/data/get/getGTFSModelTrip.php',data:{run_id:$scope.activeModel.id,trip_id:tripid},method:"POST"}).then(function(data){
+            return(data);
+        })
+      }
+
       $scope.isActiveRoute = function(routeid){
         return routeid == $scope.activeRoute ? 'active' : '';
       }
+
       $scope.setActiveRoute = function(routeid){
         $scope.activeRoute = routeid;
+        $scope.activeTrip = '';
         if($scope.activeRoute == '')
         {
          $scope.overview = true;

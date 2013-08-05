@@ -2,11 +2,9 @@
 	<div class="span12">
 		<h3>Route Analysis for Model : {{activeModel.id+' '+activeModel.name}}</h3>
 		<div class="fluid-row">
-			<div class="span3">
+			<div class="span1">
 				<div class="mvl pvl">
-
 		            <div class="tabbable tabs-left">
-		            	
 						<ul class="nav nav-tabs nav-append-content">
 		                	<li ng-class="isActiveRoute('')"><a ng-click="setActiveRoute('')">Overview</a></li>
 		                	<li ng-repeat="route in modelData.routes" ng-class="isActiveRoute(route.route)">
@@ -14,7 +12,20 @@
 							</li>
 		        		</ul>
 		   			</div>
+
 		   		</div>
+		   	</div>
+		   	<div class="span2">
+		   		<div class="mvl pvl">
+			   		<div class="tabbable tabs-left">
+		   				<ul class="nav nav-tabs nav-append-content" ng-hide="isActiveRoute('')=='active'">
+		   					<li ng-class="isActiveTrip('')"><a href=""  ng-click="setActiveTrip('')">Overview</a></li>
+		                	<li ng-repeat="trip in modelData.trips | filter:{route:activeRoute}" ng-class="isActiveTrip(trip.gtfs_trip_id)">
+								<a ng-click="setActiveTrip(trip.gtfs_trip_id)">{{ trip.gtfs_trip_id }}</a>
+							</li>
+		        		</ul>
+			   		</div>
+			   	</div>
 		   	</div>
 		   	<div class="span8" ng-show="overview">
 			   	<p><strong>Routes Overview</strong></p>
@@ -49,6 +60,27 @@
 	              <td>{{trip.trip_headsign}}</td>
 	              <td>{{ trip.departure_time}}</td>
 	              <td>{{trip.count}}</td>
+	            </tr>
+	          </tbody></table>
+		   	</div>
+		   	<div class="span8" ng-show="showtrips">
+			   	<p><strong>Route {{ activeRoute }} - Trip {{ activeTrip }} </strong></p>
+			   	<table class="table table-striped">
+	            <tbody><tr>
+	              <th>Stop Sequence</th>
+	              <th>Stop ID</th>
+	              <th>Stop Name</th>
+	              <th>Arrival Time</th>
+	              <th>Boarded</th>
+	              <th>Alighted</th>
+	            </tr>
+	            <tr ng-repeat="trip in tripData">
+	              <td>{{trip.stop_sequence}}</td>
+	              <td>{{trip.stop_code}}</td>
+	              <td>{{trip.stop_name}}</td>
+	              <td>{{trip.arrival_time}}</td>
+	              <td>{{trip.boarded}}</td>
+	              <td>{{trip.disembarked}}</td>
 	            </tr>
 	          </tbody></table>
 		   	</div>

@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <!-- saved from url=(0055)http://ray-mon.com/urbandatachallenge/sanfrancisco.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
 	<meta name="description" content="description">
 	<meta name="keywords" content="keywords">
 	<link href="./index_files/font.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="./index_files/style.css">
+	<link rel="stylesheet" href="../resources/css/leaflet.css" />
 	<script type="text/javascript" src="../resources/js/jquery-1.9.1.min.js"></script><style type="text/css"></style>
 	<script type="text/javascript" src="../resources/js/d3.v3.min.js"></script>	
-	<script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
-		
+	<script src="../resources/js/leaflet0.6.4.js"></script>
 	<script type="text/javascript" src="index_files/script.js"></script>
-	
 	<title>AVAIL Transit Demand Modeling</title>
 </head>
 
@@ -21,10 +19,6 @@
 
 <div id="loading" style="display: none;">loading</div>
 
-<div id="zoom">
-	<a id="zoom-in" href="#"><img src="./index_files/zoom-in.png" alt="zoom in" width="30" height="30"></a>
-	<a id="zoom-out" href="#"><img src="./index_files/zoom-out.png" alt="zoom out" width="30" height="30"></a>
-</div>
 
 <div id="info"></div>
 <div id="coords"></div>
@@ -115,7 +109,6 @@
 	</div>		
 
 </div>
-	
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#stops-select").on('change',function(){
@@ -130,7 +123,7 @@
     	.done(function(data){
     		console.log(data);
     		viz.zone = $('#zone-select').val();
-    		viz.model = <?php echo intval($_GET['mr']);?>;
+    		viz.model_run = <?php echo intval($_GET['mr']);?>;
     		viz.centroid = JSON.parse(data.centroid);
     		viz.njtransit();
     	})
