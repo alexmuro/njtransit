@@ -93,7 +93,7 @@ angular.module('myApp.controllers', [])
 
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
-        //console.log($scope.modelData);
+        console.log($scope.modelData);
         $scope.writePage();
       });
 
@@ -180,9 +180,11 @@ angular.module('myApp.controllers', [])
         {
          $scope.overview = true;
          $scope.showroutes = false;
+         $scope.showtrips = false;
         }else{
          $scope.overview = false;
          $scope.showroutes = true;
+         $scope.showtrips = false;
         }
       }
       

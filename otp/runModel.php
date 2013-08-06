@@ -2,14 +2,14 @@
 	include '../config/db.php';
 	class transitModel
 	{
-		public $id= 1,
+		 public $id= 1,
     	 $market_area =1,
     	 $name = 'Untitiled Model',
-    	 $start_hour=7,
+    	 $start_hour=6,
     	 $start_min =0,
     	 $end_hour=9,
     	 $end_min=59,
-    	 $date='6/3/2013',
+    	 $date='7/23/2013',
     	 $trips=array(),
     	 $totalTrips=0,
      	 $message='',
@@ -17,7 +17,7 @@
      	 $zones = array(),
      	 $output = array();
 
-     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='6/3/2013') {
+     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='7/23/2013') {
        			$this->name = $in_name;
        			$this->market_area = $in_zone;
        			$this->date = $in_date;
@@ -43,7 +43,6 @@
      	}
 
      	public function getOutput(){
-
      		return $this->output;
      	}
 
@@ -74,8 +73,8 @@
 			$begin_stops =$this->getStops($tract['state'],$tract['county'],$tract['tract']);
 			$end_stops = $this->getStops($tract['qpowst'],$tract['qpowco'],$tract['qpowtract']);
 			
-			//echo $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'].'<br>';
-			//echo count($begin_stops)." ".count($end_stops)." ".intval($tract['bus_total']).'<br>';;
+			// echo $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'].'<br>';
+			// echo count($begin_stops)." ".count($end_stops)." ".intval($tract['bus_total']).'<br>';;
 			//console.log('orig_stops:',begin_stops.length);
 			//console.log('dest_stops:',end_stops.length);
 
@@ -110,17 +109,20 @@
 		  	$otp_url .= "fromPlace=$from_lat,$from_lon";
 		  	$otp_url .= "&toPlace=$to_lat,$to_lon";
 		  	$otp_url .= "&mode=TRANSIT,WALK";
-		  	$otp_url .= "&min:QUICK";
-		  	$otp_url .= "&maxWalkDistance:1000";
-		  	$otp_url .= "&walkSpeed:1.341";
-		  	$otp_url .= "&time:".rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am';
-		  	$otp_url .= "&date:".$this->date;
-		  	$otp_url .= "&arriveBy:false";
-		  	$otp_url .= "&itinID:1";
-		  	$otp_url .= "&wheelchair:false";
-		  	$otp_url .= "&preferredRoutes:";
-		  	$otp_url .= "&unpreferredRoutes:";
+		  	$otp_url .= "&min=QUICK";
+		  	$otp_url .= "&maxWalkDistance=1000";
+		  	$otp_url .= "&walkSpeed=1.341";
+		  	$otp_url .= "&time=".rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am';
+		  	$otp_url .= "&date=".$this->date;
+		  	$otp_url .= "&arriveBy=false";
+		  	$otp_url .= "&itinID=1";
+		  	$otp_url .= "&wheelchair=false";
+		  	$otp_url .= "&preferredRoutes=";
+		  	$otp_url .= "&unpreferredRoutes=";
+		  	
 		  	//echo $otp_url.'<br>';
+		  	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
+
 		  	$this->processTrip(json_decode($this->curl_download($otp_url),true));
 		}
 
@@ -144,10 +146,13 @@
 		}
 
 		private function processTrip($data){
+			print_r($data);
 			if(count($data['plan']['itineraries']) > 0){
 				//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 				$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
-				$insert_data = "(".$this->id.",".$trip['startTime'].",".$trip['endTime'].",".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].")";
+				//print_r($trip);
+				//echo "Start Time: ".date('Y-m-d H:i:s',$trip['startTime']/1000).",".$trip['startTime']."<br>";
+				$insert_data = "(".$this->id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".$trip['endTime']."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].")";
 	 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance) VALUES $insert_data";
 				mysql_query($sql) or die(mysql_error());
 				$insert_trip_id =  mysql_insert_id();
@@ -155,12 +160,13 @@
 				foreach ($trip['legs'] as $index => $leg) {
 
 					if($leg['mode'] == 'BUS'){
-				
+						//echo "Route:" .$leg['route']." ".$leg['tripId']."<br>";
 						$leg_data .= "(".$this->id.",$insert_trip_id,'".$leg['mode']."',".$leg['duration'].",'".$leg['distance']."','".$leg['route']."','".$leg['routeId']."','".$leg['tripId']."','".$leg['from']['stopCode']."','".$leg['from']['stopId']['id']."','".$leg['to']['stopCode']."','".$leg['to']['stopId']['id']."'),";
 				 	
 				 	}
 				 	else if($leg['mode'] == 'WALK'){
 
+				 		//echo "WALK<br>";
 				 		$leg_data .= "(".$this->id.",$insert_trip_id,'".$leg['mode']."',".$leg['duration'].",'".$leg['distance']."','','','','','','',''),";
 				 	}
 					
@@ -180,6 +186,6 @@
 	if(isset($_GET['zone'])){ $zone = $_GET['zone'];}
 	if(isset($_GET['name'])){ $name = $_GET['name'];}
 	if(isset($_GET['date'])){ $name = $_GET['date'];}
-	$model = new transitModel($name,$zone,$date);
+	$model = new transitModel($name,$zone);
 	$model->run();
 	echo json_encode($model->getOutput());
