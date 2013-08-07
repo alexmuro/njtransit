@@ -104,35 +104,63 @@ var viz = {
 		// functions to draw tracts, routes, and stops
 		var tracts = function() {
 			//../data/get/getCTRegion.php?zone='+viz.zone
-			d3.json('../data/zones/'+viz.zone+'/ct.json', function(data) {
-				group.selectAll("path.tract")
-					.data(data.features)
-					.enter()
-					.append("path")
-					.attr("d", path)
-					.attr("class", "tract")
-					.style("fill",colorScale[5])
-					.style("stroke",'#ccc')
-					.attr("id-number", 'test-id')
-					.on("mouseover", function(self) {
-						self = $(this);
-						self.css({
-							"stroke-width": "2px"
-						});
-						var textTitle = "<p><strong>" + self.attr("id-number") + "</strong></p>";
-						//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
-						//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
-						$("#info").show().html(textTitle);// + textPoverty + textRace
-					})
-					.on("mouseout", function(self) {
-						self = $(this);
-						self.css({
-							"stroke-width": 0
-						});
-						$("#info").hide().html("");
-					});
-				loader.run();
-			});
+
+			data = transitData.getCensusTracts(viz.zone);
+			var bounds = d3.geo.bounds(data);
+			path = d3.geo.path().projection(project);
+			//console.log(data);
+			var feature = g.selectAll("path.tract")
+				.data(data.features)
+				.enter()
+				.append("path")
+				.attr("d", path)
+				.attr("class", "tract")
+				.style("fill",colorScale[5])
+				.style("stroke",'#ccc')
+				.attr("id-number", 'test-id');
+				// .on("mouseover", function(self) {
+				// 	self = $(this);
+				// 	self.css({
+				// 		"stroke-width": "2px"
+				// 	});
+				// 	var textTitle = "<p><strong>" + self.attr("id-number") + "</strong></p>";
+				// 	//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
+				// 	//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
+				// 	$("#info").show().html(textTitle);// + textPoverty + textRace
+				// })
+				// .on("mouseout", function(self) {
+				// 	self = $(this);
+				// 	self.css({
+				// 		"stroke-width": 0
+				// 	});
+				// 	$("#info").hide().html("");
+				// });
+			
+			map.on("viewreset", reset);
+     		map.on("resize",reset);
+  			reset();
+			function reset() {
+				var bottomLeft = project(bounds[0]),
+				topRight = project(bounds[1]);
+
+				svg .attr("width", topRight[0] - bottomLeft[0])
+					.attr("height", bottomLeft[1] - topRight[1])
+					.style("margin-left", bottomLeft[0] + "px")
+					.style("margin-top", topRight[1] + "px");
+
+				g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+			    feature.attr("d", path);
+
+			}
+		  	function project(x) {
+				 //console.log(x);
+				 var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+			 return [point.x, point.y];
+			}
+
+			loader.run();
+			
 		};
 		
 		var routes = function() {
@@ -290,7 +318,7 @@ var viz = {
 							"opacity": 1
 						}, 100);
 						var text = "";
-						var text = "<p><strong>Stop " + self.attr("stopid") + "</strong><br/><span>" + self.attr("intersection") + "</span></p><p><strong>Boarding Count</strong><br/> " + self.attr("boarding_count") + "</p><p><strong>Aligthing Count</strong><br/> " + self.attr("alighting_count") + "</p><p><strong>Stop Frequency</strong><br/> " + self.attr("frequency") + "</p>";
+						var text = "<p><strong>Stop " + self.attr("stopid") + "</strong><br/><span>" + self.attr("intersection") + "</span></p><p><strong>Boarding Count</strong><br/> " + self.attr("boarding_count") + "</p><p><strong>Alighting Count</strong><br/> " + self.attr("alighting_count") + "</p><p><strong>Stop Frequency</strong><br/> " + self.attr("frequency") + "</p>";
 						$("#info").show().html(text);
 					})
 					.on("mouseout", function(self) {
@@ -419,6 +447,23 @@ var transitData = {
 		var output = {};
 		console.log('modelrun', viz.model_run)
 		$.ajax({url:'/data/get/getStopsByZone.php',
+			data:{zone_id:viz.zone,model_run:viz.model_run},
+			method:'POST',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);
+	},
+	getCensusTracts : function(){
+		var output = {};
+		//console.log('modelrun', viz.model_run)
+		$.ajax({url:'/data/geo/getTractsByZone.php',
 			data:{zone_id:viz.zone,model_run:viz.model_run},
 			method:'POST',
 			dataType:'json',
