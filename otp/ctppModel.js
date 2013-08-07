@@ -2,7 +2,7 @@ var transitModel = {
 	id:1,
     zone:1,
     name:'',
-    start_hour:7,
+    start_hour:6,
     start_min:0,
     end_hour:9,
     end_min:59,
