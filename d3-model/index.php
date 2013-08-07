@@ -76,9 +76,9 @@
 	<h1>
 		<select id="zone-select">
 			<option value=0>Newark</option>
-			<option value=1>Patterson</option>
+			<option value=1>Paterson</option>
 			<option value=2 selected>Atlantic City</option>
-			<option value=3>Philedelphia</option>
+			<option value=3>Philadelphia</option>
 			<option value=4>Princeton</option>
 		</select>
 	</h1>
