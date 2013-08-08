@@ -17,7 +17,6 @@ $rs =mysql_query($sql) or die($sql." ");
 
 $row = mysql_fetch_array($rs);
 
-//echo $row['ct'];
 
 $sql = "SELECT
 		    geoid, 
@@ -56,26 +55,22 @@ $sql = "SELECT
 		    as c on a.statefp = SUBSTRING(c.qpowst,2,2) and a.countyfp=c.qpowco and a.tractce=c.qpowtract
 		where
 		    geoid in ".$row['ct'];
+
 $rs = mysql_query($sql) or die($sql." ");
 
 $output = array();
 $output ['type'] = 'FeatureCollection';
 
 while($row = mysql_fetch_array($rs)){
-
 	
     $properties = array();
     $feature = array();
     $geometry = array();
     $properties['geoid'] = $row['geoid'];
-    //$properties['route'] = $meta['routeID'];
-    //$properties['num_trips'] = $meta['numTrips'];
     $feature['type'] = 'Feature';
     $feature['properties'] = $properties;
     $feature['geometry'] = json_decode(wkt_to_json($row['shape']));
-    
-	//echo $row['geoid']." ---".wkt_to_json($row['shape'])."<br>";
-    $output['features'][]=$feature;
+  	$output['features'][]=$feature;
 
 }
 echo json_encode($output);
