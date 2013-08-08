@@ -14,6 +14,12 @@ angular.module('myApp.controllers', [])
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       console.log($scope.activeMarket);
+      $scope.dow = 0;
+      $scope.season = 0;
+      $scope.time = 0;
+      $scope.walk_distance = 1;
+      $scope.walk_speed = 3;
+
 
       //AM Peak Hours
       $scope.AMstart = new Date();
@@ -64,12 +70,14 @@ angular.module('myApp.controllers', [])
   	function($rootScope,$scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       $scope.activeModel = MarketArea.getModel();
+      
       $scope.getModelOverview =function(){
         return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
             return(data);
         })
       }
-  		$scope.writePage = function(){
+  		
+      $scope.writePage = function(){
         $scope.totalRoutes = $scope.modelData.routes.length;
         $scope.totalTrips = $scope.modelData.trips.length;
         if( $scope.modelData.boarding.length > $scope.modelData.alighting.length ){
@@ -93,6 +101,7 @@ angular.module('myApp.controllers', [])
 
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
+        $scope.overview = data.data.overview[0];
         console.log($scope.modelData);
         $scope.writePage();
       });
@@ -103,6 +112,7 @@ angular.module('myApp.controllers', [])
 
         $scope.getModelOverview().then(function(data){
           $scope.modelData = data.data;
+          $scope.overview = data.data.overview[0];
           $scope.writePage();
         });
       })

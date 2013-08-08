@@ -2,13 +2,25 @@
 	<div class="span12">
 		<h3>Model Overview {{activeModel.id+' '+activeModel.name}}</h3>
 		<p>
-		<strong>Number of Routes:</strong> {{totalRoutes}}<br>
-		<strong>Number of GTFS Trips:</strong> {{totalTrips}}<br>
-		<strong>Number of Active Stops:</strong> {{activeStops}}<br>
-		<strong>Number of Boardings:</strong> {{boardingTotal}}<br>
-		<strong>Number of Alightings:</strong> {{alightingTotal}}<br>
-		<strong>Number of Transit Trips:</strong> {{tripsTotal}}<br>
-		<br>
+    <div class="span3">
+  		<strong>Number of Routes:</strong> {{totalRoutes}}<br>
+  		<strong>Number of GTFS Trips:</strong> {{totalTrips}}<br>
+  		<strong>Number of Active Stops:</strong> {{activeStops}}<br>
+  		<strong>Number of Boardings:</strong> {{boardingTotal}}<br>
+  		<strong>Number of Alightings:</strong> {{alightingTotal}}<br>
+  		<strong>Number of Transit Trips:</strong> {{tripsTotal}}<br>
+  		<br>
+    </div>
+    <div class="span3">
+      <strong>Season:</strong> {{overview.season}}<br>
+      <strong>Day of Week:</strong> {{overview.dow}}<br>
+      <strong>Time:</strong> {{overview.time}}<br>
+      <strong>Max Walk Distance (miles):</strong> {{overview.max_walk_distance}}<br>
+      <strong>Walk Speed (mph):</strong> {{overview.walk_speed}}<br>
+      <br><br>
+      <br>
+    </div>
+    <div class="span8">
 		<strong>Top 5 Boarded Stops</strong><p>
 			<table class="table table-striped">
             <tbody><tr>
@@ -58,6 +70,6 @@
           </tbody>
       	</table>
       </p>
-		 
+		</div>
 	</div>
 </div>

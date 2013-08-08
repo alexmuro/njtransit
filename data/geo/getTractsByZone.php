@@ -19,7 +19,43 @@ $row = mysql_fetch_array($rs);
 
 //echo $row['ct'];
 
-$sql = "select geoid,AsText(shape) as shape from us_atlas.34_tracts where geoid in ".$row['ct'];
+$sql = "SELECT
+		    geoid, 
+		    AsText(shape) as shape, 
+		    b.total_workers as outgoing_workers, 
+		    b.bus_avail, 
+		    b.bus_total as outgoing_transit,
+		    c.total_workers, 
+		    c.bus_avail, 
+		    c.bus_total
+		from
+		    us_atlas.34_tracts as a
+		left outer join
+		    (select 
+		            state3,county,tract,
+		            sum(`table301-1`) as total_workers, 
+		            sum(`table302-1-5`) as bus_avail, 
+		            sum(`table306-8`) as bus_total
+		        from
+		            njtransit.workplace_flow_data_2010_1
+		        group by 
+		            state3,county,tract
+		    )
+		    as b on a.statefp = SUBSTRING(b.state3,2,2) and a.countyfp=b.county and a.tractce=b.tract
+		left outer join
+		    (select 
+		            qpowst, qpowco, qpowtract,
+		            sum(`table301-1`) as total_workers, 
+		            sum(`table302-1-5`) as bus_avail, 
+		            sum(`table306-8`) as bus_total
+		        from
+		            njtransit.workplace_flow_data_2010_1
+		        group by 
+		            qpowst, qpowco, qpowtract
+		    )
+		    as c on a.statefp = SUBSTRING(c.qpowst,2,2) and a.countyfp=c.qpowco and a.tractce=c.qpowtract
+		where
+		    geoid in".$row['ct'];
 $rs =mysql_query($sql) or die($sql." ");
 
 $output = array();

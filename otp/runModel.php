@@ -56,7 +56,7 @@
      	}
 
      	private function getTractTrips($in_state,$in_county,$in_tract){
-     		$sql = "select state3 as state, county, tract, qpowst, qpowco, qpowtract, `table301-1` as total_workers, `table302-1-5` as bus_avail, `table306-8` as bus_total from  workplace_flow_data where state3 = '0$in_state' and county = '$in_county' and tract = '$in_tract'";
+     		$sql = "select state3 as state, county, tract, qpowst, qpowco, qpowtract, `table301-1` as total_workers, `table302-1-5` as bus_avail, `table306-8` as bus_total from  workplace_flow_data_2010 where state3 = '0$in_state' and county = '$in_county' and tract = '$in_tract'";
  			$rs=mysql_query($sql) or die($sql." ".mysql_error());
  			$data = array();
  		
