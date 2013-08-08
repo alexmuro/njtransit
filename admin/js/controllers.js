@@ -69,9 +69,7 @@ angular.module('myApp.controllers', [])
   .controller('ModelOverviewCtrl', ['$rootScope','$scope', '$http','MarketArea',
   	function($rootScope,$scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
-      console.log($scope.activeMarket);
       $scope.activeModel = MarketArea.getModel();
-      console.log($scope.activeModel);
       
       $scope.getModelOverview =function(){
         return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){

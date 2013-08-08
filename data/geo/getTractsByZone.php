@@ -55,8 +55,8 @@ $sql = "SELECT
 		    )
 		    as c on a.statefp = SUBSTRING(c.qpowst,2,2) and a.countyfp=c.qpowco and a.tractce=c.qpowtract
 		where
-		    geoid in".$row['ct'];
-$rs =mysql_query($sql) or die($sql." ");
+		    geoid in ".$row['ct'];
+$rs = mysql_query($sql) or die($sql." ");
 
 $output = array();
 $output ['type'] = 'FeatureCollection';
