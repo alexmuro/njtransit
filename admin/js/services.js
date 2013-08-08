@@ -16,7 +16,7 @@ angular.module('myApp.services', [])
 .factory('MarketArea', ['$rootScope',
     function($rootScope) {
         var activeMarket = {name: 'Atlantic City',id: 2};
-        var activeModel = {id:'123',name:'Atlantic City - No Hammonton or Folsom (Tues)'}
+        var activeModel = {id:'137',name:'Atlantic City '}
 
         return {
             getMarketArea: function() {
