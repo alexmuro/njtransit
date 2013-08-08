@@ -74,4 +74,7 @@ angular.module('myApp', ['myApp.filters',
     .when('/mo/routes', {templateUrl: 'partials/model_output/routes.html', controller: 'ModelRoutesCtrl',access: {isFree: true}})
     .when('/mo/stops', {templateUrl: 'partials/model_output/stops.html', controller: 'ModelStopsCtrl',access: {isFree: true}})
     .otherwise({redirectTo: '/'});
-  }]);
+  }])
+ .config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.timeout = 10000;
+}]);;

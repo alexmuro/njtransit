@@ -87,7 +87,7 @@
 
 		<h2>Demographic Data</h2>
 		<ul id="economic">
-			<li><a href="#" id="toggle-tracts">POVERTY LEVEL &amp;<br>RACIAL BREAKDOWN</a></li>
+			<li><a href="#" id="toggle-tracts">Display Census Tracts</a></li>
 		</ul>
 
 		<hr>
