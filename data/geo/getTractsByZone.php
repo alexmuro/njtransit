@@ -56,7 +56,7 @@ $sql = "SELECT
 		where
 		    geoid in ".$row['ct'];
 
-$rs = mysql_query($sql) or die($sql." ");
+$rs = mysql_query($sql) or die($sql." ".mysql_error());
 
 $output = array();
 $output ['type'] = 'FeatureCollection';
