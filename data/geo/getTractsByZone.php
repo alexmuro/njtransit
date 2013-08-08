@@ -36,7 +36,7 @@ $sql = "SELECT
 		            sum(`table302-1-5`) as bus_avail, 
 		            sum(`table306-8`) as bus_total
 		        from
-		            njtransit.workplace_flow_data_2010_1
+		            njtransit.workplace_flow_data_2010
 		        group by 
 		            state3,county,tract
 		    )
@@ -48,7 +48,7 @@ $sql = "SELECT
 		            sum(`table302-1-5`) as bus_avail, 
 		            sum(`table306-8`) as bus_total
 		        from
-		            njtransit.workplace_flow_data_2010_1
+		            njtransit.workplace_flow_data_2010
 		        group by 
 		            qpowst, qpowco, qpowtract
 		    )
