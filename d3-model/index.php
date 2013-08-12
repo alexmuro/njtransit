@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)http://ray-mon.com/urbandatachallenge/sanfrancisco.html -->
+<!-- 
+	Based on Urban Data Challenge 2013 Submission by Raymon Sutedjo-
+	The Transit Quality and Equity - http://ray-mon.com/ &
+	http://urbanprototyping.org/prototype/challenges/urban-data-challenge-zurich-sf-geneva/transit-quality-and-equity/
+ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="description" content="description">
 	<meta name="keywords" content="keywords">
@@ -121,7 +125,6 @@
 		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);
     	$.ajax({url:'../data/get/getZoneforD3.php',data:{zone:<?php echo intval($_GET['ma']);?>},aync:false,dataType:'json',method:"POST"})
     	.done(function(data){
-    		console.log(data);
     		viz.zone = $('#zone-select').val();
     		viz.model_run = <?php echo intval($_GET['mr']);?>;
     		viz.centroid = JSON.parse(data.centroid);

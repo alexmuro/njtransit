@@ -130,3 +130,4 @@ class db {
     mysql_close($this->conn);
   }
 }
+

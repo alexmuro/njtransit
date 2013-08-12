@@ -68,6 +68,7 @@ var viz = {
 
 
 		var colorScale = ["#EAF5DA","#CFE8AC","#9F.C961","#7CAD34","#64961B","#41660A"];
+		
 			
 		var routeID = function(d,i) {
 			return "route-" + d.properties.route.replace(" ","-");
@@ -105,36 +106,72 @@ var viz = {
 		var tracts = function() {
 			//../data/get/getCTRegion.php?zone='+viz.zone
 
+			
+
 			data = transitData.getCensusTracts(viz.zone);
 			var bounds = d3.geo.bounds(data);
 			path = d3.geo.path().projection(project);
 			//console.log(data);
+
+			max = 0;
+			min = 10000;
+
+			var symbol = 'P0010001';
+			data.features.forEach(function(f){
+
+				//console.log(f.properties[symbol]);
+			 	if(f.properties[symbol]/f.properties.land_area > max){
+			 		max = f.properties[symbol];
+			 	}
+			 	else if(f.properties[symbol]/f.properties.land_area < min){
+			 		min = f.properties[symbol];
+			 	}
+			})
+			console.log('min max',min,max);
+
+			var color = d3.scale.quantile()
+    			.domain([min,max])
+    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"]);
+    				//["#ffffcc","#c2e699","#78c679","#31a354","#006837"]);
+			
 			var feature = g.selectAll("path.tract")
 				.data(data.features)
 				.enter()
 				.append("path")
 				.attr("d", path)
 				.attr("class", "tract")
-				.style("fill",colorScale[5])
-				.style("stroke",'#ccc')
-				.attr("id-number", 'test-id');
-				// .on("mouseover", function(self) {
-				// 	self = $(this);
-				// 	self.css({
-				// 		"stroke-width": "2px"
-				// 	});
-				// 	var textTitle = "<p><strong>" + self.attr("id-number") + "</strong></p>";
-				// 	//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
-				// 	//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
-				// 	$("#info").show().html(textTitle);// + textPoverty + textRace
-				// })
-				// .on("mouseout", function(self) {
-				// 	self = $(this);
-				// 	self.css({
-				// 		"stroke-width": 0
-				// 	});
-				// 	$("#info").hide().html("");
-				// });
+				.style("fill",function(d){
+					if(d.properties[symbol] == null){
+						return "#f00";
+					}else{
+						return color(d.properties[symbol]);
+					}
+
+				})
+				.style("stroke",'#333')
+				.on("mouseover", function(d){
+					self = $(this);
+					self.css({
+						"stroke-width": "2px"
+					});
+					var textTitle = "<p>";
+					textTitle += "<strong>Census Tract:</strong>" + d.properties["id-number"] + "<br>";
+					textTitle += "<strong>Total Population:</strong>" + d.properties['P0010001'] + "<br>";
+					textTitle += "<strong>Inbound Workers:</strong>" + d.properties["inbound_workers"]+ "<br>";
+					textTitle += "<strong>Inbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br>";
+					textTitle += "<strong>Outbound Workers:</strong>" + d.properties["outbound_workers"] + "<br>";
+					textTitle += "<strong>Outbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br></p>";
+					//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
+					//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
+					$("#info").show().html(textTitle);// + textPoverty + textRace
+				})
+				.on("mouseout", function(self) {
+					self = $(this);
+					self.css({
+						"stroke-width": 0
+					});
+					$("#info").hide().html("");
+				});
 			
 			map.on("viewreset", reset);
      		map.on("resize",reset);
@@ -158,7 +195,6 @@ var viz = {
 				 var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
 			 return [point.x, point.y];
 			}
-
 			loader.run();
 			
 		};
