@@ -120,10 +120,10 @@ var viz = {
 			data.features.forEach(function(f){
 
 				//console.log(f.properties[symbol]);
-			 	if(f.properties[symbol]/f.properties.land_area > max){
+			 	if(f.properties[symbol] > max){
 			 		max = f.properties[symbol];
 			 	}
-			 	else if(f.properties[symbol]/f.properties.land_area < min){
+			 	else if(f.properties[symbol]< min){
 			 		min = f.properties[symbol];
 			 	}
 			})
