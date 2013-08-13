@@ -30,7 +30,11 @@ var viz = {
 	zone:2,
 	model_run:31,
 	centroid:[-74.465093,39.349667],
-	stopsBy:'off',
+	projection:{},
+	path:{},
+	map:{},
+	svg:{},
+	g:{},
     //----------------------------------------------------------------------------------------------------------
    	njtransit  : function() {
 
@@ -48,26 +52,23 @@ var viz = {
 		};
 		 ﻿
 		// d3 geo
-		var projection = d3.geo.mercator()
+		viz.projection = d3.geo.mercator()
 			.center(lonlat)  
 			.scale(1950000)
 			.translate([width/2, height/2]);
-		var path = d3.geo.path()
-			.projection(projection);
+		viz.path = d3.geo.path()
+			.projection(viz.projection);
 
-		var map = new L.Map("viz", {
+		viz.map = new L.Map("viz", {
   		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
   		     		zoom: 13
-  		   	})
-			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));
-  		   	//
-  		   	//.addLayer(new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"))
-  			
-  			L.control.scale().addTo(map);
-  			//104129
+  		   	});
+			//.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
+  			L.control.scale().addTo(viz.map);
+  		
+  		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg"),
+    	viz.g = viz.svg.append("g").attr("class", "leaflet-zoom-hide");
 
-
-		var colorScale = ["#EAF5DA","#CFE8AC","#9F.C961","#7CAD34","#64961B","#41660A"];
 		
 			
 		var routeID = function(d,i) {
@@ -78,126 +79,7 @@ var viz = {
 			return d.properties.route_name;
 		};
 		
-		var zoom = d3.behavior.zoom()
-			.translate(projection.translate())
-			.scale(projection.scale())
-			.scaleExtent([1250000,6000000])
-			.on("zoom", function() {
-				projection.translate(d3.event.translate).scale(d3.event.scale);
-				group.selectAll("path").attr("d", path);
-				group.selectAll("circle.stop").attr("cx", function(d) {
-				    return projection(d.geometry.coordinates)[0] 
-				});
-				group.selectAll("circle.stop").attr("cy", function(d) {
-				    return projection(d.geometry.coordinates)[1] 
-				});
-		});
 		
-
-  		var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-    	g = svg.append("g").attr("class", "leaflet-zoom-hide");	
-		// initialize viz
-		var group = d3.select("#viz").append("svg").attr("width",width).attr("height",height);
-		group.call(zoom).on("mousemove", mousemoved);
-
-		//http://a.tile.cloudmade.com//86564/256/${z}/${x}/${y}.png
-
-		// functions to draw tracts, routes, and stops
-		var tracts = function() {
-			//../data/get/getCTRegion.php?zone='+viz.zone
-
-			
-
-			data = transitData.getCensusTracts(viz.zone);
-			var bounds = d3.geo.bounds(data);
-			path = d3.geo.path().projection(project);
-			//console.log(data);
-
-			max = 0;
-			min = 10000;
-
-			var symbol = 'P0010001';
-			data.features.forEach(function(f){
-
-				//console.log(f.properties[symbol]);
-			 	if(f.properties[symbol] > max){
-			 		max = f.properties[symbol];
-			 	}
-			 	else if(f.properties[symbol]< min){
-			 		min = f.properties[symbol];
-			 	}
-			})
-			console.log('min max',min,max);
-
-			var color = d3.scale.quantile()
-    			.domain([min,max])
-    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"]);
-    				//["#ffffcc","#c2e699","#78c679","#31a354","#006837"]);
-			
-			var feature = g.selectAll("path.tract")
-				.data(data.features)
-				.enter()
-				.append("path")
-				.attr("d", path)
-				.attr("class", "tract")
-				.style("fill",function(d){
-					if(d.properties[symbol] == null){
-						return "#f00";
-					}else{
-						return color(d.properties[symbol]);
-					}
-
-				})
-				.style("stroke",'#333')
-				.on("mouseover", function(d){
-					self = $(this);
-					self.css({
-						"stroke-width": "2px"
-					});
-					var textTitle = "<p>";
-					textTitle += "<strong>Census Tract:</strong>" + d.properties["id-number"] + "<br>";
-					textTitle += "<strong>Total Population:</strong>" + d.properties['P0010001'] + "<br>";
-					textTitle += "<strong>Inbound Workers:</strong>" + d.properties["inbound_workers"]+ "<br>";
-					textTitle += "<strong>Inbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br>";
-					textTitle += "<strong>Outbound Workers:</strong>" + d.properties["outbound_workers"] + "<br>";
-					textTitle += "<strong>Outbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br></p>";
-					//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
-					//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
-					$("#info").show().html(textTitle);// + textPoverty + textRace
-				})
-				.on("mouseout", function(self) {
-					self = $(this);
-					self.css({
-						"stroke-width": 0
-					});
-					$("#info").hide().html("");
-				});
-			
-			map.on("viewreset", reset);
-     		map.on("resize",reset);
-  			reset();
-			function reset() {
-				var bottomLeft = project(bounds[0]),
-				topRight = project(bounds[1]);
-
-				svg .attr("width", topRight[0] - bottomLeft[0])
-					.attr("height", bottomLeft[1] - topRight[1])
-					.style("margin-left", bottomLeft[0] + "px")
-					.style("margin-top", topRight[1] + "px");
-
-				g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
-
-			    feature.attr("d", path);
-
-			}
-		  	function project(x) {
-				 //console.log(x);
-				 var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
-			 return [point.x, point.y];
-			}
-			loader.run();
-			
-		};
 		
 		var routes = function() {
 
@@ -205,7 +87,7 @@ var viz = {
 			collection = transitData.getGTFSRoutes(viz.zone);
 			var bounds = d3.geo.bounds(collection),
      		path = d3.geo.path().projection(project);
-     		var feature = g.selectAll("path.route")
+     		var feature = viz.g.selectAll("path.route")
      			.data(collection.features)
      			.enter().append("path")
      			.attr("d", path)
@@ -214,27 +96,27 @@ var viz = {
 				.attr("id", routeID)
 				.attr("title", routeName);
 
-     		map.on("viewreset", reset);
-     		map.on("resize",reset);
+     		viz.map.on("viewreset", reset);
+     		viz.map.on("resize",reset);
   			reset();
 
   			function reset() {
 				var bottomLeft = project(bounds[0]),
 				topRight = project(bounds[1]);
 
-				svg .attr("width", topRight[0] - bottomLeft[0])
+				viz.svg .attr("width", topRight[0] - bottomLeft[0])
 					.attr("height", bottomLeft[1] - topRight[1])
 					.style("margin-left", bottomLeft[0] + "px")
 					.style("margin-top", topRight[1] + "px");
 
-				g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+				viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
 
 			    feature.attr("d", path);
 
 			}
 		  	function project(x) {
 				 //console.log(x);
-				 var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+				 var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
 			 return [point.x, point.y];
 			}
   			 
@@ -260,69 +142,105 @@ var viz = {
 		};
 		
 		
-		var stops = {
+		;
+		
+		function mousemoved() {
+		  $('#coords').text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
+		}
+
+		function formatLocation(p, k) {
+ 			var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+  			return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
+       		+ (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+		}
+		
+		// queue up and run the functions
+		loader.push(viz.tracts.draw);
+		loader.push(routes);
+		loader.push(viz.stops.preload);
+		loader.push(viz.stops.load);
+		loader.run();
+
+	},
+	stops: {
 			data :{},
 			min_r:0,
 			max_r:5,
 			min_c:0,
 			max_c:15,
+			stopsBy:'off_count',
 			sizeScale :function(){},
 			colorScaleFreq:function(){},
 			preload: function(){
-				stops.data = transitData.getGTFSStops();
-				stops.setBounds('on');
-				stops.colorScaleFreq = d3.scale.linear()
-					.domain([stops.min_c,stops.max_c])
+				viz.stops.data = transitData.getGTFSStops();
+				viz.stops.setBounds(viz.stops.stopsBy);
+				viz.stops.colorScaleFreq = d3.scale.linear()
+					.domain([viz.stops.min_c,viz.stops.max_c])
 					.range(['#ED3A2D', '#2e0101']);
-				stops.sizeScale = d3.scale.linear()
-					.domain([stops.min_r,stops.max_r])
-					.range([3,30]);	 
+				viz.stops.sizeScale = d3.scale.linear()
+					.domain([viz.stops.min_r,viz.stops.max_r])
+					.range([1,40]);	 
 				loader.run();
 			},
 			setBounds: function(){
-				stops.data.features.forEach(function(d){
-					r_var = d.properties.on_count;
-					if(viz.stopsBy == 'off'){
-						r_var = d.properties.off_count;
+				viz.stops.min_r = 0;
+				viz.stops.max_r = 5;
+				viz.stops.min_c = 0;
+				viz.stops.max_c = 15;
+
+
+				viz.stops.data.features.forEach(function(d){
+					
+					r_var = d.properties[viz.stops.stopsBy];
+					if(r_var < viz.stops.min_r){
+						viz.stops.min_r = r_var;
 					}
-					if(r_var < stops.min_r){
-						stops.min_r = r_var;
+					if(r_var > viz.stops.max_r){
+						viz.stops.max_r = r_var;
 					}
-					if(r_var > stops.max_r){
-						stops.max_r = r_var;
+					if(d.properties.stop_frequency < viz.stops.min_c){
+						viz.stops.min_c = d.properties.stop_frequency;
 					}
-					if(d.properties.stop_frequency < stops.min_c){
-						stops.min_c = d.properties.stop_frequency;
-					}
-					if(d.properties.stop_frequency > stops.max_c){
-						stops.max_c = d.properties.stop_frequency;
+					if(d.properties.stop_frequency > viz.stops.max_c){
+						viz.stops.max_c = d.properties.stop_frequency;
 					}
 				});
 			},
 			stopR: function(d, i) {
-				return stops.sizeScale(d.properties.on_count);
+				return viz.stops.sizeScale(d.properties[viz.stops.stopsBy]);
 			},
 			fillDelay: function(d,i) {
-				return stops.colorScaleFreq(d.properties.stop_frequency);
+				return viz.stops.colorScaleFreq(d.properties.stop_frequency);
+			},
+			visualize:function(){
+				viz.stops.setBounds();
+
+				viz.stops.sizeScale = d3.scale.linear()
+					.domain([viz.stops.min_r,viz.stops.max_r])
+					.range([1,40]);
+				viz.g.selectAll("circle.stop")
+				.transition().duration(1000)
+    			.attr('r', function(d){ 
+    				return viz.stops.sizeScale(d.properties[viz.stops.stopsBy])
+    			});
 			},
 			load: function() {
-
-				var bounds = d3.geo.bounds(stops.data),
+				var bounds = d3.geo.bounds(viz.stops.data),
      			path = d3.geo.path().projection(project);
-				var feature = g.selectAll("circle.stop")
-					.data(stops.data.features)
+				var feature = viz.g.selectAll("circle.stop")
+					.data(viz.stops.data.features)
 					.enter()
 					.append("circle")
 					.classed("stop", true)
 					.attr({
-						r: stops.stopR,
+						r: viz.stops.stopR,
 						cx: function(d,i) { 
 							return project(d.geometry.coordinates)[0]; 
 						},
 						cy: function(d,i) { 
 							return project(d.geometry.coordinates)[1]; 
 						},
-						"fill": stops.fillDelay,
+						"fill": viz.stops.fillDelay,
 						"stopid": function(d,i) { 
 							return d.properties.stop_id
 						},
@@ -366,8 +284,8 @@ var viz = {
 						$("#info").hide().html("");
 					})
 
-				map.on("viewreset", reset);
-				map.on("resize",function(){
+				viz.map.on("viewreset", reset);
+				viz.map.on("resize",function(){
 					console.log('map resized');
 					reset();
 				});
@@ -377,12 +295,12 @@ var viz = {
 					var bottomLeft = project(bounds[0]),
 					topRight = project(bounds[1]);
 
-					svg .attr("width", topRight[0] - bottomLeft[0])
+					viz.svg .attr("width", topRight[0] - bottomLeft[0])
 						.attr("height", bottomLeft[1] - topRight[1])
 						.style("margin-left", bottomLeft[0] + "px")
 						.style("margin-top", topRight[1] + "px");
 
-					g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+					viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
 
 				    feature.attr("d", path)
 				    .attr("cx", function(d) {
@@ -395,7 +313,7 @@ var viz = {
 
 				}
 			  	function project(x) {
-					var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+					var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
 			
 				 	return [point.x, point.y];
 				}		
@@ -403,26 +321,124 @@ var viz = {
 				$("#loading").fadeOut(1000);
 				
 			}
-		};
-		
-		function mousemoved() {
-		  $('#coords').text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
-		}
-
-		function formatLocation(p, k) {
- 			var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
-  			return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
-       		+ (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
-		}
-		
-		// queue up and run the functions
-		loader.push(tracts);
-		loader.push(routes);
-		loader.push(stops.preload);
-		loader.push(stops.load);
-		loader.run();
-
 	},
+	tracts:{
+			data:{},
+			max:0,
+			min:10000,
+			symbol:'P0010001',
+			changeSymbol:function(){
+
+				viz.tracts.max=0;
+				viz.tracts.min=10000
+				viz.tracts.data.features.forEach(function(f){
+				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){
+				 		viz.tracts.max = f.properties[viz.tracts.symbol];
+				 	}
+				 	else if(f.properties[viz.tracts.symbol] < viz.tracts.min){
+			 			viz.tracts.min = f.properties[viz.tracts.symbol];
+				 	}
+				})
+				var color = d3.scale.quantile()
+	    			.domain([viz.tracts.min,viz.tracts.max])
+	    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"])
+
+	    		viz.g.selectAll("path.tract")
+				.transition().duration(1000)
+    			.style("fill",function(d){
+						if(d.properties[viz.tracts.symbol] == null){
+							return "#f00";
+						}else{
+							return color(d.properties[viz.tracts.symbol]);
+						}
+
+				});
+
+			},
+			draw:function(){
+				viz.tracts.data = transitData.getCensusTracts(viz.zone);
+				var bounds = d3.geo.bounds(viz.tracts.data);
+				path = d3.geo.path().projection(project);
+				
+				
+
+				
+				viz.tracts.data.features.forEach(function(f){
+				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){
+				 		viz.tracts.max = f.properties[viz.tracts.symbol];
+				 	}
+				 	else if(f.properties[viz.tracts.symbol] < viz.tracts.min){
+			 			viz.tracts.min = f.properties[viz.tracts.symbol];
+				 	}
+				})
+				var color = d3.scale.quantile()
+	    			.domain([viz.tracts.min,viz.tracts.max])
+	    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"]);
+	    				
+				var feature = viz.g.selectAll("path.tract")
+					.data(viz.tracts.data.features)
+					.enter()
+					.append("path")
+					.attr("d", path)
+					.attr("class", "tract")
+					.style("fill",function(d){
+						if(d.properties[viz.tracts.symbol] == null){
+							return "#f00";
+						}else{
+							return color(d.properties[viz.tracts.symbol]);
+						}
+
+					})
+					.style("stroke",'#333')
+					.on("mouseover", function(d){
+						self = $(this);
+						self.css({
+							"stroke-width": "2px"
+						});
+						var textTitle = "<p>";
+						textTitle += "<strong>Census Tract:</strong>" + d.properties["geoid"] + "<br>";
+						textTitle += "<strong>Total Population:</strong>" + d.properties['P0010001'] + "<br>";
+						textTitle += "<strong>Inbound Workers:</strong>" + d.properties["inbound_workers"]+ "<br>";
+						textTitle += "<strong>Inbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br>";
+						textTitle += "<strong>Outbound Workers:</strong>" + d.properties["outbound_workers"] + "<br>";
+						textTitle += "<strong>Outbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br></p>";
+						//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
+						//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
+						$("#info").show().html(textTitle);// + textPoverty + textRace
+					})
+					.on("mouseout", function(self) {
+						self = $(this);
+						self.css({
+							"stroke-width": 0
+						});
+						$("#info").hide().html("");
+					});
+				
+				viz.map.on("viewreset", reset);
+	     		viz.map.on("resize",reset);
+	  			reset();
+				function reset() {
+					var bottomLeft = project(bounds[0]),
+					topRight = project(bounds[1]);
+
+					viz.svg .attr("width", topRight[0] - bottomLeft[0])
+						.attr("height", bottomLeft[1] - topRight[1])
+						.style("margin-left", bottomLeft[0] + "px")
+						.style("margin-top", topRight[1] + "px");
+
+					viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+				    feature.attr("d", path);
+
+				}
+			  	function project(x) {
+					 //console.log(x);
+					 var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+				 return [point.x, point.y];
+				}
+				loader.run();
+			}
+		}
     
 };
 

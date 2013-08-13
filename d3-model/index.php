@@ -91,7 +91,17 @@
 
 		<h2>Demographic Data</h2>
 		<ul id="economic">
-			<li><a href="#" id="toggle-tracts">Display Census Tracts</a></li>
+			<li><a href="#" id="toggle-tracts" >Display Census Tracts</a></li>
+			<li>
+				<center>
+					<select id="tracts-select" class='inverse-select'>
+						<option value="P0010001" selected>Total Population</option>
+						<option value="P0030002" >White Population</option>
+						<option value="P0030003" >Black Population</option>
+						<option value="P0030005" >Asian Population</option>
+					</select>
+				</center>
+			</li>
 		</ul>
 
 		<hr>
@@ -99,9 +109,9 @@
 		<h2>Display Stops by</h2>
 			<center>
 			<h2>
-				<select id="stops-select">
-					<option value="on" selected>Boarding</option>
-					<option value="off">Alighting</option>
+				<select id="stops-select" class='inverse-select'>
+					<option value="on_count" >Boarding</option>
+					<option value="off_count" selected>Alighting</option>
 				</select>
 			</h2>
 			</center>
@@ -116,11 +126,19 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#stops-select").on('change',function(){
-			viz.stopsBy = $("#stop-select").val();
-			//loader.push(viz.njtransit.stops.preload);
-			//loader.push(viz.njtransit.stops.load);
-			//loader.run();
+			console.log()
+			viz.stops.stopsBy = $("#stops-select").val();
+			viz.stops.visualize();
+			
 		});
+
+		$("#tracts-select").on('change',function(){
+			console.log()
+			viz.tracts.symbol = $("#tracts-select").val();
+			viz.tracts.changeSymbol();
+			
+		});
+
 
 		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);
     	$.ajax({url:'../data/get/getZoneforD3.php',data:{zone:<?php echo intval($_GET['ma']);?>},aync:false,dataType:'json',method:"POST"})
