@@ -47,85 +47,87 @@ foreach($routes as $route)
    
     //get all the stops
     //associated with longest trip
-    $sql = "SELECT
-    a.stop_id as stop_id,
-    b.stop_code as stop_code,
-    b.stop_name as stop_name,
-    b.zone_id as zone_id,
-    b.stop_lat as stop_lat,
-    b.stop_lon as stop_lon
-    from
-        gtfs_20130712.stop_times as a,
-        gtfs_20130712.stops as b
-    where
-    a.stop_id = b.stop_id and a.trip_id = $trip_id";
+    if(!empty($trip_id)){
+        $sql = "SELECT
+        a.stop_id as stop_id,
+        b.stop_code as stop_code,
+        b.stop_name as stop_name,
+        b.zone_id as zone_id,
+        b.stop_lat as stop_lat,
+        b.stop_lon as stop_lon
+        from
+            gtfs_20130712.stop_times as a,
+            gtfs_20130712.stops as b
+        where
+        a.stop_id = b.stop_id and a.trip_id = $trip_id";
 
 
-    $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
-    $results = array();
-    
+        $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
+        $results = array();
+        
 
-    while ($row = mysql_fetch_assoc( $rs ))
-    {
-        if (in_array($row['stop_id'], $stops)) {
-            //if this stop has already been added
-            //do nothing
-        }
-        else{
-            
-            $sql = "SELECT 
-                    a.stop_id as stop_id,
-                    count(a.stop_id) as stop_frequency
-                    from
-                        gtfs_20130712.stop_times as a
-                    where
-                        a.stop_id = ".$row['stop_id']."
-                    group by a.stop_id";
-            $fs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
-            $fow = mysql_fetch_assoc( $fs );
+        while ($row = mysql_fetch_assoc( $rs ))
+        {
+            if (in_array($row['stop_id'], $stops)) {
+                //if this stop has already been added
+                //do nothing
+            }
+            else{
+                
+                $sql = "SELECT 
+                        a.stop_id as stop_id,
+                        count(a.stop_id) as stop_frequency
+                        from
+                            gtfs_20130712.stop_times as a
+                        where
+                            a.stop_id = ".$row['stop_id']."
+                        group by a.stop_id";
+                $fs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
+                $fow = mysql_fetch_assoc( $fs );
 
-            $sql = "SELECT 
-                        SUM(case
-                            when on_stop_id = ".$row['stop_id']." then 1
-                            else 0
-                        end) as on_count,
-                        SUM(case
-                            when off_stop_id = ".$row['stop_id']." then 1
-                            else 0
-                        end) as off_count
-                    from
-                        model_legs
-                    where
-                        (on_stop_code = ".$row['stop_code']." or off_stop_code = ".$row['stop_code'].") and run_id = $model_run";
-            $gs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
-            $gow = mysql_fetch_assoc( $gs );                    
-                    
+                $sql = "SELECT 
+                            SUM(case
+                                when on_stop_id = ".$row['stop_id']." then 1
+                                else 0
+                            end) as on_count,
+                            SUM(case
+                                when off_stop_id = ".$row['stop_id']." then 1
+                                else 0
+                            end) as off_count
+                        from
+                            model_legs
+                        where
+                            (on_stop_code = ".$row['stop_code']." or off_stop_code = ".$row['stop_code'].") and run_id = $model_run";
+                $gs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
+                $gow = mysql_fetch_assoc( $gs );                    
+                        
 
-            //print_r($gow);
-            $stops[] = $row['stop_id'];
-            $properties = array();
-            $feature = array();
-            $geometry = array();
-            $properties['stop_frequency'] = intval($fow['stop_frequency']);
-            $properties['on_count'] = intval($gow['on_count']);
-            $properties['off_count'] = intval($gow['off_count']); 
-            $properties['stop_id'] = intval($row['stop_id']);
-            $properties['stop_code'] = $row['stop_code'];
-            $properties['stop_name'] = $row['stop_name'];
-            $properties['zone_id'] = $row['zone_id'];
-            $properties['include'] = 0;
+                //print_r($gow);
+                $stops[] = $row['stop_id'];
+                $properties = array();
+                $feature = array();
+                $geometry = array();
+                $properties['stop_frequency'] = intval($fow['stop_frequency']);
+                $properties['on_count'] = intval($gow['on_count']);
+                $properties['off_count'] = intval($gow['off_count']); 
+                $properties['stop_id'] = intval($row['stop_id']);
+                $properties['stop_code'] = $row['stop_code'];
+                $properties['stop_name'] = $row['stop_name'];
+                $properties['zone_id'] = $row['zone_id'];
+                $properties['include'] = 0;
 
-            $feature['type'] = 'Feature';
-            $feature['properties'] = $properties;
-            $geometry['type'] = 'Point'; 
-            $coordinates = array(floatval($row['stop_lon']),floatval($row['stop_lat']));
+                $feature['type'] = 'Feature';
+                $feature['properties'] = $properties;
+                $geometry['type'] = 'Point'; 
+                $coordinates = array(floatval($row['stop_lon']),floatval($row['stop_lat']));
 
-           
+               
 
-            $geometry['coordinates'] = $coordinates;
-            $feature['geometry'] = $geometry;
-            $output['features'][]=$feature;
-            unset($coordinates);
+                $geometry['coordinates'] = $coordinates;
+                $feature['geometry'] = $geometry;
+                $output['features'][]=$feature;
+                unset($coordinates);
+            }
         }
     }
 }

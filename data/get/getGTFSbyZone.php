@@ -21,7 +21,7 @@ $output ['type'] = 'FeatureCollection';
 //Sql call & json encod
 foreach($routes as $route)
 {
-    //echo $route." ";
+    //echo "route:".$route."<br>";
     $sql ="SELECT
     trips.shape_id as shapeID,
     trips.route_id as routeID,
@@ -41,68 +41,69 @@ foreach($routes as $route)
     $row = mysql_fetch_assoc( $rs );
     $shape_id = $row['shapeID'];
     //echo $shape_id." ";
-
-    $sql = "SELECT
-    trips.route_id as routeID,
-    count(distinct trips.trip_id) as numTrips,
-    count(distinct trips.service_id) numService,
-    shapes.shape_id as shape_id,
-    shapes.shape_pt_lat,
-    shapes.shape_pt_lon,
-    shapes.shape_pt_sequence,
-    routes.route_id,
-    routes.route_short_name as route_name,
-    trips.shape_id
-    FROM gtfs_20130712.shapes,gtfs_20130712.trips,gtfs_20130712.routes where shapes.shape_id = trips.shape_id
-    AND trips.shape_id = $shape_id
-    and trips.route_id = routes.route_id
-    group by shapes.shape_id ,shapes.shape_pt_sequence
-    order by shapes.shape_id , shapes.shape_pt_sequence";
-
+    if(!empty($shape_id)){
+        
+        $sql = "SELECT
+        trips.route_id as routeID,
+        count(distinct trips.trip_id) as numTrips,
+        count(distinct trips.service_id) numService,
+        shapes.shape_id as shape_id,
+        shapes.shape_pt_lat,
+        shapes.shape_pt_lon,
+        shapes.shape_pt_sequence,
+        routes.route_id,
+        routes.route_short_name as route_name,
+        trips.shape_id
+        FROM gtfs_20130712.shapes,gtfs_20130712.trips,gtfs_20130712.routes where shapes.shape_id = trips.shape_id
+        AND trips.shape_id = $shape_id
+        and trips.route_id = routes.route_id
+        group by shapes.shape_id ,shapes.shape_pt_sequence
+        order by shapes.shape_id , shapes.shape_pt_sequence";
     //echo $sql."<br><br>";
 
-$rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
+        $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
 
-$results = array();
-while ($row = mysql_fetch_assoc( $rs ))
-{
-    $curr_shape_id=$row['shape_id'];
-    $properties = array();
-    $feature = array();
-    $geometry = array();
-    $properties['id'] = $row['shape_id'];
-    $properties['route'] = $row['routeID'];
-    $properties['num_trips'] = $row['numTrips'];
-    $properties['num_service'] = $row['numService'];
-    $properties['route_name'] = $row['route_name'];
-    $properties['shape_id'] = $row['shape_id'];
-    $properties['include'] = 0;
+        $results = array();
+        while ($row = mysql_fetch_assoc( $rs ))
+        {
+            $curr_shape_id=$row['shape_id'];
+            $properties = array();
+            $feature = array();
+            $geometry = array();
+            $properties['id'] = $row['shape_id'];
+            $properties['route'] = $row['routeID'];
+            $properties['num_trips'] = $row['numTrips'];
+            $properties['num_service'] = $row['numService'];
+            $properties['route_name'] = $row['route_name'];
+            $properties['shape_id'] = $row['shape_id'];
+            $properties['include'] = 0;
 
-    $feature['type'] = 'Feature';
-    $feature['properties'] = $properties;
-    $geometry['type'] = 'LineString'; 
-    $coordinates[] = array();
+            $feature['type'] = 'Feature';
+            $feature['properties'] = $properties;
+            $geometry['type'] = 'LineString'; 
+            $coordinates[] = array();
 
-    $x=0;
-    $coordinates[] = array();
-    //echo $curr_shape_id;
-    while($row['shape_id'] == $curr_shape_id)
-    {        
-           //$geo = json_decode($geodata, true);
-           if (!empty($row['shape_pt_lat']) && !empty($row['shape_pt_lon']))
-           {
-            $coordinates[$x][0] = floatval($row['shape_pt_lon']);
-            $coordinates[$x][1] = floatval($row['shape_pt_lat']);
+            $x=0;
+            $coordinates[] = array();
+            //echo $curr_shape_id;
+            while($row['shape_id'] == $curr_shape_id)
+            {        
+                   //$geo = json_decode($geodata, true);
+                   if (!empty($row['shape_pt_lat']) && !empty($row['shape_pt_lon']))
+                   {
+                    $coordinates[$x][0] = floatval($row['shape_pt_lon']);
+                    $coordinates[$x][1] = floatval($row['shape_pt_lat']);
+                    }
+                   $x++;            
+                   $row = mysql_fetch_assoc( $rs );
             }
-           $x++;            
-           $row = mysql_fetch_assoc( $rs );
-    }
 
-    $geometry['coordinates'] = $coordinates;
-    $feature['geometry'] = $geometry;
-    $output['features'][]=$feature;
-    unset($coordinates);
-}
+            $geometry['coordinates'] = $coordinates;
+            $feature['geometry'] = $geometry;
+            $output['features'][]=$feature;
+            unset($coordinates);
+        }
+    }
 }
 echo json_encode($output); 
 
