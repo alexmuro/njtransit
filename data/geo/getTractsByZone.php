@@ -22,41 +22,19 @@ $sql = "SELECT
     a.geoid, 
     AsText(shape) as shape, 
     aland,
-    b.total_workers as outgoing_workers, 
-    b.bus_avail, 
-    b.bus_total as outgoing_transit,
-    c.total_workers as incoming_workers, 
-    c.bus_avail, 
-    c.bus_total as incoming_transit,
+    b.OutboundWorkers, 
+    c.InboundWorkers,
     c1.P0010001,c1.P0030002,c1.P0030003,c1.P0030005
 from
     us_atlas.34_tracts as a
 left outer join
     us_atlas.sf1 as c1 on a.geoid = c1.geoid 
 left outer join
-    (select 
-            state3,county,tract,
-            sum(`table301-1`) as total_workers, 
-            sum(`table302-1-5`) as bus_avail, 
-            sum(`table306-8`) as bus_total
-        from
-            njtransit.workplace_flow_data_2010
-        group by 
-            state3,county,tract
-    )
-    as b on a.statefp = SUBSTRING(b.state3,2,2) and a.countyfp=b.county and a.tractce=b.tract
+    (select h_geocode, sum(s000) as OutboundWorkers from LEHD_2011.nj_od_j00_ct group by h_geocode) as b
+ on b.h_geocode = a.geoid
 left outer join
-    (select 
-            qpowst, qpowco, qpowtract,
-            sum(`table301-1`) as total_workers, 
-            sum(`table302-1-5`) as bus_avail, 
-            sum(`table306-8`) as bus_total
-        from
-            njtransit.workplace_flow_data_2010
-        group by 
-            qpowst, qpowco, qpowtract
-    )
-    as c on a.statefp = SUBSTRING(c.qpowst,2,2) and a.countyfp=c.qpowco and a.tractce=c.qpowtract
+     (select w_geocode, sum(s000) as InboundWorkers from LEHD_2011.nj_od_j00_ct group by w_geocode) as c
+on c.w_geocode = a.geoid
 where
     a.geoid in".$row['ct'];
 
@@ -104,10 +82,8 @@ while($row = mysql_fetch_array($rs)){
     
     $properties['geoid'] = $row['geoid'];
     $properties['land_area'] = $row['aland'];
-    $properties['inbound_transit']= $row['incoming_transit'];
-    $properties['outbound_transit']= $row['outgoing_transit'];
-    $properties['inbound_workers']= $row['incoming_workers'];
-    $properties['outbound_workers']= $row['outgoing_workers'];
+    $properties['outbound_workers']= $row['OutboundWorkers'];
+    $properties['inbound_workers']= $row['InboundWorkers'];
     
     $feature['type'] = 'Feature';
     $feature['properties'] = $properties;

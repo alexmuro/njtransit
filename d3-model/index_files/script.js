@@ -35,6 +35,9 @@ var viz = {
 	map:{},
 	svg:{},
 	g:{},
+	routeData:{},
+	tractData:{},
+	stopData:{},
     //----------------------------------------------------------------------------------------------------------
    	njtransit  : function() {
 
@@ -63,7 +66,7 @@ var viz = {
   		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
   		     		zoom: 13
   		   	})
-			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
+			//.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
   			L.control.scale().addTo(viz.map);
   		
   		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg"),
@@ -84,9 +87,9 @@ var viz = {
 		var routes = function() {
 
 			
-			collection = transitData.getGTFSRoutes(viz.zone);
+			collection = viz.routeData = transitData.getGTFSRoutes(viz.zone);
 			var bounds = d3.geo.bounds(collection),
-     		path = d3.geo.path().projection(project);
+     		path = d3.geo.path().projection(viz.project);
      		var feature = viz.g.selectAll("path.route")
      			.data(collection.features)
      			.enter().append("path")
@@ -96,53 +99,22 @@ var viz = {
 				.attr("id", routeID)
 				.attr("title", routeName);
 
-     		viz.map.on("viewreset", reset);
-     		viz.map.on("resize",reset);
-  			reset();
+     		viz.map.on("viewreset", function(){
+     			viz.reset(bounds,feature);
+     		});
+     		viz.reset(bounds,feature)
+  		
 
-  			function reset() {
-				var bottomLeft = project(bounds[0]),
-				topRight = project(bounds[1]);
-
-				viz.svg .attr("width", topRight[0] - bottomLeft[0])
-					.attr("height", bottomLeft[1] - topRight[1])
-					.style("margin-left", bottomLeft[0] + "px")
-					.style("margin-top", topRight[1] + "px");
-
-				viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
-
-			    feature.attr("d", path);
-
-			}
-		  	function project(x) {
-				 //console.log(x);
-				 var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
-			 return [point.x, point.y];
-			}
-  			 
-
-
+		  	
 			collection.features.forEach(function(d,i){
 				$('#routes').append('<li><a href="#" id="toggle-route-'+d.properties.route.replace(" ","-")+'" class="toggle-routes">'+d.properties.route_name.replace("\"","").replace("\"","")+'</a></li>');
 			});
-			// group.selectAll("path.route")
-			// 	.data(data.features)
-			// 	.enter()
-			// 	.append("path")
-			// 	.attr("d", path)
-			// 	.style("fill", "none")
-			// 	.attr("class", "route")
-			// 	.attr("id", routeID)
-			// 	.attr("title", routeName);
 			
 			toggles.init();
 			popup.init();
 			loader.run();
 		
 		};
-		
-		
-		;
 		
 		function mousemoved() {
 		  $('#coords').text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
@@ -226,7 +198,7 @@ var viz = {
 			},
 			load: function() {
 				var bounds = d3.geo.bounds(viz.stops.data),
-     			path = d3.geo.path().projection(project);
+     			path = d3.geo.path().projection(viz.project);
 				var feature = viz.g.selectAll("circle.stop")
 					.data(viz.stops.data.features)
 					.enter()
@@ -235,10 +207,10 @@ var viz = {
 					.attr({
 						r: viz.stops.stopR,
 						cx: function(d,i) { 
-							return project(d.geometry.coordinates)[0]; 
+							return viz.project(d.geometry.coordinates)[0]; 
 						},
 						cy: function(d,i) { 
-							return project(d.geometry.coordinates)[1]; 
+							return viz.project(d.geometry.coordinates)[1]; 
 						},
 						"fill": viz.stops.fillDelay,
 						"stopid": function(d,i) { 
@@ -284,39 +256,11 @@ var viz = {
 						$("#info").hide().html("");
 					})
 
-				viz.map.on("viewreset", reset);
-				viz.map.on("resize",function(){
-					console.log('map resized');
-					reset();
-				});
-				reset();
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature);
 
-				function reset() {
-					var bottomLeft = project(bounds[0]),
-					topRight = project(bounds[1]);
-
-					viz.svg .attr("width", topRight[0] - bottomLeft[0])
-						.attr("height", bottomLeft[1] - topRight[1])
-						.style("margin-left", bottomLeft[0] + "px")
-						.style("margin-top", topRight[1] + "px");
-
-					viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
-
-				    feature.attr("d", path)
-				    .attr("cx", function(d) {
-				    	return project(d.geometry.coordinates)[0];
-		    		})
-		    		.attr("cy", function(d) {
-		        		return project(d.geometry.coordinates)[1]; 
-		    		});
-				   
-
-				}
-			  	function project(x) {
-					var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
-			
-				 	return [point.x, point.y];
-				}		
 				loader.run();
 				$("#loading").fadeOut(1000);
 				
@@ -357,13 +301,18 @@ var viz = {
 			},
 			draw:function(){
 				viz.tracts.data = transitData.getCensusTracts(viz.zone);
+				console.log(viz.tracts.data);
 				var bounds = d3.geo.bounds(viz.tracts.data);
-				path = d3.geo.path().projection(project);
+				path = d3.geo.path().projection(viz.project);
 				
 				
 
 				
 				viz.tracts.data.features.forEach(function(f){
+
+					f.properties["inbound_transit"] = (f.properties["inbound_workers"]*.05).toFixed(0);
+					f.properties["outbound_transit"] = (f.properties["outbound_workers"]*.05).toFixed(0);
+
 				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){
 				 		viz.tracts.max = f.properties[viz.tracts.symbol];
 				 	}
@@ -399,9 +348,9 @@ var viz = {
 						textTitle += "<strong>Census Tract:</strong>" + d.properties["geoid"] + "<br>";
 						textTitle += "<strong>Total Population:</strong>" + d.properties['P0010001'] + "<br>";
 						textTitle += "<strong>Inbound Workers:</strong>" + d.properties["inbound_workers"]+ "<br>";
-						textTitle += "<strong>Inbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br>";
+						textTitle += "<strong>Inbound Transit Trips:</strong>" +d.properties["inbound_transit"]+ "<br>";
 						textTitle += "<strong>Outbound Workers:</strong>" + d.properties["outbound_workers"] + "<br>";
-						textTitle += "<strong>Outbound Transit Trips:</strong>" + d.properties["inbound_transit"]+ "<br></p>";
+						textTitle += "<strong>Outbound Transit Trips:</strong>" + d.properties["outbound_transit"]+ "<br></p>";
 						//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
 						//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
 						$("#info").show().html(textTitle);// + textPoverty + textRace
@@ -414,32 +363,61 @@ var viz = {
 						$("#info").hide().html("");
 					});
 				
-				viz.map.on("viewreset", reset);
-	     		viz.map.on("resize",reset);
-	  			reset();
-				function reset() {
-					var bottomLeft = project(bounds[0]),
-					topRight = project(bounds[1]);
-
-					viz.svg .attr("width", topRight[0] - bottomLeft[0])
-						.attr("height", bottomLeft[1] - topRight[1])
-						.style("margin-left", bottomLeft[0] + "px")
-						.style("margin-top", topRight[1] + "px");
-
-					viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
-
-				    feature.attr("d", path);
-
-				}
-			  	function project(x) {
-					 //console.log(x);
-					 var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
-				 return [point.x, point.y];
-				}
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature)
+				
 				loader.run();
 			}
+		},
+		reproject :function (){
+    		viz.projection = d3.geo.mercator()
+				.center(viz.centroid)  
+				.scale(1950000)
+				.translate([$(window).width()/2, $(window).width()/2]);
+			viz.path = d3.geo.path()
+				.projection(viz.projection);
+
+    	},
+    	reset :function (bounds,feature) { 
+
+  				
+				var bottomLeft = viz.project(bounds[0]),
+				topRight = viz.project(bounds[1]);
+
+				viz.svg .attr("width", topRight[0] - bottomLeft[0])
+					.attr("height", bottomLeft[1] - topRight[1])
+					.style("margin-left", bottomLeft[0] + "px")
+					.style("margin-top", topRight[1] + "px");
+
+				viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+
+				//console.log("test",viz.g.attr("transform"));
+
+				console.log();
+			    if(feature.attr('cx') == null){
+			    //polygons only need path updated	
+			    	feature
+			    		.attr("d", path)
+			    
+			    }
+			    else{
+			    //circles must have their centers adjusted
+				    feature
+				    	.attr("d", path)  
+				    	.attr("cx", function(d) {
+					    	return viz.project(d.geometry.coordinates)[0];
+			    		})
+			    		.attr("cy", function(d) {
+			        		return viz.project(d.geometry.coordinates)[1]; 
+			    		});
+		    	}	
+		},
+		project :function(x) {
+			var point = viz.map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
+			return [point.x, point.y];
 		}
-    
 };
 
 

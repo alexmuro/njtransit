@@ -5,15 +5,21 @@
 	http://urbanprototyping.org/prototype/challenges/urban-data-challenge-zurich-sf-geneva/transit-quality-and-equity/
  -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- Meta Data -->
 	<meta name="description" content="description">
 	<meta name="keywords" content="keywords">
+	
+	<!-- Cascading Style Sheets -->
 	<link href="./index_files/font.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="./index_files/style.css">
 	<link rel="stylesheet" href="../resources/css/leaflet.css" />
+	
+	<!-- Javascript Includes -->
 	<script type="text/javascript" src="../resources/js/jquery-1.9.1.min.js"></script><style type="text/css"></style>
 	<script type="text/javascript" src="../resources/js/d3.v3.min.js"></script>	
 	<script src="../resources/js/leaflet0.6.4.js"></script>
 	<script type="text/javascript" src="index_files/script.js"></script>
+	
 	<title>AVAIL Transit Demand Modeling</title>
 </head>
 
@@ -99,6 +105,8 @@
 						<option value="P0030002" >White Population</option>
 						<option value="P0030003" >Black Population</option>
 						<option value="P0030005" >Asian Population</option>
+						<option value="inbound_transit">Inbound Transit</option>
+						<option value="outbound_transit">Outbound Transit</option>
 					</select>
 				</center>
 			</li>
@@ -154,7 +162,5 @@
 
 	});
 </script>
-
-
-
-</body></html>
+</body>
+</html>
