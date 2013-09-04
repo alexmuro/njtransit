@@ -44,7 +44,7 @@ angular.module('myApp.controllers', [])
       $scope.output = "";
       $scope.runModel = function(){
         $scope.message = "Model running...."
-        $http({url:'/otp/runModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
+        $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
         .success(function(data) {
           console.log(data);
           $scope.message = data.status;
