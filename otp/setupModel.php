@@ -52,6 +52,7 @@
 			$this->output['numTrips'] = $row['numTrips'];
 			$this->output['time'] = "This script took ".$totaltime." seconds to run";  
 			$this->output['status'] = "FINISHED MODEL RUN:".$this->id;
+			$this->output['run_id'] = $this->id;
      	}
 
      	public function getOutput(){
@@ -61,7 +62,7 @@
      	public function runOTP(){
      		$command = "php5 -f cliRunModel.php ".$this->id;
 			$pid = exec( "$command > /dev/null &", $arrOutput );
-			echo "Proccessing on pid $pid";
+			
      	}
 
      	private function parseZones($zones){

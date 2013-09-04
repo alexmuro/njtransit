@@ -10,8 +10,8 @@ angular.module('myApp.controllers', [])
   		
   }])
 
-  .controller('ModelRunCtrl', ['$scope', '$http','MarketArea',
-  	function($scope, $http, MarketArea) {
+  .controller('ModelRunCtrl', ['$scope', '$http','$timeout','MarketArea',
+  	function($scope, $http, $timeout, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       console.log($scope.activeMarket);
       $scope.dow = 0;
@@ -19,6 +19,7 @@ angular.module('myApp.controllers', [])
       $scope.time = 0;
       $scope.walk_distance = 1;
       $scope.walk_speed = 3;
+      $scope.active_run =false;
 
 
       //AM Peak Hours
@@ -31,12 +32,32 @@ angular.module('myApp.controllers', [])
       $scope.hstep = 1;
       $scope.mstep = 15;
       $scope.message = "";
+      $scope.trips_complete = 0;
+      $scope.total_trips = 0;
+
+      $scope.checkStatus = function(run_id){
+        $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
+          .success(function(data) {
+            console.log(data);
+            if(data.finished == "1"){
+              $scope.active_run = false;
+              $scope.message= "Run "+run_id+" finished. "+data.numTrips+"trips calculated";
+            }
+            else{
+              $scope.trips_complete = data.numTrips;
+              $timeout($scope.checkStatus(run_id),2000);
+            }
+          })
+          .error(function(e) {
+            console.log(e);
+          });
+      }
     
       $scope.today = function() {
         $scope.dt = new Date();
       };
+
       $scope.today();
-      // Disable weekend selection
       $scope.disabled = function(date, mode) {date
         return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
       };
@@ -46,8 +67,14 @@ angular.module('myApp.controllers', [])
         $scope.message = "Model running...."
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
         .success(function(data) {
-          console.log(data);
+
           $scope.message = data.status;
+          $scope.active_run = true;
+          $scope.trips_complete = 0;
+          $scope.total_trips = data.numTrips;
+          $scope.checkStatus(data.run_id);
+
+
         }).error(function(e) {
           console.log(e);
         });   
@@ -150,6 +177,8 @@ angular.module('myApp.controllers', [])
       });
 
       
+
+
       $scope.isActiveTrip = function(tripid){
         return tripid == $scope.activeTrip ? 'active' : '';
       }
