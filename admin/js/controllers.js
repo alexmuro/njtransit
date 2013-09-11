@@ -10,8 +10,8 @@ angular.module('myApp.controllers', [])
   		
   }])
 
-  .controller('ModelRunCtrl', ['$scope', '$http','$timeout','MarketArea',
-  	function($scope, $http, $timeout, MarketArea) {
+  .controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
+  	function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       console.log($scope.activeMarket);
       $scope.dow = 0;
@@ -19,9 +19,6 @@ angular.module('myApp.controllers', [])
       $scope.time = 0;
       $scope.walk_distance = 1;
       $scope.walk_speed = 3;
-      $scope.active_run =false;
-
-
       //AM Peak Hours
       $scope.AMstart = new Date();
       $scope.AMstart.setHours(7);
@@ -32,26 +29,34 @@ angular.module('myApp.controllers', [])
       $scope.hstep = 1;
       $scope.mstep = 15;
       $scope.message = "";
-      $scope.trips_complete = 0;
-      $scope.total_trips = 0;
+      $scope.active_run =ActiveModelService.getStatus();
+      if($scope.active_run){
 
-      $scope.checkStatus = function(run_id){
-        $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
-          .success(function(data) {
-            console.log(data);
-            if(data.finished == "1"){
-              $scope.active_run = false;
-              $scope.message= "Run "+run_id+" finished. "+data.numTrips+"trips calculated";
-            }
-            else{
-              $scope.trips_complete = data.numTrips;
-              $timeout($scope.checkStatus(run_id),2000);
-            }
-          })
-          .error(function(e) {
-            console.log(e);
-          });
+         $scope.trips_complete= ActiveModelService.getProgress();
+        $scope.total_trips = ActiveModelService.getTotalTrips();
+        
+
+      }else{
+
+        $scope.trips_complete = 0;
+        $scope.total_trips = 0;
+      
       }
+
+      $rootScope.$on("marketUpdated", function (event) {
+        $scope.activeMarket = MarketArea.getMarketArea();
+        $scope.activeModel = MarketArea.getModel();
+      });
+
+      $rootScope.$on("ActiveModelUpdate", function (event) {
+        $scope.trips_complete = ActiveModelService.getProgress();
+      });
+
+      $rootScope.$on("ActiveModelComplete", function (event) {
+        console.log('Model Run Completed');
+        $scope.message = "Model Run Completed";
+        $scope.active_run = false;
+      });
     
       $scope.today = function() {
         $scope.dt = new Date();
@@ -72,8 +77,7 @@ angular.module('myApp.controllers', [])
           $scope.active_run = true;
           $scope.trips_complete = 0;
           $scope.total_trips = data.numTrips;
-          $scope.checkStatus(data.run_id);
-
+          ActiveModelService.setActive(data.run_id,data.numTrips);
 
         }).error(function(e) {
           console.log(e);

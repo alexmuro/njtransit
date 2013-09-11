@@ -36,4 +36,49 @@ angular.module('myApp.services', [])
             }
         }
     }
-]);
+])
+.factory('ActiveModelService', ['$rootScope','$http','$timeout',
+    function($rootScope,$http,$timeout) {
+        var active_run = false;
+        var modelID = -1;
+        var trips_complete = 0;
+        var totalTrips = 0;
+
+        var checkStatus = function(run_id){
+            console.log('run x')
+            $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
+            .success(function(data) {
+                //console.log(data);
+                if(data.finished == "1"){
+                  active_run = false;
+                  $rootScope.$broadcast('ActiveModelComplete');
+                }
+                else{
+                  trips_complete = data.numTrips;
+                  $rootScope.$broadcast('ActiveModelUpdate');
+                  setTimeout(checkStatus(run_id),4000);//recursive on a 4 second time out
+                }
+            })
+            .error(function(e) {
+                console.log(e);
+            });
+        }
+        return {
+            setActive:function(model_id,total_trips){
+               active_run = true;
+               modelID = model_id;
+               totalTrips = total_trips;
+               checkStatus(model_id); 
+            },
+            getStatus:function(){
+                return active_run;
+            },
+            getProgress:function(){
+                return trips_complete;
+            },
+            getTotalTrips:function(){
+                return totalTrips;
+            },
+        }
+    }
+])   
