@@ -45,7 +45,6 @@ angular.module('myApp.services', [])
         var totalTrips = 0;
 
         var checkStatus = function(run_id){
-            console.log('run x')
             $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
             .success(function(data) {
                 //console.log(data);

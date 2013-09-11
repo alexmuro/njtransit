@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse flush">
+<div class="navbar navbar-inverse flush" ng-controller="HeaderCtrl">
   <div class="navbar-inner">
     <div class="container">
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#nav-collapse-03">
@@ -14,7 +14,7 @@
         </ul> <!-- /nav -->
 
         
-
+        
         <ul class="nav pull-right">
           <li class="divider"></li>
           <li class="dropdown">
@@ -28,6 +28,11 @@
             </ul>
           </li>
         </ul> <!-- /nav -->
+        <ul class="nav pull-right" ng-show="active_run">
+          <li>
+            <a>Active Run:{{ trips_complete +" / "+ total_trips }}</a>
+          </li>
+        </ul>
         <form class="navbar-search form-search pull-right" action="" align="center">
           <div class="input-append">
             <input type="text" class="search-query span2" placeholder="Search">

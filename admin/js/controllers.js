@@ -9,7 +9,35 @@ angular.module('myApp.controllers', [])
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
+.controller('HeaderCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
+    function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
+        $scope.active_run =ActiveModelService.getStatus();
+       
+        if($scope.active_run){
 
+            $scope.trips_complete= ActiveModelService.getProgress();
+            $scope.total_trips = ActiveModelService.getTotalTrips();
+        
+        }else{
+
+            $scope.trips_complete = 0;
+            $scope.total_trips = 0;
+      
+        }
+        $rootScope.$on("ActiveModelUpdate", function (event) {
+            $scope.active_run =ActiveModelService.getStatus();
+            $scope.trips_complete = ActiveModelService.getProgress();
+            $scope.total_trips = ActiveModelService.getTotalTrips();
+        });
+
+        $rootScope.$on("ActiveModelComplete", function (event) {
+          console.log('Model Run Completed');
+          $scope.message = "Model Run Completed";
+          $scope.active_run = false;
+        });
+    }
+])
+  
   .controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
   	function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
@@ -32,7 +60,7 @@ angular.module('myApp.controllers', [])
       $scope.active_run =ActiveModelService.getStatus();
       if($scope.active_run){
 
-         $scope.trips_complete= ActiveModelService.getProgress();
+        $scope.trips_complete= ActiveModelService.getProgress();
         $scope.total_trips = ActiveModelService.getTotalTrips();
         
 
@@ -69,19 +97,21 @@ angular.module('myApp.controllers', [])
 
       $scope.output = "";
       $scope.runModel = function(){
-        $scope.message = "Model running...."
-        $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
-        .success(function(data) {
+        if(!$scope.active_run){
+          $scope.message = "Model running...."
+          $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
+          .success(function(data) {
 
-          $scope.message = data.status;
-          $scope.active_run = true;
-          $scope.trips_complete = 0;
-          $scope.total_trips = data.numTrips;
-          ActiveModelService.setActive(data.run_id,data.numTrips);
+            $scope.message = data.status;
+            $scope.active_run = true;
+            $scope.trips_complete = 0;
+            $scope.total_trips = data.numTrips;
+            ActiveModelService.setActive(data.run_id,data.numTrips);
 
-        }).error(function(e) {
-          console.log(e);
-        });   
+          }).error(function(e) {
+            console.log(e);
+          });   
+        }
       }
 
   }])
