@@ -27,7 +27,7 @@ angular.module('myApp.controllers', [])
             $scope.active_run =ActiveModelService.getStatus();
             $scope.trips_complete = ActiveModelService.getProgress();
             $scope.total_trips = ActiveModelService.getTotalTrips();
-            $scope.apply();
+            $scope.$apply();
         });
 
         $rootScope.$on("ActiveModelComplete", function (event) {
