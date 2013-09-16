@@ -45,7 +45,7 @@ angular.module('myApp.services', [])
         var totalTrips = 0;
 
         function checkStatus (run_id){
-            $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
+            $http({url:'/data/get/modelRunStatus.php',params:{randnun:Math.random(),model_run_id:run_id},method:"GET"})
             .success(function(data) {
                 //console.log(data);
                 if(data.finished == "1"){
