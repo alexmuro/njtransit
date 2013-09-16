@@ -1,8 +1,6 @@
 'use strict';
 
 /* Controllers */
-
-
 angular.module('myApp.controllers', [])
 .controller('HomeCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
@@ -31,7 +29,7 @@ angular.module('myApp.controllers', [])
         });
 
         $rootScope.$on("ActiveModelComplete", function (event) {
-          console.log('Model Run Completed');
+          
           $scope.message = "Model Run Completed";
           $scope.active_run = false;
         });
@@ -41,7 +39,6 @@ angular.module('myApp.controllers', [])
   .controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
   	function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
-      console.log($scope.activeMarket);
       $scope.dow = 0;
       $scope.season = 0;
       $scope.time = 0;
@@ -84,7 +81,6 @@ angular.module('myApp.controllers', [])
       });
 
       $rootScope.$on("ActiveModelComplete", function (event) {
-        console.log('Model Run Completed');
         $scope.message = "Model Run Completed";
         $scope.active_run = false;
       });
@@ -104,7 +100,6 @@ angular.module('myApp.controllers', [])
           $scope.message = "Model running...."
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed},method:"GET"})
           .success(function(data) {
-            console.log('test',data);
             $scope.message = data.status;
             $scope.active_run = true;
             $scope.trips_complete = 0;
@@ -166,7 +161,6 @@ angular.module('myApp.controllers', [])
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
         $scope.overview = data.data.overview[0];
-        console.log($scope.modelData);
         $scope.writePage();
       });
 
@@ -202,7 +196,6 @@ angular.module('myApp.controllers', [])
       }
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
-        //console.log($scope.modelData);
       });
 
       $rootScope.$on("modelUpdated", function (event) {
@@ -233,13 +226,12 @@ angular.module('myApp.controllers', [])
          $scope.showtrips = true;
          $scope.getTrip(tripid).then(function(data){
             $scope.tripData = data.data;
-            console.log($scope.tripData);
          });
         }
       }
       
       $scope.getTrip =function(tripid){
-        console.log($scope.activeModel.id);
+        
         return  $http({url:'/data/get/getGTFSModelTrip.php',data:{run_id:$scope.activeModel.id,trip_id:tripid},method:"POST"}).then(function(data){
             return(data);
         })
@@ -281,7 +273,6 @@ angular.module('myApp.controllers', [])
       }
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;
-        //console.log($scope.modelData);
       });
   		
       $rootScope.$on("modelUpdated", function (event) {
