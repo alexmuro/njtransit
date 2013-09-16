@@ -24,7 +24,7 @@ angular.module('myApp.controllers', [])
         }
         $rootScope.$on("ActiveModelUpdate", function (event) {
            console.log('hello ie header');
-           console.log('num trips',ActiveModelService.getProgress(Math.random()));
+           console.log('num trips',ActiveModelService.getProgress(Math.random()),Math.random());
             $scope.active_run =ActiveModelService.getStatus();
             $scope.trips_complete = ActiveModelService.getProgress();
             $scope.total_trips = ActiveModelService.getTotalTrips();
