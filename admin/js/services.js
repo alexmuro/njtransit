@@ -44,7 +44,7 @@ angular.module('myApp.services', [])
         var trips_complete = 0;
         var totalTrips = 0;
 
-        var checkStatus = function(run_id){
+        function checkStatus (run_id){
             $http({url:'/data/get/modelRunStatus.php',params:{model_run_id:run_id},method:"GET"})
             .success(function(data) {
                 //console.log(data);
@@ -55,7 +55,9 @@ angular.module('myApp.services', [])
                 else{
                   trips_complete = data.numTrips;
                   $rootScope.$broadcast('ActiveModelUpdate');
-                  $timeout(checkStatus(run_id),4000);//recursive on a 4 second time out
+                  setTimeout(function(){
+                        checkStatus(run_id);
+                    },4000);//recursive on a 4 second time out
                 }
             })
             .error(function(e) {
