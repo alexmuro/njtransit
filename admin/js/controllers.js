@@ -23,9 +23,11 @@ angular.module('myApp.controllers', [])
       
         }
         $rootScope.$on("ActiveModelUpdate", function (event) {
+           console.log('hello ie header');
             $scope.active_run =ActiveModelService.getStatus();
             $scope.trips_complete = ActiveModelService.getProgress();
             $scope.total_trips = ActiveModelService.getTotalTrips();
+            $scope.apply();
         });
 
         $rootScope.$on("ActiveModelComplete", function (event) {
