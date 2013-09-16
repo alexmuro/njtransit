@@ -55,7 +55,7 @@ angular.module('myApp.services', [])
                 else{
                   trips_complete = data.numTrips;
                   $rootScope.$broadcast('ActiveModelUpdate');
-                  setTimeout(checkStatus(run_id),4000);//recursive on a 4 second time out
+                  $timeout(checkStatus(run_id),4000);//recursive on a 4 second time out
                 }
             })
             .error(function(e) {
