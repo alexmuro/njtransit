@@ -7,7 +7,7 @@
 	$inscon = $test->connect();
 
 	$date = array();
-	$sql = "select id,name from model_runs where zone_id = $zone_id";
+	$sql = "select id,name from model_runs where zone_id = $zone_id and finished = 1 ";
  	$rs=mysql_query($sql) or die($sql." ".mysql_error());
  	$data = array();
 

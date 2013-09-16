@@ -15,8 +15,8 @@
       <strong>Season:</strong> {{overview.season}}<br>
       <strong>Day of Week:</strong> {{overview.dow}}<br>
       <strong>Time:</strong> {{overview.time}}<br>
-      <strong>Max Walk Distance (miles):</strong> {{overview.max_walk_distance}}<br>
-      <strong>Walk Speed (mph):</strong> {{overview.walk_speed}}<br>
+      <strong>Max Walk Distance (miles):</strong> {{overview.max_walk_distance/1609 | number:1}}<br>
+      <strong>Walk Speed (mph):</strong> {{overview.walk_speed/1.60934 | number:1}}<br>
       <br><br>
       <br>
     </div>

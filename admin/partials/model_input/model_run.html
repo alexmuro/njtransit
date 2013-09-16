@@ -7,31 +7,37 @@
         <div class="row-fluid">
 	        <div class="span4">
 		       	<label>Season</label>
-		   
-		    		<select ng-model="season">
-		    			<option selected value='0'>Summer (June)</option>
-		    			<option disabled value='1'>Fall (September)</option>
-		    			<option disabled value='2'>Spring (April)</option>
-		    			<option disabled value='3'>Winder (January)</option>
-		    			
-		    		</select>
-		    		<label>Day of Week</label>
-		    		<select ng-model="dow">
-		    			<option value='0'>Monday</option>
-		    			<option value='1'>Tuesday</option>
-		    			<option value='2'>Wednesday</option>
-		    			<option value='3'>Thursday</option>
-		    			<option value='4'>Friday</option>
-		    			<option disabled value='5'>Saturday</option>
-		    			<option disabled value='6'>Sundayday</option>
-		    		</select>
-		    		<label>Time</label>
-		   
-		    		<select ng-model="time">
-		    			<option value='0'>AM Peak</option>
-		    			<option disabled value='1'>PM Peak</option>
-		    			<option disabled value='2'>Full Day</option>
-		    		</select>
+	    		<select ng-model="model_season">
+	    			<option selected value='7/22/2013'>Summer 13(June)</option>
+	    			<option disabled value='9/22/2013'>Fall 13(September)</option>
+	    			<option disabled value='12/23/2013'>Winter (January)</option>
+	    			<option disabled value='3/21/2014'>Spring 14(April)</option>	
+	    		</select>
+
+	    		<label>Day of Week</label>
+	    		<select ng-model="dow">
+	    			<option value='0'>Monday</option>
+	    			<option value='1'>Tuesday</option>
+	    			<option value='2'>Wednesday</option>
+	    			<option value='3'>Thursday</option>
+	    			<option value='4'>Friday</option>
+	    			<option disabled value='5'>Saturday</option>
+	    			<option disabled value='6'>Sundayday</option>
+	    		</select>
+
+	    		<label>Time</label>
+	    		<select ng-model="model_time">
+	    			<option value='0'>AM Peak</option>
+	    			<option disabled value='1'>PM Peak</option>
+	    			<option disabled value='2'>Full Day</option>
+	    		</select>
+				
+				<label>Type</label>
+	    		<select ng-model="model_type">
+	    			<option selected value='CTPP2000' >CTPP 2000</option>
+	    			<option value='LEHD5'>LEHD</option>
+	    			
+	    		</select>
 			</div>
 			
 			 <div class="span4">

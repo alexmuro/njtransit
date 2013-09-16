@@ -47,6 +47,9 @@ angular.module('myApp.controllers', [])
       $scope.time = 0;
       $scope.walk_distance = 1;
       $scope.walk_speed = 3;
+      $scope.model_type = "CTPP2000" 
+      $scope.model_time = 0;
+      $scope.model_season= '7/22/2013';
       //AM Peak Hours
       $scope.AMstart = new Date();
       $scope.AMstart.setHours(7);
@@ -99,9 +102,9 @@ angular.module('myApp.controllers', [])
       $scope.runModel = function(){
         if(!$scope.active_run){
           $scope.message = "Model running...."
-          $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id},method:"GET"})
+        $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed},method:"GET"})
           .success(function(data) {
-
+            console.log('test',data);
             $scope.message = data.status;
             $scope.active_run = true;
             $scope.trips_complete = 0;
