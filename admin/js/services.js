@@ -74,7 +74,7 @@ angular.module('myApp.services', [])
             getStatus:function(){
                 return active_run;
             },
-            getProgress:function(){
+            getProgress:function(rand){
                 return trips_complete;
             },
             getTotalTrips:function(){
