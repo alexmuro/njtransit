@@ -66,7 +66,7 @@ var viz = {
   		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
   		     		zoom: 13
   		   	})
-			//.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
+			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
   			L.control.scale().addTo(viz.map);
   		
   		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg"),
