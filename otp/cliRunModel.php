@@ -9,8 +9,31 @@
  while($row = mysql_fetch_assoc($rs)){
  	planTrip($row['from_tract'],$row['to_tract'],$row['from_lat'],$row['from_lon'],$row['to_lat'],$row['to_lon'],$model_id);
  }
+ $sql ="INSERT into model_stops (run_id,stop_code,boarding,alighting,routes) (
+    select 
+        run_id,on_stop_code as stop_code, count(1) as boarding,b.alighting,GROUP_CONCAT(distinct route) as routes
+    from
+        model_legs as a
+    join
+    (select 
+        off_stop_code as stop_code, count(1) as alighting
+    from
+        model_legs
+    where
+        mode = 'BUS' and run_id = $model_id
+    group by 
+        run_id,off_stop_code ) as b on b.stop_code = a.on_stop_code
+    where
+        mode = 'BUS' and a.run_id = $model_id
+    group by 
+        run_id,on_stop_code
+)";
+ mysql_query($sql) or die($sql." ".mysql_error());
+
+
  $sql = "Update model_runs set finished = 1 where id = ".$model_id;
  mysql_query($sql) or die($sql." ".mysql_error());
+
 
 	function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$model_id){
 

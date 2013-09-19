@@ -54,12 +54,17 @@ foreach($routes as $route)
         b.stop_name as stop_name,
         b.zone_id as zone_id,
         b.stop_lat as stop_lat,
-        b.stop_lon as stop_lon
+        b.stop_lon as stop_lon,
+        c.boarding,
+        c.alighting,
+        c.routes
         from
             gtfs_20130712.stop_times as a,
             gtfs_20130712.stops as b
+        left outer join
+            model_stops as c on b.stop_code = c.stop_code
         where
-        a.stop_id = b.stop_id and a.trip_id = $trip_id";
+        a.stop_id = b.stop_id and a.trip_id = $trip_id and c.run_id = $model_run";
 
 
         $rs=mysql_query($sql) or die($sql."<br><br>".mysql_error());
@@ -73,43 +78,15 @@ foreach($routes as $route)
                 //do nothing
             }
             else{
-                
-                $sql = "SELECT 
-                        a.stop_id as stop_id,
-                        count(a.stop_id) as stop_frequency
-                        from
-                            gtfs_20130712.stop_times as a
-                        where
-                            a.stop_id = ".$row['stop_id']."
-                        group by a.stop_id";
-                $fs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
-                $fow = mysql_fetch_assoc( $fs );
-
-                $sql = "SELECT 
-                            SUM(case
-                                when on_stop_id = ".$row['stop_id']." then 1
-                                else 0
-                            end) as on_count,
-                            SUM(case
-                                when off_stop_id = ".$row['stop_id']." then 1
-                                else 0
-                            end) as off_count
-                        from
-                            model_legs
-                        where
-                            (on_stop_code = ".$row['stop_code']." or off_stop_code = ".$row['stop_code'].") and run_id = $model_run";
-                $gs=mysql_query($sql)  or die($sql."<br><br>".mysql_error());
-                $gow = mysql_fetch_assoc( $gs );                    
-                        
+                                 
 
                 //print_r($gow);
                 $stops[] = $row['stop_id'];
                 $properties = array();
                 $feature = array();
                 $geometry = array();
-                $properties['stop_frequency'] = intval($fow['stop_frequency']);
-                $properties['on_count'] = intval($gow['on_count']);
-                $properties['off_count'] = intval($gow['off_count']); 
+                $properties['on_count'] = intval($row['boarding']);
+                $properties['off_count'] = intval($row['alighting']); 
                 $properties['stop_id'] = intval($row['stop_id']);
                 $properties['stop_code'] = $row['stop_code'];
                 $properties['stop_name'] = $row['stop_name'];
@@ -121,8 +98,6 @@ foreach($routes as $route)
                 $geometry['type'] = 'Point'; 
                 $coordinates = array(floatval($row['stop_lon']),floatval($row['stop_lat']));
 
-               
-
                 $geometry['coordinates'] = $coordinates;
                 $feature['geometry'] = $geometry;
                 $output['features'][]=$feature;
@@ -131,7 +106,7 @@ foreach($routes as $route)
         }
     }
 }
-$output['stops'][] = $stops;
+//$output['stops'][] = $stops;
 echo json_encode($output); 
 
 ?>

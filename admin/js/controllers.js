@@ -7,6 +7,7 @@ angular.module('myApp.controllers', [])
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
   }])
+
 .controller('HeaderCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
     function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
         $scope.active_run =ActiveModelService.getStatus();
@@ -36,8 +37,8 @@ angular.module('myApp.controllers', [])
         });
     }
 ])
-  
-  .controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
+
+.controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
   	function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
       $scope.dow = 0;
@@ -98,7 +99,7 @@ angular.module('myApp.controllers', [])
       $scope.output = "";
       $scope.runModel = function(){
         if(!$scope.active_run){
-          $scope.message = "Model running...."
+          $scope.message = "Calculating trip table and metadata.";
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed},method:"GET"})
           .success(function(data) {
             $scope.message = data.status;
@@ -110,6 +111,9 @@ angular.module('myApp.controllers', [])
           }).error(function(e) {
             console.log(e);
           });   
+        }
+        else{
+          $scope.message = 'Model already in progress.'
         }
       }
 
