@@ -91,6 +91,8 @@ foreach($routes as $route)
                 $properties['stop_code'] = $row['stop_code'];
                 $properties['stop_name'] = $row['stop_name'];
                 $properties['zone_id'] = $row['zone_id'];
+                $properties['routes'] = $row['routes'];
+
                 $properties['include'] = 0;
 
                 $feature['type'] = 'Feature';

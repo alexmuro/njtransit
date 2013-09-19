@@ -122,6 +122,11 @@ angular.module('myApp.controllers', [])
   .controller('ModelDataCtrl', ['$scope', '$http','MarketArea',
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
+      $scope.CTPP="2000";
+      $scope.LEHD="2011";
+      $scope.SF1="2010";
+      $scope.ACS5="2011";
+
   		
   }])
 

@@ -149,9 +149,9 @@ var viz = {
 				viz.stops.colorScaleFreq = d3.scale.linear()
 					.domain([viz.stops.min_c,viz.stops.max_c])
 					.range(['#ED3A2D', '#2e0101']);
-				viz.stops.sizeScale = d3.scale.linear()
+				viz.stops.sizeScale = d3.scale.sqrt()
 					.domain([viz.stops.min_r,viz.stops.max_r])
-					.range([1,40]);	 
+					.range([2,40]);	 
 				loader.run();
 			},
 			setBounds: function(){
@@ -182,12 +182,12 @@ var viz = {
 				return viz.stops.sizeScale(d.properties[viz.stops.stopsBy]);
 			},
 			fillDelay: function(d,i) {
-				return viz.stops.colorScaleFreq(d.properties.stop_frequency);
+				return '#ED3A2D';
 			},
 			visualize:function(){
 				viz.stops.setBounds();
 
-				viz.stops.sizeScale = d3.scale.linear()
+				viz.stops.sizeScale = d3.scale.sqrt()
 					.domain([viz.stops.min_r,viz.stops.max_r])
 					.range([1,40]);
 				viz.g.selectAll("circle.stop")
@@ -225,6 +225,12 @@ var viz = {
 							}else{return 0;}
 
 						},
+						"routes": function(d,i) { 
+							if(d.properties.routes != 'undefined'){
+								return(d.properties.routes)
+							}else{return 0;}
+
+						},
 						"boarding_count": function(d,i) { 
 							if(d.properties.on_count != 'undefined'){
 								return(d.properties.on_count)
@@ -244,7 +250,7 @@ var viz = {
 							"opacity": 1
 						}, 100);
 						var text = "";
-						var text = "<p><strong>Stop " + self.attr("stopid") + "</strong><br/><span>" + self.attr("intersection") + "</span></p><p><strong>Boarding Count</strong><br/> " + self.attr("boarding_count") + "</p><p><strong>Alighting Count</strong><br/> " + self.attr("alighting_count") + "</p><p><strong>Stop Frequency</strong><br/> " + self.attr("frequency") + "</p>";
+						var text = "<p><strong>Stop " + self.attr("stopid") + "</strong><br/><span>" + self.attr("intersection") + "</span></p><p><strong>Boarding Count</strong><br/> " + self.attr("boarding_count") + "</p><p><strong>Alighting Count</strong><br/> " + self.attr("alighting_count") + "</p><p><strong>Routes Served</strong><br/> " + self.attr("routes") + "</p>";
 						$("#info").show().html(text);
 					})
 					.on("mouseout", function(self) {

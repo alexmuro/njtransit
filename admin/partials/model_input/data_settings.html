@@ -1,10 +1,41 @@
 <div class="row">
 	<div class="span12">
-		<h3>Data Settings</h3>
-		<p>
-		  
-		  <h4>Data Management</h4>
-		 Through this tab you will be able to manage and upload new GTFS data sets, select which versions of the API and manage other data inputs that will be used for moddeling and analysis as the project continues towards completion.
-		 </p>
+		<div class="row-fluid">
+			<div class="span8">
+				<h3>Data Settings<h3>
+			</div>
+		</div>
+		<div class="row-fluid">
+	        <div class="span4">
+	        	
+	        	<h4>Origin-Destination Data</h4>
+		       	<label>CTPP - Census Transportation Planning Products</label>
+	    		<select ng-model="CTPP">
+	    			<option selected value='2000'>CTPP 2000</option>	
+	    		</select>
+
+	    		<label>LODES - Longitudinal Employer-Household Dynamics (LEHD) Origin-Destination Employment Statistics</label>
+	    		<select ng-model="LEHD">
+	    			<option value='2011'>2011</option>
+	    		</select>
+
+	    		
+			</div>
+			 <div class="span4">
+			 	<h4>Census Data</h4>
+	    		<label>SF1 - Summary File 1</label>
+	    		<select ng-model="SF1">
+	    			<option value='2010'>2010 SF1</option>
+	    			<option disabled value='2000'>2000 SF1</option>
+	    		</select>
+				
+				<label>ACS - American Community Survey</label>
+	    		<select ng-model="ACS5">
+	    			<option selected value='2011' >2007-2011 5 Year</option>
+	    			<option selected value='2010' >2006-2010 5 Year</option>
+	    			
+	    		</select>
+			 </div>
+		</div>
 	</div>
 </div>
