@@ -183,7 +183,10 @@ var viz = {
 				return viz.stops.sizeScale(d.properties[viz.stops.stopsBy]);
 			},
 			fillDelay: function(d,i) {
-				return '#ED3A2D';
+				if(viz.stops.stopsBy == 'off_count'){
+					return '#ED3A2D';
+				}
+				return '#89ca27';	
 			},
 			visualize:function(){
 				viz.stops.setBounds();
@@ -195,7 +198,8 @@ var viz = {
 				.transition().duration(1000)
     			.attr('r', function(d){ 
     				return viz.stops.sizeScale(d.properties[viz.stops.stopsBy])
-    			});
+    			})
+    			.attr('fill',viz.stops.fillDelay);
 			},
 			load: function() {
 				var bounds = d3.geo.bounds(viz.stops.data),
@@ -319,7 +323,6 @@ var viz = {
 			},
 			draw:function(){
 				viz.tracts.data = transitData.getCensusTracts(viz.zone);
-				console.log(viz.tracts.data);
 				var bounds = d3.geo.bounds(viz.tracts.data);
 				path = d3.geo.path().projection(viz.project);
 				
@@ -400,7 +403,6 @@ var viz = {
 			var prev = 0;
 			var numbers = ["zero","one","two","three","four","five","six","seven","eight","nine"];
 			viz.tracts.color.domain().forEach(function(d,i){
-				console.log(d);
 				
 				if(i == 0){
 					legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll][i]+'"></rect></svg><span>&lt;= '+viz.tracts.color.domain()[i].toFixed(0)+' </span></li>'
@@ -522,7 +524,7 @@ var transitData = {
 	},
 	getGTFSStops : function(){
 		var output = {};
-		console.log('modelrun', viz.model_run)
+		//console.log('modelrun', viz.model_run)
 		$.ajax({url:'/data/get/getStopsByZone.php',
 			data:{zone_id:viz.zone,model_run:viz.model_run},
 			method:'POST',

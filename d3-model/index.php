@@ -50,14 +50,14 @@
 	<div id="legend-detail">
 		<ul>
 			<li><svg width="20" height="20"><path d="M0 10 L20 10 Z" stroke="#2C7BC9" stroke-width="2"></path></svg><span>route<span></span></span></li>
-			<li><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="#ED3A2D"></circle></svg><span>stop</span></li>
+			<li><svg width="20" height="20"><circle cx="10" cy="10" r="7" fill="#ED3A2D" class='legend_circle'></circle></svg><span>stop</span></li>
 		</ul>
 		<hr>
 		<ul>
 			<li>
-				<svg width="170" height="30">
-					<circle cx="3" cy="15" r="3" fill="#ED3A2D"></circle>
-					<circle cx="155" cy="15" r="15" fill="#ED3A2D"></circle>
+				<svg width="170" height="30" class='stopLegend'>
+					<circle class='legend_circle' cx="3" cy="15" r="3" fill="#ED3A2D"></circle>
+					<circle class='legend_circle' cx="155" cy="15" r="15" fill="#ED3A2D"></circle>
 				</svg>
 				<span class="c-01">less people<br><span class="stops_legend"></span></span>
 				<span class="c-02">more people<br><span class="stops_legend" style="float:right;"></span></span>
@@ -67,7 +67,8 @@
 		<div id="choro_legend">
 		</div>
 		<!-- <hr>
-		Color Scale : <select id="colorbrews"></select> -->
+			Color Scale : <select id="colorbrews"></select> 
+		-->
 	</div>
 </div>
 	
@@ -131,6 +132,10 @@
 		$("#stops-select").on('change',function(){
 			$(".stops_legend").html($("#stops-select").find(":selected").text())
 			viz.stops.stopsBy = $("#stops-select").val();
+			if(viz.stops.stopsBy == 'off_count'){
+					 $('.legend_circle').css('fill','#89ca27');
+				}
+				$('.legend_circle').css('fill','#89ca27');
 			viz.stops.visualize();
 			
 		});
