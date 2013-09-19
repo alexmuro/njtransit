@@ -92,11 +92,15 @@
 				<center>
 					<select id="tracts-select" class='inverse-select'>
 						<option value="P0010001" selected>Total Population</option>
-						<option value="P0030002" >White Population</option>
-						<option value="P0030003" >Black Population</option>
-						<option value="P0030005" >Asian Population</option>
-						<option value="inbound_transit">Inbound Transit</option>
-						<option value="outbound_transit">Outbound Transit</option>
+						<OPTGROUP LABEL="Race">
+							<option value="P0030002" >White Population</option>
+							<option value="P0030003" >Black Population</option>
+							<option value="P0030005" >Asian Population</option>
+						</optgroup>
+						<optgroup LABEL = "LEHD (O-D ES)">
+							<option value="inbound_transit">Inbound Transit</option>
+							<option value="outbound_transit">Outbound Transit</option>
+						</optgroup>
 					</select>
 				</center>
 			</li>
