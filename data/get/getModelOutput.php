@@ -13,7 +13,14 @@
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	$data['overview'][] = mysql_fetch_assoc($rs);
 
-	$sql = "select distinct on_stop_code, count(on_stop_id) as count,b.stop_name  from model_legs as a join gtfs_20130712.stops as b on b.stop_id = a.off_stop_id where run_id = $run_id and mode = 'BUS' group by on_stop_code order by count desc";
+	$sql = "SELECT distinct on_stop_code, count(on_stop_id) as count,b.stop_name  
+			from model_legs as a 
+			join 
+			gtfs_20130712.stops as b on b.stop_id = a.on_stop_id 
+			where run_id = $run_id and mode = 'BUS'
+			group by on_stop_code 
+			order by count desc
+			";
  	$rs=mysql_query($sql) or die($sql." ".mysql_error());
  	
 
@@ -23,7 +30,12 @@
  		$data['boarding'][] = $row;
  	}
 
- 	$sql = "select distinct off_stop_code, count(off_stop_id) as count, b.stop_name  from model_legs as a join gtfs_20130712.stops as b on b.stop_id = a.off_stop_id where run_id = $run_id and mode = 'BUS' group by off_stop_code order by count desc";
+ 	$sql = "SELECT distinct off_stop_code, count(off_stop_id) as count, b.stop_name  
+ 			from model_legs as a join gtfs_20130712.stops as b on b.stop_id = a.off_stop_id 
+ 			where run_id = $run_id and mode = 'BUS' 
+ 			group by off_stop_code 
+ 			order by count desc";
+ 			
  	$rs=mysql_query($sql) or die($sql." ".mysql_error());
  	while($row = mysql_fetch_assoc($rs)){
  		$data['alighting'][] = $row;
