@@ -38,6 +38,7 @@ var viz = {
 	routeData:{},
 	tractData:{},
 	stopData:{},
+	
     //----------------------------------------------------------------------------------------------------------
    	njtransit  : function() {
 
@@ -277,6 +278,11 @@ var viz = {
 			max:0,
 			min:10000,
 			symbol:'P0010001',
+			color:{},
+			brewer:['YlGn','YlGnBu','GnBu','BuGn','PuBuGn','PuBu','BuPu','RdPu','PuRd','OrRd','YlOrRd','YlOrBr','Purples','Blues','Greens','Oranges','Reds','Greys','PuOr','BrBG','PRGn','PiYG','RdBu','RdGy','RdYlBu','Spectral','RdYlGn','Accent','Dark2','Paired','Pastel1','Pastel2','Set1','Set2','Set3'],
+			brewer_index:1,
+			ll:5,
+			legend_domain:{},
 			changeSymbol:function(){
 
 				viz.tracts.max=0;
@@ -289,9 +295,14 @@ var viz = {
 			 			viz.tracts.min = f.properties[viz.tracts.symbol];
 				 	}
 				})
-				var color = d3.scale.quantile()
-	    			.domain([viz.tracts.min,viz.tracts.max])
-	    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"])
+				viz.tracts.legend_domain = d3.scale.quantile()
+					.domain([viz.tracts.min,viz.tracts.max])
+					.range(colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll]);
+
+
+				viz.tracts.color = d3.scale.quantile()
+	    			.domain(viz.tracts.legend_domain.quantiles())
+	    			.range(colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll]);
 
 	    		viz.g.selectAll("path.tract")
 				.transition().duration(1000)
@@ -299,10 +310,11 @@ var viz = {
 						if(d.properties[viz.tracts.symbol] == null){
 							return "#f00";
 						}else{
-							return color(d.properties[viz.tracts.symbol]);
+							return viz.tracts.color(d.properties[viz.tracts.symbol]);
 						}
 
 				});
+				viz.setLegend();
 
 			},
 			draw:function(){
@@ -326,9 +338,15 @@ var viz = {
 			 			viz.tracts.min = f.properties[viz.tracts.symbol];
 				 	}
 				})
-				var color = d3.scale.quantile()
-	    			.domain([viz.tracts.min,viz.tracts.max])
-	    			.range(["#EAF5DA","#CFE8AC","#9FC961","#7CAD34","#64961B","#41660A"]);
+
+				viz.tracts.legend_domain = d3.scale.quantile()
+					.domain([viz.tracts.min,viz.tracts.max])
+					.range(colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll]);
+
+
+				viz.tracts.color = d3.scale.quantile()
+	    			.domain(viz.tracts.legend_domain.quantiles())
+	    			.range(colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll]);
 	    				
 				var feature = viz.g.selectAll("path.tract")
 					.data(viz.tracts.data.features)
@@ -340,7 +358,7 @@ var viz = {
 						if(d.properties[viz.tracts.symbol] == null){
 							return "#f00";
 						}else{
-							return color(d.properties[viz.tracts.symbol]);
+							return viz.tracts.color(d.properties[viz.tracts.symbol]);
 						}
 
 					})
@@ -373,9 +391,32 @@ var viz = {
      				viz.reset(bounds,feature);
      			});
      			viz.reset(bounds,feature)
-				
+				viz.setLegend();
 				loader.run();
 			}
+		},
+		setLegend : function(){
+			var legendText = '<hr><h3>'+$("#tracts-select").find(":selected").text()+'</h3><ul id="tangle-legend">';
+			var prev = 0;
+			var numbers = ["zero","one","two","three","four","five","six","seven","eight","nine"];
+			viz.tracts.color.domain().forEach(function(d,i){
+				console.log(d);
+				
+				if(i == 0){
+					legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll][i]+'"></rect></svg><span>&lt;= '+viz.tracts.color.domain()[i].toFixed(0)+' </span></li>'
+				
+				}
+				else{
+					legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll][i]+'"></rect></svg><span> '+viz.tracts.color.domain()[i-1].toFixed(0)+' - '+viz.tracts.color.domain()[i].toFixed(0)+'</span></span></li>';				
+				}		
+			})
+			
+			legendText += '<li><svg width="20" height="20"><rect width="300" height="100" fill="'+colorbrewer[viz.tracts.brewer[viz.tracts.brewer_index]][viz.tracts.ll][viz.tracts.color.domain().length]+'"></rect></svg><span>&gt; '+viz.tracts.color.domain()[viz.tracts.color.domain().length-1].toFixed(0)+'</span></li>'
+				
+			legendText +="</ul>";
+			$("#choro_legend").html(legendText);
+			setUpTangle();
+			//loader.run();
 		},
 		reproject :function (){
     		viz.projection = d3.geo.mercator()

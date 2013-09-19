@@ -17,8 +17,19 @@
 	<!-- Javascript Includes -->
 	<script type="text/javascript" src="../resources/js/jquery-1.9.1.min.js"></script><style type="text/css"></style>
 	<script type="text/javascript" src="../resources/js/d3.v3.min.js"></script>	
+	<script type="text/javascript" src="../resources/js/colorbrewer.js"></script>
+	<script type="text/javascript" src="../resources/js/Tangle-0.1.0/Tangle.js"></script>
+
+    <!-- TangleKit (optional) -->
+    <link rel="stylesheet" href="../resources/js/Tangle-0.1.0/TangleKit/TangleKit.css" type="text/css">
+    <script type="text/javascript" src="../resources/js/Tangle-0.1.0/TangleKit/mootools.js"></script>
+    <script type="text/javascript" src="../resources/js/Tangle-0.1.0/TangleKit/sprintf.js"></script>
+    <script type="text/javascript" src="../resources/js/Tangle-0.1.0/TangleKit/BVTouchable.js"></script>
+    <script type="text/javascript" src="../resources/js/Tangle-0.1.0/TangleKit/TangleKit.js"></script>
+
 	<script src="../resources/js/leaflet0.6.4.js"></script>
 	<script type="text/javascript" src="index_files/script.js"></script>
+	<script type="text/javascript" src="index_files/tangle-legend.js"></script>
 	
 	<title>AVAIL Transit Demand Modeling</title>
 </head>
@@ -48,36 +59,15 @@
 					<circle cx="3" cy="15" r="3" fill="#ED3A2D"></circle>
 					<circle cx="155" cy="15" r="15" fill="#ED3A2D"></circle>
 				</svg>
-				<span class="c-01">less frequent<br>service</span>
-				<span class="c-02">more frequent<br>service</span>
+				<span class="c-01">less people<br><span class="stops_legend"></span></span>
+				<span class="c-02">more people<br><span class="stops_legend" style="float:right;"></span></span>
 			</li>
 		</ul>
 		<hr>
-		<ul>
-			<li>
-				<svg width="170" height="10">
-					<rect width="170" height="10" fill="url(#gradient)"></rect>
-					<defs>
-						<lineargradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-							<stop offset="0%" style="stop-color:#ED3A2D;"></stop>
-							<stop offset="100%" style="stop-color:#2e0101"></stop>
-						</lineargradient>
-					</defs>
-				</svg>
-				<span class="c-01">shorter<br>delay<br>(0 min.)</span>
-				<span class="c-02">longer<br>delay<br>(15+ min.)</span>
-			</li>
-		</ul>
-		<hr>
-		<h3>Poverty Level</h3>
-		<ul>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#EAF5DA"></rect></svg><span>&lt;= 5% of residents</span></li>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#CFE8AC"></rect></svg><span>5.01 - 10% of residents</span></li>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#9FC961"></rect></svg><span>10.01 - 15% of residents</span></li>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#7CAD34"></rect></svg><span>15.01 - 20% of residents</span></li>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#64961B"></rect></svg><span>20.01 - 25% of residents</span></li>
-			<li><svg width="20" height="20"><rect width="300" height="100" fill="#41660A"></rect></svg><span>&gt; 25% of residents</span></li>
-		</ul>
+		<div id="choro_legend">
+		</div>
+		<!-- <hr>
+		Color Scale : <select id="colorbrews"></select> -->
 	</div>
 </div>
 	
@@ -133,12 +123,22 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".stops_legend").html($("#stops-select").find(":selected").text())
 		$("#stops-select").on('change',function(){
-			console.log()
+			$(".stops_legend").html($("#stops-select").find(":selected").text())
 			viz.stops.stopsBy = $("#stops-select").val();
 			viz.stops.visualize();
 			
 		});
+
+		viz.tracts.brewer.forEach(function(d,i){
+
+  			$('#colorbrews')
+		         	.append($("<option></option>")
+		         	.attr("value",i)
+		         	.text(d));
+
+  		});
 
 		$("#tracts-select").on('change',function(){
 			console.log()
