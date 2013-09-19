@@ -59,7 +59,7 @@
 			$totaltime = $finish - $start; 
 			$this->output['numTrips'] = $row['numTrips'];
 			$this->output['time'] = "This script took ".$totaltime." seconds to run";  
-			$this->output['status'] = "TRIP TABLE CALCULATED<BR> RUNNING MODEL #:".$this->id;
+			$this->output['status'] = "TRIP TABLE CALCULATED, RUNNING MODEL #".$this->id;
 			$this->output['run_id'] = $this->id;
      	}
 
