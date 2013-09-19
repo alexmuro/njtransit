@@ -137,9 +137,10 @@
 			$(".stops_legend").html($("#stops-select").find(":selected").text())
 			viz.stops.stopsBy = $("#stops-select").val();
 			if(viz.stops.stopsBy == 'off_count'){
-					 $('.legend_circle').css('fill','#89ca27');
+					 $('.legend_circle').css('fill','#ED3A2D');
+				}else{
+					$('.legend_circle').css('fill','#89ca27');
 				}
-				$('.legend_circle').css('fill','#89ca27');
 			viz.stops.visualize();
 			
 		});
