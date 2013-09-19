@@ -44,7 +44,7 @@ $output = array();
 $output ['type'] = 'FeatureCollection';
 $sources = Array('sf1','acs5');
 $handles = Array( 'sf1' =>Array('P0010001','P0030002','P0030003','P0030005'), 
-                'acs5' => Array('B23025_001E','B23025_002E'));
+                'acs5' => Array('B23025_001E','B23025_002E','B08006_001E','B08006_002E','B08006_003E','B08006_004E','B08006_008E'));
 
 
 while($row = mysql_fetch_array($rs)){
@@ -85,13 +85,13 @@ while($row = mysql_fetch_array($rs)){
     $county = substr($row['geoid'],2,3);
     $tract = substr($row['geoid'],5,6);
     $source= 1;
-    $vars = 'B23025_001E,B23025_002E';
-    $jURL = 'http://api.census.gov/data/2010/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
+    $vars = 'B23025_001E,B23025_002E,B08006_001E,B08006_002E,B08006_003E,B08006_004E,B08006_008E';
+    $jURL = 'http://api.census.gov/data/2011/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
     $cdata = curl_download($jURL);
     $foo =  utf8_encode($cdata); 
     $cdata = json_decode($foo, true);
 
-    for($i =0; $i < 2; $i++ ){
+    for($i =0; $i < 7; $i++ ){
         $properties[$handles[$sources[$source]][$i]] = intval($cdata[1][$i]);
     }
 

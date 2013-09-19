@@ -102,6 +102,14 @@
 							<option value="B23025_001E">Total Workers</option>
 							<option value="B23025_002E">Employed Workers</option>
 						</optgroup>
+						<optgroup LABEL = "Transportation to Work">
+							<option value="B08006_001E">Total Commuters</option>
+							<option value="B08006_002E">Car, truck, or van</option>
+							<option value="B08006_003E">Drove alone</option>
+							<option value="B08006_004E">Carpooled</option>
+							<option value="B08006_008E">Public transportation</option>
+							
+						</optgroup>
 						<optgroup LABEL = "LEHD (O-D ES)">
 							<option value="inbound_transit">Inbound Transit</option>
 							<option value="outbound_transit">Outbound Transit</option>
