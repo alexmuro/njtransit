@@ -292,7 +292,7 @@ var viz = {
 				viz.tracts.max=0;
 				viz.tracts.min=10000
 				viz.tracts.data.features.forEach(function(f){
-					console.log(f.properties);
+					//console.log(f.properties)
 				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){
 				 		viz.tracts.max = f.properties[viz.tracts.symbol];
 				 	}
@@ -445,7 +445,7 @@ var viz = {
 
 				//console.log("test",viz.g.attr("transform"));
 
-				console.log();
+				//console.log();
 			    if(feature.attr('cx') == null){
 			    //polygons only need path updated	
 			    	feature

@@ -154,7 +154,7 @@
   		});
 
 		$("#tracts-select").on('change',function(){
-			console.log()
+			//console.log()
 			viz.tracts.symbol = $("#tracts-select").val();
 			viz.tracts.changeSymbol();
 			
