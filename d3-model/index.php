@@ -98,6 +98,10 @@
 							<option value="P0030003" >Black Population</option>
 							<option value="P0030005" >Asian Population</option>
 						</optgroup>
+						<optgroup LABEL = "Employment">
+							<option value="B23025_001E">Total Workers</option>
+							<option value="B23025_002E">Employed Workers</option>
+						</optgroup>
 						<optgroup LABEL = "LEHD (O-D ES)">
 							<option value="inbound_transit">Inbound Transit</option>
 							<option value="outbound_transit">Outbound Transit</option>

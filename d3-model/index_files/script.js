@@ -284,14 +284,15 @@ var viz = {
 			symbol:'P0010001',
 			color:{},
 			brewer:['YlGn','YlGnBu','GnBu','BuGn','PuBuGn','PuBu','BuPu','RdPu','PuRd','OrRd','YlOrRd','YlOrBr','Purples','Blues','Greens','Oranges','Reds','Greys','PuOr','BrBG','PRGn','PiYG','RdBu','RdGy','RdYlBu','Spectral','RdYlGn','Accent','Dark2','Paired','Pastel1','Pastel2','Set1','Set2','Set3'],
-			brewer_index:1,
-			ll:5,
+			brewer_index:0,
+			ll:7,
 			legend_domain:{},
 			changeSymbol:function(){
 
 				viz.tracts.max=0;
 				viz.tracts.min=10000
 				viz.tracts.data.features.forEach(function(f){
+					console.log(f.properties);
 				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){
 				 		viz.tracts.max = f.properties[viz.tracts.symbol];
 				 	}
