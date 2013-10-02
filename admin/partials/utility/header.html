@@ -12,8 +12,6 @@
             </a>
           </li>
         </ul> <!-- /nav -->
-
-        
         
         <ul class="nav pull-right">
           <li class="divider"></li>
@@ -22,9 +20,10 @@
               Settings <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#fakelink">Manage Accounts</a></li>
+              <lin g-show="user.access_level == 3"><a  href="/admin/#/users/">Manage Accounts</a></li>
+              <li><a href="/admin/#/user/edit/{{user.id}}">My Account</a></li>
               <li class="divider"></li>
-              <li><a href="/">Logout</a></li>
+              <li><a href="" ng-click="logout()">Logout</a></li>
             </ul>
           </li>
         </ul> <!-- /nav -->

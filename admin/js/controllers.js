@@ -6,12 +6,32 @@ angular.module('myApp.controllers', [])
   	function($scope, $http, MarketArea) {
   		$scope.activeMarket = MarketArea.getMarketArea();
   		
-  }])
+}])
 
-.controller('HeaderCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
-    function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
+.controller('HeaderCtrl', ['ActiveModelService','UserService','$scope','$rootScope','$http','$timeout','MarketArea',
+    function(ActiveModelService,UserService,$scope,$rootScope, $http, $timeout, MarketArea) {
         $scope.active_run =ActiveModelService.getStatus();
-       
+        $scope.user = UserService.getSession();
+        
+        $rootScope.$on("sessionUpdated", function (event) {
+          
+          $scope.user = UserService.getSession();
+          if($scope.user.status !== 'connected'){
+            window.location = '/';
+          } 
+
+        });
+
+        $scope.logout = function () {
+            $scope.loggedin = false;
+            //UserService.fblogout();
+            //make a call to a php page that will erase the session data
+            $http.post("/data/session/logout.php").success(function(){
+                UserService.updateSession();
+            });
+            
+        };
+
         if($scope.active_run){
 
             $scope.trips_complete= ActiveModelService.getProgress(Math.rand);
@@ -368,7 +388,61 @@ angular.module('myApp.controllers', [])
            MarketArea.setModel($scope.activeModel);
         })
       }
-  }]);
+  }])
+.controller('UsersCtrl', ['$scope', '$http',
+    function($scope, $http) {
+    $scope.users = []; 
+    $http.post("/data/get/users.php").success(function(data){
+        $scope.users = data;
+    });
+    $scope.edit = function(id){
+      window.location = "/admin/#/user/edit/"+id;
+    }      
+      
+}])
+.controller('EditUserCtrl', ['UserService','$scope', '$http','$rootScope','$routeParams',
+    function(UserService,$scope, $http,$rootScope,$routeParams) {
+    $scope.user = {}; 
+    $scope.message = "";
+    $scope.current_user= {};
+    $scope.current_user.id = -1;
+    $http({url:'/data/get/users.php',data:{user_id:$routeParams.userid},method:"POST"}).success(function(data){
+        $scope.user = data[0];
+        console.log($scope.user);
+    });
+     $scope.current_user = UserService.getSession();    
+     $rootScope.$on("sessionUpdated", function (event) {
+          $scope.current_user = UserService.getSession();
+          console.log($scope.current_user);
+    });
+
+    $scope.UpdateUser = function(){
+    $http({url:'/data/update/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
+        console.log(data);
+        if(data.status){
+          $scope.message = "User Updated";
+        }
+    });
+    } 
+      
+      
+}])
+.controller('NewUserCtrl', ['$scope', '$http',
+    function($scope, $http) {
+      $scope.message = "";
+      $scope.CreateUser = function(){
+      
+        $http({url:'/data/create/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
+          console.log(data);
+          if(!data.status){
+            $scope.message = data.message;
+          }  else {
+            window.location ="/admin/#/users"
+          }
+        });
+    }
+      
+}])
 
 
 

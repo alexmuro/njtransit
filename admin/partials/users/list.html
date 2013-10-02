@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="span12">
+		<h3>Manage Users</h3>
+		
+		  
+		 <a href="/admin/#/user/new" class="btn btn-info padded-bottom"> New User </a>
+
+		 <table class="table table-bordered table-hover ">
+		 <thead>
+		 <tr>
+		 	<th>User ID</th>
+		 	<th>User Name</th>
+		 	<th>Email</th>
+		 	<th>Name </th>
+		 	<th>Access Level</th>
+		 </tr>
+		</thead>
+		<tbody>
+		 <tr ng-repeat="user in users" ng-click="edit(user.id)">
+		 	<td>{{ user.id }}</td>
+		 	<td>{{ user.username }}</td>
+		 	<td>{{ user.email }}</td>
+		 	<td>{{ user.first_name +" "+ user.last_name }}</td>
+		 	<td>{{ user.access_level }}</td>
+		 </tr>
+		</tbody>
+		</table>
+	</div>
+</div>

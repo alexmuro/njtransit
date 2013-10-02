@@ -73,6 +73,9 @@ angular.module('myApp', ['myApp.filters',
     .when('/mo/overview', {templateUrl: 'partials/model_output/overview.html', controller: 'ModelOverviewCtrl',access: {isFree: true}})
     .when('/mo/routes', {templateUrl: 'partials/model_output/routes.html', controller: 'ModelRoutesCtrl',access: {isFree: true}})
     .when('/mo/stops', {templateUrl: 'partials/model_output/stops.html', controller: 'ModelStopsCtrl',access: {isFree: true}})
+    .when('/users/', {templateUrl: 'partials/users/list.html', controller: 'UsersCtrl',access: {isFree: true}})
+    .when('/user/new', {templateUrl: 'partials/users/new.html', controller: 'NewUserCtrl',access: {isFree: true}})
+    .when('/user/edit/:userid', {templateUrl: 'partials/users/edit.html', controller: 'EditUserCtrl',access: {isFree: true}})
     .otherwise({redirectTo: '/'});
   }])
  .config(['$httpProvider', function($httpProvider) {

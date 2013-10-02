@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="span12">
+		<h3>Update User</h3>
+			<div class="span6">
+			<a href='/admin/#/users' class="btn btn-info padded-bottom" ng-show="current_user.access_level == 3"> Manage Users</a>
+			<form name="update" class="logins-form" novalidate>
+                <div class="login-form" >
+                	<p> User Info</p>
+                	<div class="control-group small">
+                        <input type="text" class="login-field" ng-model='user.email' tabindex="3" value="" placeholder="Email" id="email" required>
+                        <label class="login-field-icon fui-mail" for="email"></label>
+                    </div>
+                	<div class="control-group small">
+                        <input type="text" class="login-field" ng-model='user.username' tabindex="3" value="" placeholder="Username" id="email" required>
+                        <label class="login-field-icon fui-user" for="email"></label>
+                    </div>
+                    <div class="control-group small">
+                        <input type="text" class="login-field" ng-model='user.first_name' value="" placeholder="First Name" id="first-name" tabindex="1"  required>
+                        <label class="login-field-icon fui-user" for="first-name"></label>
+                    </div>
+                    <div class="control-group small">
+                        <input type="text" class="login-field" ng-model='user.last_name' value="" placeholder="Last Name" id="last-name" tabindex="2" required>
+                        <label class="login-field-icon fui-user" for="last-name"></label>
+                    </div>
+                    <div ng-show="user.id == current_user.id">
+                    	<p>Update Password</p>
+                    	<hr>
+	                    <div class="control-group small">
+							
+	                        <input type="password" class="login-field" ng-minlength="6" value="" ng-model='user.new_password' placeholder="Password" tabindex="4" id="login-pass" required>
+	                        <label class="login-field-icon fui-lock" for="login-pass"></label>
+	                    </div>
+	                    <div class="control-group small" >
+	                        <input type="password" class="login-field" ng-minlength="6" value="" ng-model='user.new_password2' placeholder="Confirm Password" id="login-pass" tabindex="4" required>
+	                        <label class="login-field-icon fui-lock" for="login-pass"></label>
+	                    </div>
+	                </div>
+
+                    <input type="button"  tabindex="5"  id='login-btn' class="btn btn-info btn-large btn-block" ng-click="UpdateUser()"  ng-disabled="signup_form.$invalid ||  submitted" value="Update"><br>
+                    
+    				<p>{{ message}}</p>
+                  	</form>
+                </div>
+               
+            

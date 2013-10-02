@@ -82,4 +82,35 @@ angular.module('myApp.services', [])
             },
         }
     }
-])   
+])  
+.factory('UserService',['$rootScope','$http',
+    function ($rootScope,$http) {
+        var userData = {status:'init'};
+        $http.post('/data/session/read.php').success(function (data) {
+            if(data == []){
+                userData = {status:'init'};
+            }else{
+                userData = data;
+            }
+            $rootScope.$broadcast('sessionUpdated');
+        })  
+        return {
+            updateSession:function () {
+                //called on login and logout from controllers
+                //reads the session variables if exist from php
+                $http.post('/data/session/read.php').success(function (data) {
+                    if(data == []){
+                        userData = {status:'init'};
+                    }else{
+                        userData = data;
+                    }
+                    $rootScope.$broadcast('sessionUpdated');
+                });
+            },   
+            getSession:function () {
+               return userData;
+            }
+            
+        }
+    }
+]) 
