@@ -13,15 +13,17 @@
 		 	<th>Email</th>
 		 	<th>Name </th>
 		 	<th>Access Level</th>
+		 	<th>Delete </th>
 		 </tr>
 		</thead>
 		<tbody>
-		 <tr ng-repeat="user in users" ng-click="edit(user.id)">
-		 	<td>{{ user.id }}</td>
-		 	<td>{{ user.username }}</td>
-		 	<td>{{ user.email }}</td>
-		 	<td>{{ user.first_name +" "+ user.last_name }}</td>
-		 	<td>{{ user.access_level }}</td>
+		 <tr ng-repeat="user in users" >
+		 	<td ng-click="edit(user.id)">{{ user.id }}</td>
+		 	<td ng-click="edit(user.id)">{{ user.username }}</td>
+		 	<td ng-click="edit(user.id)">{{ user.email }}</td>
+		 	<td ng-click="edit(user.id)">{{ user.first_name +" "+ user.last_name }}</td>
+		 	<td>{{ view_access(user.access_level) }}</td>
+		 	<td><center><a href="" ng-click="delete(user.id,user.username)">X</a></center></td>
 		 </tr>
 		</tbody>
 		</table>

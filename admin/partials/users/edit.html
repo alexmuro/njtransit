@@ -22,7 +22,12 @@
                         <input type="text" class="login-field" ng-model='user.last_name' value="" placeholder="Last Name" id="last-name" tabindex="2" required>
                         <label class="login-field-icon fui-user" for="last-name"></label>
                     </div>
-                    <div ng-show="user.id == current_user.id">
+                    <div ng-show="current_user.access_level == 3">
+                        <select ng-model="user.access_level" ng-options="accesslevel.value as accesslevel.text for accesslevel in accesslevels">
+                        </select>
+                    </div>
+                    
+                    <div ng-show="user.id == current_user.id || current_user.access_level == 3">
                     	<p>Update Password</p>
                     	<hr>
 	                    <div class="control-group small">

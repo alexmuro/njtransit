@@ -28,15 +28,16 @@
      		$test = new db();
 			$inscon = $test->connect();
 
-			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."')";
-			$sql = "INSERT into model_runs (runtime,zone_id,name) VALUES $insert_data";
+			$sql = "SELECT `".$this->geo_type."` from zones where id = ".$this->market_area;
+			$rs=mysql_query($sql) or die($sql." ".mysql_error());
+			$row = mysql_fetch_assoc( $rs );
+
+			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".$row[$this->geo_type]."')";
+			$sql = "INSERT into model_runs (runtime,zone_id,name,zone,dow) VALUES $insert_data";
 			mysql_query($sql);
 			$this->id = mysql_insert_id();
 
-			$sql = "SELECT `".$this->geo_type."` from zones where id = ".$this->market_area;
-			//echo "SQL=".$sql;
-			$rs=mysql_query($sql) or die($sql." ".mysql_error());
-			$row = mysql_fetch_assoc( $rs );
+			
 			$this->parseZones($this->zones = json_decode($row[$this->geo_type]));
 			$this->output['geodata'] = $row;
 			$this->output['status'] = "FINISHED MODEL RUN:".$this->id;
@@ -185,7 +186,7 @@
 	$date='6/3/2013';
 	if(isset($_GET['zone'])){ $zone = $_GET['zone'];}
 	if(isset($_GET['name'])){ $name = $_GET['name'];}
-	if(isset($_GET['date'])){ $name = $_GET['date'];}
+	if(isset($_GET['date'])){ $date = $_GET['date'];}
 	$model = new transitModel($name,$zone);
 	$model->run();
 	echo json_encode($model->getOutput());

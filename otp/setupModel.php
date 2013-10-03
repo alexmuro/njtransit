@@ -19,16 +19,18 @@
      	 $walk_speed = 1.341,
      	 $walk_distance = 1000,
      	 $type="CTPP2000",
+     	 $user=0,
      	 $insert = "Insert into model_trip_table (run_id,from_tract,to_tract,from_lat,from_lon,to_lat,to_lon) values ";
      	 
 
-     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='7/22/2013',$distance,$speed,$type) {
+     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='7/22/2013',$distance,$speed,$type,$user) {
        			$this->name = $in_name;
        			$this->market_area = $in_zone;
        			$this->date = $in_date;
        			$this->walk_distance = $distance * 1609;
        			$this->walk_speed = $speed * 1.60934;
        			$this->type = $type;
+       			$this->user = $user;
 
   
    		}
@@ -38,14 +40,19 @@
      		$test = new db();
 			$inscon = $test->connect();
 
-			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".date('l',strtotime($this->date))."','".date('F Y',strtotime($this->date))."','AM Peak','".$this->walk_distance."','".$this->walk_speed."','".$this->type."')";
-			$sql = "INSERT into model_runs (runtime,zone_id,name,dow,season,time,max_walk_distance,walk_speed,type) VALUES $insert_data";
-			mysql_query($sql);
-			$this->id = mysql_insert_id();
-
 			$sql = "SELECT `".$this->geo_type."` from zones where id = ".$this->market_area;
 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 			$row = mysql_fetch_assoc( $rs );
+
+			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".date('l',strtotime($this->date))."','".date('F Y',strtotime($this->date))."','AM Peak','".$this->walk_distance."','".$this->walk_speed."','".$this->type."','".$row[$this->geo_type]."')";
+			$sql = "INSERT into model_runs (runtime,zone_id,name,dow,season,time,max_walk_distance,walk_speed,type,zones) VALUES $insert_data";
+			mysql_query($sql);
+			$this->id = mysql_insert_id();
+
+			$insert = "Insert into user_model values (user_id,run_id) values (".$this->user.",".$this->id.")";
+			$rs=mysql_query($sql) or die($sql." ".mysql_error());
+
+			
 			$this->parseZones($this->zones = json_decode($row[$this->geo_type]));
 			//Parse Zones distributes all the work here
 
@@ -216,6 +223,7 @@
 
 	$zone = 2;
 	$name = "untitled model";
+	$user_id = -1;
 	if(isset($_GET['zone'])){ $zone = $_GET['zone'];}
 	if(isset($_GET['name'])){ $name = $_GET['name'];}
 	if(isset($_GET['season'])){ 
@@ -228,9 +236,9 @@
 		$walk_speed = $_GET['walk_speed'];
 		
 	}
-
+	if(isset($_GET['user_id'])){ $user_id = $_GET['user_id']; } 
 	
-	$model = new transitModel($name,$zone,$run_date,$walk_distance,$walk_speed,$model_type);
+	$model = new transitModel($name,$zone,$run_date,$walk_distance,$walk_speed,$model_type,$user_id);
 	$model->run();
 	$model->runOTP();
 	echo json_encode($model->getOutput());

@@ -58,9 +58,16 @@ angular.module('myApp.controllers', [])
     }
 ])
 
-.controller('ModelRunCtrl', ['ActiveModelService','$scope','$rootScope','$http','$timeout','MarketArea',
-  	function(ActiveModelService,$scope,$rootScope, $http, $timeout, MarketArea) {
-  		$scope.activeMarket = MarketArea.getMarketArea();
+.controller('ModelRunCtrl', ['ActiveModelService','UserService','$scope','$rootScope','$http','$timeout','MarketArea',
+  	function(ActiveModelService,UserService,$scope,$rootScope, $http, $timeout, MarketArea) {
+      $scope.user = UserService.getSession();
+        
+      $rootScope.$on("sessionUpdated", function (event) {
+          
+          $scope.user = UserService.getSession();
+      });
+  		
+      $scope.activeMarket = MarketArea.getMarketArea();
       $scope.dow = 0;
       $scope.season = 0;
       $scope.time = 0;
@@ -120,8 +127,9 @@ angular.module('myApp.controllers', [])
       $scope.runModel = function(){
         if(!$scope.active_run){
           $scope.message = "Calculating trip table and metadata.";
-        $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed},method:"GET"})
+        $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed,user_id:$scope.user.id},method:"GET"})
           .success(function(data) {
+            console.log(data);
             $scope.message = data.status;
             $scope.active_run = true;
             $scope.trips_complete = 0;
@@ -328,8 +336,19 @@ angular.module('myApp.controllers', [])
         }
       }
   }])
-  .controller('NavCtrl', ['$scope', '$http','MarketArea',
-  	function($scope, $http, MarketArea) {
+  .controller('NavCtrl', ['$scope','$rootScope','UserService', '$http','MarketArea',
+  	function($scope,$rootScope,UserService,$http, MarketArea) {
+      $scope.user = UserService.getSession();
+        
+      $rootScope.$on("sessionUpdated", function (event) {
+          
+          $scope.user = UserService.getSession();
+          $scope.getModelRuns().then(function(data){
+          $scope.modelRuns = data.data;
+          $scope.activeModel = $scope.modelRuns[0]; 
+      })
+
+      });
   		$scope.activeMarket = MarketArea.getMarketArea();
   		$scope.marketAreas = [
   			{
@@ -356,16 +375,12 @@ angular.module('myApp.controllers', [])
   		];
 
       $scope.getModelRuns =function(){
-        return  $http({url:'/data/get/getModelRuns.php',data:{zone_id:$scope.activeMarket.id},method:"POST"}).then(function(data){
+        return  $http({url:'/data/get/getModelRuns.php',data:{zone_id:$scope.activeMarket.id,user_id:$scope.user.id},method:"POST"}).then(function(data){
             return(data);
         })
       }
     
-      $scope.getModelRuns().then(function(data){
-        $scope.modelRuns = data.data;
-        $scope.activeModel = $scope.modelRuns[0]; 
-      })
-
+      
   		$scope.isActiveMarket = function(id){
         	return id == $scope.activeMarket.id ? 'active' : '';
       	}
@@ -397,7 +412,32 @@ angular.module('myApp.controllers', [])
     });
     $scope.edit = function(id){
       window.location = "/admin/#/user/edit/"+id;
-    }      
+    }
+
+    $scope.delete =function(id,email){
+       var r = window.confirm("Do you really want to delete "+id+" "+email);
+       if(r== true){
+        console.log("baleeted");
+        $http({url:'/data/update/user.php',data:{del:'1',user:id},method:"POST"}).success(function(data){
+          if(data.status){
+            $scope.message = "User Updated";
+            $http.post("/data/get/users.php").success(function(data){
+                $scope.users = data;
+            });
+          }
+        });
+       }
+    }
+    $scope.view_access = function(level){
+      if(level*1 == 3){
+        return "Admin"
+      }else if(level*1 == 2){
+        return "User"
+      }else if(level*1 == 1){
+        return "View Only"
+      }
+    }
+
       
 }])
 .controller('EditUserCtrl', ['UserService','$scope', '$http','$rootScope','$routeParams',
@@ -406,23 +446,24 @@ angular.module('myApp.controllers', [])
     $scope.message = "";
     $scope.current_user= {};
     $scope.current_user.id = -1;
+    $scope.accesslevels = [{"value":'1',"text":"View"},{"value":'2',"text":"User"},{"value":'3',"text":"Admin"}];
+
+    
     $http({url:'/data/get/users.php',data:{user_id:$routeParams.userid},method:"POST"}).success(function(data){
         $scope.user = data[0];
-        console.log($scope.user);
     });
      $scope.current_user = UserService.getSession();    
      $rootScope.$on("sessionUpdated", function (event) {
           $scope.current_user = UserService.getSession();
-          console.log($scope.current_user);
-    });
+      });
 
     $scope.UpdateUser = function(){
-    $http({url:'/data/update/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
-        console.log(data);
-        if(data.status){
-          $scope.message = "User Updated";
-        }
-    });
+      $http({url:'/data/update/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
+          console.log(data);
+          if(data.status){
+            $scope.message = "User Updated";
+          }
+      });
     } 
       
       

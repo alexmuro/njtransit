@@ -4,11 +4,11 @@
 	$test = new db();
 	$where = "";
 	if(isset($_POST['user_id']) && !empty($_POST['user_id']) ){
-		$where = "where id = ".$_POST['user_id'];
+		$where = "and id = ".$_POST['user_id'];
 	}
 		
 	$inscon = $test->connect();
-	$sql = "SELECT * from users $where";
+	$sql = "SELECT * from users where deleted = 0 $where";
 	$output = array();
 
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
