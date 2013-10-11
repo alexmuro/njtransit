@@ -5,6 +5,7 @@ $test = new db();
 $inscon = $test->connect();
 
 $zone = $_POST['zone_id'];
+//$model =$_POST['model_id'];
 
 function wkt_to_json($wkt) {
   $geom = geoPHP::load($wkt,'wkt');
@@ -53,47 +54,47 @@ while($row = mysql_fetch_array($rs)){
     $feature = array();
     $geometry = array();
 
-    if($row['P0010001'] == null){
-        $state = substr($row['geoid'],0,2);
-        $county = substr($row['geoid'],2,3);
-        $tract = substr($row['geoid'],5,6);
-        $source= 0;
-        $vars = 'P0010001,P0030002,P0030003,P0030005';
-        $jURL = 'http://api.census.gov/data/2010/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
-        $cdata = curl_download($jURL);
-        $foo =  utf8_encode($cdata); 
-        $cdata = json_decode($foo, true);
+    // if($row['P0010001'] == null){
+    //     $state = substr($row['geoid'],0,2);
+    //     $county = substr($row['geoid'],2,3);
+    //     $tract = substr($row['geoid'],5,6);
+    //     $source= 0;
+    //     $vars = 'P0010001,P0030002,P0030003,P0030005';
+    //     $jURL = 'http://api.census.gov/data/2010/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
+    //     $cdata = curl_download($jURL);
+    //     $foo =  utf8_encode($cdata); 
+    //     $cdata = json_decode($foo, true);
 
-        for($i =0; $i < 4; $i++ ){
-            $properties[$handles[$sources[$source]][$i]] = intval($cdata[1][$i]);
-        }
-        $properties['api'] = "true";
+    //     for($i =0; $i < 4; $i++ ){
+    //         $properties[$handles[$sources[$source]][$i]] = intval($cdata[1][$i]);
+    //     }
+    //     $properties['api'] = "true";
 
-        $sql = "INSERT into us_atlas.sf1 (geoid,P0010001,P0030002,P0030003,P0030005) values ('".$row['geoid']."',".$cdata[1][0].",".$cdata[1][1].",".$cdata[1][2].",".$cdata[1][3].")";
-        mysql_query($sql) or die($sql." ".mysql_error());;
-    }
-    else{
+    //     $sql = "INSERT into us_atlas.sf1 (geoid,P0010001,P0030002,P0030003,P0030005) values ('".$row['geoid']."',".$cdata[1][0].",".$cdata[1][1].",".$cdata[1][2].",".$cdata[1][3].")";
+    //     mysql_query($sql) or die($sql." ".mysql_error());;
+    // }
+    // else{
         $properties['P0010001'] = intval($row['P0010001']);
         $properties['P0030002'] = intval($row['P0030002']);
         $properties['P0030003'] = intval($row['P0030003']);
         $properties['P0030005'] = intval($row['P0030005']);
 
-    }
+    //}
 
 
-    $state = substr($row['geoid'],0,2);
-    $county = substr($row['geoid'],2,3);
-    $tract = substr($row['geoid'],5,6);
-    $source= 1;
-    $vars = 'B23025_001E,B23025_002E,B08006_001E,B08006_002E,B08006_003E,B08006_004E,B08006_008E';
-    $jURL = 'http://api.census.gov/data/2011/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
-    $cdata = curl_download($jURL);
-    $foo =  utf8_encode($cdata); 
-    $cdata = json_decode($foo, true);
+    // $state = substr($row['geoid'],0,2);
+    // $county = substr($row['geoid'],2,3);
+    // $tract = substr($row['geoid'],5,6);
+    // $source= 1;
+    // $vars = 'B23025_001E,B23025_002E,B08006_001E,B08006_002E,B08006_003E,B08006_004E,B08006_008E';
+    // $jURL = 'http://api.census.gov/data/2011/'.$sources[$source].'?key=564db01afc848ec153fa77408ed72cad68191211&get='.$vars.'&for=tract:'.$tract.'&in=county:'.$county.'+state:'.$state;
+    // $cdata = curl_download($jURL);
+    // $foo =  utf8_encode($cdata); 
+    // $cdata = json_decode($foo, true);
 
-    for($i =0; $i < 7; $i++ ){
-        $properties[$handles[$sources[$source]][$i]] = intval($cdata[1][$i]);
-    }
+    // for($i =0; $i < 7; $i++ ){
+    //     $properties[$handles[$sources[$source]][$i]] = intval($cdata[1][$i]);
+    // }
 
 	
     

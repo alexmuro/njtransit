@@ -71,6 +71,10 @@
 		-->
 	</div>
 </div>
+<div id="info-tab">
+	<h2><a href="#" class="closed">Model Info</a></h2>
+	<div id="info-detail"></div>
+</div>
 	
 <div id="container">
 
@@ -120,7 +124,22 @@
 		</ul>
 
 		<hr>
+		<h2>Origin Destination Data</h2>
+			<center>
+				<p id="od_label" >Click to load OD points.</p>
+				<svg width="130" height="30" class="stopLegend">
+					<rect x="2" y="2" width="25" height="25" fill="#0f0" id="so" class="hidden"/>
+					<rect x="32" y="2" width="25" height="25" fill="#0f0" id="sd" class="hidden"/>
+					<rect x="62" y="2" width="25" height="25" fill="#0f0" id="mo" class="hidden"/>
+					<rect x="92" y="2" width="25" height="25" fill="#0f0" id="md" class="hidden"/>
+					<circle class="od_circle" cx="15" cy="15" r="10" fill="#ED3A2D" color="#ED3A2D" on="0"sel="so" text="Survey Origins"></circle>
+					<circle class="od_circle" cx="45" cy="15" r="10" fill="#ED3A2D" color="#ED3A2D" on="0" sel="sd" text="Survey Destinations"></circle>
+					<circle class="od_circle" cx="75" cy="15" r="10" fill="#ED3A2D" color="#ED3A2D" on="0" sel="mo" text="Model Origins"></circle>
+					<circle class="od_circle" cx="105" cy="15" r="10" fill="#ED3A2D" color="#ED3A2D" on="0" sel="md" text="Model Destinations"></circle>
 
+				</svg>
+			</center>
+		<hr>
 		<h2>Display Stops by</h2>
 			<center>
 			<h2>
@@ -168,6 +187,71 @@
 			viz.tracts.changeSymbol();
 			
 		});
+
+		$('.od_circle').on('mouseover',function(){
+			$("#od_label").html($(this).attr("text"));
+			$(this).attr("fill","#00f");
+
+		});
+		$('.od_circle').on('mouseout',function(){
+			
+			$("#od_label").html("Click to load OD points.");
+			$(this).attr("fill",$(this).attr("color"));
+
+		})
+		$('.od_circle').on('click',function(){
+			if($(this).attr("on") === "0"){
+				$(this).attr("on","1");
+				if($(this).attr("sel") == "so"){
+					if($(this).attr("loaded") == 1){
+						$('.so_dot').show();
+					}else{
+						viz.od.drawSurveyOrigins();
+						$(this).attr('loaded',1);
+					}
+				}else if($(this).attr("sel") == "sd"){
+					if($(this).attr("loaded") == 1){
+						$('.sd_dot').show();
+					}else{
+						viz.od.drawSurveyDestinations();
+						$(this).attr('loaded',1);
+					}
+				}else if($(this).attr("sel") == "mo"){
+					if($(this).attr("loaded") == 1){
+						$('.mo_dot').show();
+					}else{
+						viz.od.drawModelOrigins();
+						$(this).attr('loaded',1);
+					}
+				}else if($(this).attr("sel") == "md"){
+					if($(this).attr("loaded") == 1){
+						$('.md_dot').show();
+					}else{
+						viz.od.drawModelDestinations();
+						$(this).attr('loaded',1);
+					}
+				}
+
+
+				$('#'+$(this).attr("sel")).show();
+			}else{
+				$(this).attr("on","0");
+				if($(this).attr("sel") == "so"){
+					$('.so_dot').hide();
+				}else if($(this).attr("sel") == "sd"){
+					$('.sd_dot').hide();
+				}else if($(this).attr("sel") == "mo"){
+					$('.mo_dot').hide();
+				}else if($(this).attr("sel") == "md"){
+					$('.md_dot').hide();
+				}
+				$('#'+$(this).attr("sel")).hide();
+			}
+
+		})
+
+
+
 
 
 		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);

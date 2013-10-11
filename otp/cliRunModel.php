@@ -55,7 +55,7 @@
 	  	echo $otp_url.'<br>';
 	  // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
 
-	  processTrip(json_decode(curl_download($otp_url),true),$model_id);
+	  processTrip(json_decode(curl_download($otp_url),true),$model_id,$from_lat,$from_lon,$to_lat,$to_lon);
 	}
 
 	function curl_download($Url){ 
@@ -77,15 +77,15 @@
 	    return $output;
 	}
 
-	function processTrip($data,$model_id){
+	function processTrip($data,$model_id,$flat,$flon,$tlat,$tlon){
 		print_r($data);
 		if(count($data['plan']['itineraries']) > 0){
 			//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 			$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
 			//print_r($trip);
 			//echo "Start Time: ".date('Y-m-d H:i:s',$trip['startTime']/1000).",".$trip['startTime']."<br>";
-			$insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".$trip['endTime']."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].")";
- 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance) VALUES $insert_data";
+			$insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
+ 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
 			mysql_query($sql) or die(mysql_error());
 			$insert_trip_id =  mysql_insert_id();
  			$leg_data = '';

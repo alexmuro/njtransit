@@ -73,6 +73,8 @@ textarea											{}
 
 /* legend */
 #legend												{z-index:100;background:#fff; color:#666; float:right; position:fixed; right:20%; width:200px; top:0;}
+#info-tab											{z-index:100;background:#fff; color:#666; float:right; position:fixed; right:20%;margin-right:200px; width:200px; top:0;}
+
 #legend h2											{font-size:1em; margin:0; text-align:center;}
 #legend h2 a										{background:url(arrows.png) 15px 11px #ddd no-repeat; color:#222; display:block; padding:5px 0 8px 0;
 													-webkit-transition:background .2s ease-in;  
@@ -86,12 +88,34 @@ textarea											{}
 #legend h3 											{font-size:.75em; font-weight:700; margin:0 0 5px 0; text-transform:uppercase;}
 #legend hr 											{border-top:1px dotted #ccc; margin:15px 0;}
 
+
+#info-tab h2											{font-size:1em; margin:0; text-align:center;}
+#info-tab h2 a										{background:url(arrows.png) 15px 11px #ddd no-repeat; color:#222; display:block; padding:5px 0 8px 0;
+													-webkit-transition:background .2s ease-in;  
+													-moz-transition:background .2s ease-in;  
+													-o-transition:background .2s ease-in;  
+													transition:background .2s ease-in;
+}
+#info-tab h2 a:hover									{background-color:#eee; background-position:15px 9px; color:#222;}
+#info-tab h2 a.closed									{background:url(arrows.png) 15px -57px #ddd no-repeat; color:#222;}
+#info-tab h2 a.closed:hover							{background-color:#eee; background-position:15px -55px;}
+#info-tab h3 											{font-size:.75em; font-weight:700; margin:0 0 5px 0; text-transform:uppercase;}
+#info-tab hr 											{border-top:1px dotted #ccc; margin:15px 0;}
+
 #legend-detail										{border-bottom:1px solid #999; display:none; line-height:1.25; padding:10px 15px; width:170px;}
 #legend-detail li									{font-size:.75em; margin:0 0 5px 0; overflow:hidden;}
 #legend-detail li svg			    				{display:block; float:left; margin:0 5px 0 0;}
 #legend-detail li span			    				{display:block; float:left; padding:2px 0 0 0;}
 #legend-detail li span.c-01			    			{width:85px;}
 #legend-detail li span.c-02			    			{text-align:right; width:85px;}
+
+
+#info-detail										{border-bottom:1px solid #999; display:none; line-height:1.25; padding:10px 15px; width:170px;}
+#info-detail li										{font-size:.75em; margin:0 0 5px 0; overflow:hidden;}
+#info-detail li svg			    					{display:block; float:left; margin:0 5px 0 0;}
+#info-detail li span			    				{display:block; float:left; padding:2px 0 0 0;}
+#info-detail li span.c-01			    			{width:85px;}
+#info-detail li span.c-02			    			{text-align:right; width:85px;}
 
 
 
@@ -173,6 +197,7 @@ text												{color:black;display:block;font-size:12px;}
 #info .race span									{font-size:1em; color:#D18706; font-weight:bold; text-transform:none;}
 
 #coords	 											{position: absolute;bottom: 10px;left: 10px;}
+.hidden												{display:none;}
 
 /* responsive design css rules */
 

@@ -70,6 +70,7 @@ angular.module('myApp.services', [])
                modelID = model_id;
                totalTrips = total_trips;
                checkStatus(model_id); 
+               $rootScope.$broadcast('ActiveModelUpdate');
             },
             getStatus:function(){
                 return active_run;

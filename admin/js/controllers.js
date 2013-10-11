@@ -126,7 +126,9 @@ angular.module('myApp.controllers', [])
       $scope.output = "";
       $scope.runModel = function(){
         if(!$scope.active_run){
-          $scope.message = "Calculating trip table and metadata.";
+        $scope.active_run= true;
+        $scope.message = "Calculating trip table and metadata.";
+        //console.log($scope.user.id)
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed,user_id:$scope.user.id},method:"GET"})
           .success(function(data) {
             console.log(data);
@@ -175,25 +177,27 @@ angular.module('myApp.controllers', [])
       }
   		
       $scope.writePage = function(){
-        $scope.totalRoutes = $scope.modelData.routes.length;
-        $scope.totalTrips = $scope.modelData.trips.length;
-        if( $scope.modelData.boarding.length > $scope.modelData.alighting.length ){
-          $scope.activeStops = $scope.modelData.boarding.length;
-        }else{
-           $scope.activeStops = $scope.modelData.alighting.length;
+        if($scope.modelData.routes){
+          $scope.totalRoutes = $scope.modelData.routes.length;
+          $scope.totalTrips = $scope.modelData.trips.length;
+          if( $scope.modelData.boarding.length > $scope.modelData.alighting.length ){
+            $scope.activeStops = $scope.modelData.boarding.length;
+          }else{
+             $scope.activeStops = $scope.modelData.alighting.length;
+          }
+
+          var boardingTotal = 0;
+          $scope.modelData.boarding.forEach(function(stop){boardingTotal += stop.count*1;})
+          $scope.boardingTotal = boardingTotal;
+
+          var alightingTotal = 0;
+          $scope.modelData.alighting.forEach(function(stop){alightingTotal += stop.count*1;});
+          $scope.alightingTotal = alightingTotal;
+
+          var tripsTotal = 0;
+          $scope.modelData.trips.forEach(function(stop){tripsTotal += stop.count*1;});
+          $scope.tripsTotal = tripsTotal;
         }
-
-        var boardingTotal = 0;
-        $scope.modelData.boarding.forEach(function(stop){boardingTotal += stop.count*1;})
-        $scope.boardingTotal = boardingTotal;
-
-        var alightingTotal = 0;
-        $scope.modelData.alighting.forEach(function(stop){alightingTotal += stop.count*1;});
-        $scope.alightingTotal = alightingTotal;
-
-        var tripsTotal = 0;
-        $scope.modelData.trips.forEach(function(stop){tripsTotal += stop.count*1;});
-        $scope.tripsTotal = tripsTotal;
       }
 
       $scope.getModelOverview().then(function(data){
@@ -228,9 +232,13 @@ angular.module('myApp.controllers', [])
       $scope.showtrips = false;
       $scope.tripData ={};
       $scope.getModelOverview =function(){
-        return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
-            return(data);
-        })
+        if(!$scope.activeModel){
+          return [];
+        }else{
+          return  $http({url:'/data/get/getModelOutput.php',data:{run_id:$scope.activeModel.id},method:"POST"}).then(function(data){
+              return(data);
+          })
+        }
       }
       $scope.getModelOverview().then(function(data){
         $scope.modelData = data.data;

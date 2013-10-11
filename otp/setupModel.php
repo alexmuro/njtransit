@@ -19,6 +19,7 @@
      	 $walk_speed = 1.341,
      	 $walk_distance = 1000,
      	 $type="CTPP2000",
+     	 $survey=false,
      	 $user=0,
      	 $insert = "Insert into model_trip_table (run_id,from_tract,to_tract,from_lat,from_lon,to_lat,to_lon) values ";
      	 
@@ -31,7 +32,9 @@
        			$this->walk_speed = $speed * 1.60934;
        			$this->type = $type;
        			$this->user = $user;
-
+       			if($this->market_area == 1 || $this->market_area == 4){
+       				$this->survey = true;
+       			}
   
    		}
 
@@ -49,7 +52,7 @@
 			mysql_query($sql);
 			$this->id = mysql_insert_id();
 
-			$insert = "Insert into user_model values (user_id,run_id) values (".$this->user.",".$this->id.")";
+			$sql = "Insert into user_model  (user_id,run_id) values (".$this->user.",".$this->id.")";
 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 
 			
@@ -108,16 +111,25 @@
 
      	private function makeTrips($tract){
      		//$('#model_output').prepend('from:'+tract.tract+'-> to:'+tract.qpowtract+':#num trips:'+tract.bus_total+'<br>');
-			$begin_stops =$this->getStops($tract['state'],$tract['county'],$tract['tract']);
-			$end_stops = $this->getStops($tract['qpowst'],$tract['qpowco'],$tract['qpowtract']);
-			$from_tract = $tract['state'].$tract['county'].$tract['tract'];
+     		$begin_stops = array();
+     		$end_stops = array();
+     		$from_tract = $tract['state'].$tract['county'].$tract['tract'];
 			$to_tract = $tract['state'].$tract['county'].$tract['tract'];
 			
-			// echo $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'].'<br>';
-			// echo count($begin_stops)." ".count($end_stops)." ".intval($tract['bus_total']).'<br>';;
-			//console.log('orig_stops:',begin_stops.length);
-			//console.log('dest_stops:',end_stops.length);
+     		if($this->survey){
+     			
+     			$begin_stops =$this->getOD($from_tract,'o');
+				$end_stops = $this->getOD($to_tract,'d');
 
+     		}else{
+				
+				$begin_stops =$this->getStops($tract['state'],$tract['county'],$tract['tract'],'o');
+				$end_stops = $this->getStops($tract['qpowst'],$tract['qpowco'],$tract['qpowtract'],'d');
+			
+			}
+
+			
+			
 			if(count($begin_stops) > 0 && count($end_stops) > 0 && intval($tract['bus_total']) >0){
 			
 				//$this->output['flows'][] = $tract['state'].$tract['county'].$tract['tract'].'->'.$tract['qpowst'].$tract['qpowco'].$tract['qpowtract'].'total workers '.$tract['total_workers'].' num_trips:'.$tract['bus_total'].' tips_avail:'.$tract['bus_avail'];
@@ -125,7 +137,11 @@
 				for($i=0;$i<$tract['bus_total']*1;$i++){
 					$begin_stop =  rand(0,count($begin_stops)-1);
 					$end_stop =  rand(0,count($end_stops)-1);
-					$this->planTrip($from_tract,$to_tract,$begin_stops[$begin_stop]['lat'],$begin_stops[$begin_stop]['lon'],$end_stops[$end_stop]['lat'],$end_stops[$end_stop]['lon']);
+					$begin_lat = $begin_stops[$begin_stop]['lat']+(rand(0,20)/10000);
+					$begin_lon = $begin_stops[$begin_stop]['lon']+(rand(0,20)/10000);
+					$end_lat = $end_stops[$end_stop]['lat']+(rand(1,20)/10000);
+					$end_lon = $end_stops[$end_stop]['lon']+(rand(1,20)/10000);
+					$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon ,$end_lat,$end_lon);
 				}
 			}	
      	}
@@ -139,6 +155,26 @@
  			while($row = mysql_fetch_assoc($rs)){
  				//echo $row['stop_id'].'<br>';
  				$data[] = $row;
+ 			} 
+ 			return $data;
+		}
+
+		private function getOD($in_fips,$od){
+			$sql = "";
+			$in_fips = substr($in_fips,1);
+			if($od == 'o'){
+				$sql = "select O_MAT_LAT as lat, O_MAT_LONG as lon from survey_geo where o_geoid10 = '".$in_fips."'";
+			}
+			else{
+				$sql = "select D_MAT_LAT as lat, D_MAT_LONG as lon from survey_geo where d_geoid10 = '".$in_fips."'";
+			}
+			//echo $sql;
+			$rs=mysql_query($sql) or die($sql." ".mysql_error());
+ 			$data = array();
+ 			
+ 			while($row = mysql_fetch_assoc($rs)){
+
+ 				$data[] = $row;
  			}
  			return $data;
 		}
@@ -146,25 +182,7 @@
 		private function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon)
 		{
 		  $this->insert .= "(".$this->id.",'$from_tract','$to_tract',$from_lat,$from_lon,$to_lat,$to_lon),";
-		  // $otp_url = "http://localhost:8080/opentripplanner-api-webapp/ws/plan?";
-		  // 	$otp_url .= "fromPlace=$from_lat,$from_lon";
-		  // 	$otp_url .= "&toPlace=$to_lat,$to_lon";
-		  // 	$otp_url .= "&mode=TRANSIT,WALK";
-		  // 	$otp_url .= "&min=QUICK";
-		  // 	$otp_url .= "&maxWalkDistance=1000";
-		  // 	$otp_url .= "&walkSpeed=1.341";
-		  // 	$otp_url .= "&time=".rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am';
-		  // 	$otp_url .= "&date=".$this->date;
-		  // 	$otp_url .= "&arriveBy=false";
-		  // 	$otp_url .= "&itinID=1";
-		  // 	$otp_url .= "&wheelchair=false";
-		  // 	$otp_url .= "&preferredRoutes=";
-		  // 	$otp_url .= "&unpreferredRoutes=";
-		  	
-		  // 	//echo $otp_url.'<br>';
-		  // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
-
-		  // 	$this->processTrip(json_decode($this->curl_download($otp_url),true));
+		  
 		}
 
 		private function curl_download($Url){ 
@@ -193,7 +211,7 @@
 				$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
 				//print_r($trip);
 				//echo "Start Time: ".date('Y-m-d H:i:s',$trip['startTime']/1000).",".$trip['startTime']."<br>";
-				$insert_data = "(".$this->id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".$trip['endTime']."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].")";
+				$insert_data = "(".$this->id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['endTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].")";
 	 			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance) VALUES $insert_data";
 				mysql_query($sql) or die(mysql_error());
 				$insert_trip_id =  mysql_insert_id();

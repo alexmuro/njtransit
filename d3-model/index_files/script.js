@@ -67,7 +67,7 @@ var viz = {
   		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
   		     		zoom: 13
   		   	})
-			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
+			//.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
   			L.control.scale().addTo(viz.map);
   		
   		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg"),
@@ -102,9 +102,10 @@ var viz = {
 
      		viz.map.on("viewreset", function(){
      			viz.reset(bounds,feature);
+     			viz.boundsReset(bounds);
      		});
      		viz.reset(bounds,feature)
-  		
+  			viz.boundsReset(bounds);
 
 		  	
 			collection.features.forEach(function(d,i){
@@ -132,8 +133,134 @@ var viz = {
 		loader.push(routes);
 		loader.push(viz.stops.preload);
 		loader.push(viz.stops.load);
+		loader.push(viz.modelInfo.load);
 		loader.run();
 
+	},
+	od:{
+		drawSurveyOrigins:function(){
+			
+			so_data = transitData.getSurveyOrigins();
+			var bounds = d3.geo.bounds(so_data),
+ 			path = d3.geo.path().projection(viz.project);
+			var feature = viz.g.selectAll("circle.so")
+				.data(so_data.features)
+				.enter()
+				.append("circle")
+				.classed("so_dot", true)
+				.attr({
+					r: 2,
+					fill:'#00f',
+					cx: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[0]; 
+					},
+					cy: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[1]; 
+					},
+				});
+
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature);
+
+		},
+		drawSurveyDestinations:function(){
+			
+			so_data = transitData.getSurveyDestinations();
+			var bounds = d3.geo.bounds(so_data),
+ 			path = d3.geo.path().projection(viz.project);
+			var feature = viz.g.selectAll("circle.sd")
+				.data(so_data.features)
+				.enter()
+				.append("circle")
+				.classed("sd_dot", true)
+				.attr({
+					r: 2,
+					fill:'#f00',
+					cx: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[0]; 
+					},
+					cy: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[1]; 
+					},
+				});
+
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature);
+
+		},
+		drawModelOrigins:function(){
+			
+			mo_data = transitData.getModelOrigins();
+			var bounds = d3.geo.bounds(mo_data),
+ 			path = d3.geo.path().projection(viz.project);
+			var feature = viz.g.selectAll("circle.mo")
+				.data(mo_data.features)
+				.enter()
+				.append("circle")
+				.classed("mo_dot", true)
+				.attr({
+					r: 2,
+					fill:'#333',
+					cx: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[0]; 
+					},
+					cy: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[1]; 
+					},
+				});
+
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature);
+
+		},
+		drawModelDestinations:function(){
+			
+			mo_data = transitData.getModelDestinations();
+			var bounds = d3.geo.bounds(mo_data),
+ 			path = d3.geo.path().projection(viz.project);
+			var feature = viz.g.selectAll("circle.md")
+				.data(mo_data.features)
+				.enter()
+				.append("circle")
+				.classed("md_dot", true)
+				.attr({
+					r: 2,
+					fill:'#663399',
+					cx: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[0]; 
+					},
+					cy: function(d,i) { 
+						return viz.project(d.geometry.coordinates)[1]; 
+					},
+				});
+
+				viz.map.on("viewreset", function(){
+     				viz.reset(bounds,feature);
+     			});
+     			viz.reset(bounds,feature);
+
+		}
+	},
+	modelInfo:{
+		load:function(){
+			overview = transitData.getModelOverview().overview;
+			var output = "";
+			output += "<strong>Name:</strong>"+overview[0].name+"<br>";
+			output += "<strong>ID:</strong>"+overview[0].id+"<br>";
+			output += "<strong>Month:</strong><br>"+overview[0].season+"<br>";
+			output += "<strong>DOW:</strong><br>"+overview[0].dow+"<br>";
+			output += "<strong>Time:</strong><br>"+overview[0].time+"<br>";
+			output += "<strong>Max walk distance:</strong><br>"+(overview[0].max_walk_distance/1609).toFixed(2)+" mile(s)<br>";
+			output += "<strong>Walk speed</strong><br>"+(overview[0].walk_speed/1.609).toFixed(2)+" m/h<br>";
+			$("#info-detail").html(output);
+			loader.run();
+		}
 	},
 	stops: {
 			data :{},
@@ -219,10 +346,10 @@ var viz = {
 						},
 						"fill": viz.stops.fillDelay,
 						"stopid": function(d,i) { 
-							return d.properties.stop_id
+							return d.properties.stop_id;
 						},
 						"intersection": function(d,i) { 
-							return (d.properties.stop_name)
+							return (d.properties.stop_name);
 						},
 						"frequency": function(d,i) { 
 							if(d.properties.stop_frequency != 'undefined'){
@@ -255,7 +382,9 @@ var viz = {
 							"opacity": 1
 						}, 100);
 						var text = "";
+						//console.log(self.attr("stopid"));
 						var text = "<p><strong>Stop " + self.attr("stopid") + "</strong><br/><span>" + self.attr("intersection") + "</span></p><p><strong>Boarding Count</strong><br/> " + self.attr("boarding_count") + "</p><p><strong>Alighting Count</strong><br/> " + self.attr("alighting_count") + "</p><p><strong>Routes Served</strong><br/> " + self.attr("routes") + "</p>";
+						//console.log(text);
 						$("#info").show().html(text);
 					})
 					.on("mouseout", function(self) {
@@ -326,9 +455,6 @@ var viz = {
 				viz.tracts.data = transitData.getCensusTracts(viz.zone);
 				var bounds = d3.geo.bounds(viz.tracts.data);
 				path = d3.geo.path().projection(viz.project);
-				
-				
-
 				
 				viz.tracts.data.features.forEach(function(f){
 
@@ -419,7 +545,7 @@ var viz = {
 			legendText +="</ul>";
 			$("#choro_legend").html(legendText);
 			setUpTangle();
-			//loader.run();
+			//
 		},
 		reproject :function (){
     		viz.projection = d3.geo.mercator()
@@ -430,10 +556,8 @@ var viz = {
 				.projection(viz.projection);
 
     	},
-    	reset :function (bounds,feature) { 
-
-  				
-				var bottomLeft = viz.project(bounds[0]),
+    	boundsReset:function(bounds){
+    		var bottomLeft = viz.project(bounds[0]),
 				topRight = viz.project(bounds[1]);
 
 				viz.svg .attr("width", topRight[0] - bottomLeft[0])
@@ -443,6 +567,9 @@ var viz = {
 
 				viz.g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
 
+    	},
+    	reset :function (bounds,feature) { 
+				
 				//console.log("test",viz.g.attr("transform"));
 
 				//console.log();
@@ -556,7 +683,92 @@ var transitData = {
 			console.log(e.responseText);
 		});
 		return(output);
+	},
+	getModelOverview: function(zone){
+		var output = {};
+		$.ajax({url:'/data/get/getModelOutputSimple.php',
+			data:{run_id:viz.model_run},
+			method:'POST',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);		
+	},
+	getSurveyOrigins : function(){
+		var output = {};
+		//console.log('modelrun', viz.model_run)
+		$.ajax({url:'/data/get/getSurveyOrigins.php',
+			data:{zone:viz.zone},
+			method:'GET',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);
+	},
+	getSurveyDestinations : function(){
+		var output = {};
+		//console.log('modelrun', viz.model_run)
+		$.ajax({url:'/data/get/getSurveyDestinations.php',
+			data:{zone:viz.zone},
+			method:'GET',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);
+	},
+	getModelOrigins : function(){
+		var output = {};
+		//console.log('modelrun', viz.model_run)
+		$.ajax({url:'/data/get/getModelOrigins.php',
+			data:{model_run:viz.model_run},
+			method:'GET',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);
+	},
+	getModelDestinations : function(){
+		var output = {};
+		//console.log('modelrun', viz.model_run)
+		$.ajax({url:'/data/get/getModelDestinations.php',
+			data:{model_run:viz.model_run},
+			method:'GET',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			output = data;
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+		});
+		return(output);
 	}
+	
 }
 //--------------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
@@ -568,6 +780,11 @@ var toggles = {
 		$("#legend h2 a").on("click", function() {
 			$(this).toggleClass("closed");
 			$("#legend-detail").slideToggle(300);
+			return false;
+		});
+		$("#info-tab h2 a").on("click", function() {
+			$(this).toggleClass("closed");
+			$("#info-detail").slideToggle(300);
 			return false;
 		});
 
