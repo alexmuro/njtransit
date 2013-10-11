@@ -83,8 +83,6 @@ var viz = {
 			return d.properties.route_name;
 		};
 		
-		
-		
 		var routes = function() {
 
 			
@@ -260,6 +258,7 @@ var viz = {
 			output += "<strong>Walk speed</strong><br>"+(overview[0].walk_speed/1.609).toFixed(2)+" m/h<br>";
 			$("#info-detail").html(output);
 			loader.run();
+			$("#loading").fadeOut(1000);
 		}
 	},
 	stops: {
@@ -402,8 +401,6 @@ var viz = {
      			viz.reset(bounds,feature);
 
 				loader.run();
-				$("#loading").fadeOut(1000);
-				
 			}
 	},
 	tracts:{
