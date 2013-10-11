@@ -131,7 +131,7 @@ angular.module('myApp.controllers', [])
         //console.log($scope.user.id)
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed,user_id:$scope.user.id},method:"GET"})
           .success(function(data) {
-            console.log(data);
+            //console.log(data);
             $scope.message = data.status;
             $scope.active_run = true;
             $scope.trips_complete = 0;
@@ -425,7 +425,7 @@ angular.module('myApp.controllers', [])
     $scope.delete =function(id,email){
        var r = window.confirm("Do you really want to delete "+id+" "+email);
        if(r== true){
-        console.log("baleeted");
+        //console.log("baleeted");
         $http({url:'/data/update/user.php',data:{del:'1',user:id},method:"POST"}).success(function(data){
           if(data.status){
             $scope.message = "User Updated";
@@ -467,7 +467,7 @@ angular.module('myApp.controllers', [])
 
     $scope.UpdateUser = function(){
       $http({url:'/data/update/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
-          console.log(data);
+          //console.log(data);
           if(data.status){
             $scope.message = "User Updated";
           }
@@ -482,7 +482,7 @@ angular.module('myApp.controllers', [])
       $scope.CreateUser = function(){
       
         $http({url:'/data/create/user.php',data:{user:$scope.user},method:"POST"}).success(function(data){
-          console.log(data);
+          //console.log(data);
           if(!data.status){
             $scope.message = data.message;
           }  else {
