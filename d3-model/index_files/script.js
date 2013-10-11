@@ -150,7 +150,7 @@ var viz = {
 				.classed("so_dot", true)
 				.attr({
 					r: 2,
-					fill:'#00f',
+					fill:'#E41A1C',
 					cx: function(d,i) { 
 						return viz.project(d.geometry.coordinates)[0]; 
 					},
@@ -177,7 +177,7 @@ var viz = {
 				.classed("sd_dot", true)
 				.attr({
 					r: 2,
-					fill:'#f00',
+					fill:'#377EB8',
 					cx: function(d,i) { 
 						return viz.project(d.geometry.coordinates)[0]; 
 					},
@@ -204,7 +204,7 @@ var viz = {
 				.classed("mo_dot", true)
 				.attr({
 					r: 2,
-					fill:'#333',
+					fill:'#4DAF4A',
 					cx: function(d,i) { 
 						return viz.project(d.geometry.coordinates)[0]; 
 					},
@@ -231,7 +231,7 @@ var viz = {
 				.classed("md_dot", true)
 				.attr({
 					r: 2,
-					fill:'#663399',
+					fill:'#984EA3',
 					cx: function(d,i) { 
 						return viz.project(d.geometry.coordinates)[0]; 
 					},
