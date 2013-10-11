@@ -38,7 +38,7 @@
 
 <div id="viz"></div>
 
-<div id="loading" style="display: none;">loading</div>
+<div id="loading">loading</div>
 
 
 <div id="info"></div>
@@ -171,7 +171,7 @@
     	.fail(function(e){
     		console.log(e.responseText);
     	})
-		
+
 		$(".stops_legend").html($("#stops-select").find(":selected").text())
 		$("#stops-select").on('change',function(){
 			$(".stops_legend").html($("#stops-select").find(":selected").text())
