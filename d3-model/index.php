@@ -159,6 +159,19 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);
+    	$.ajax({url:'../data/get/getZoneforD3.php',data:{zone:<?php echo intval($_GET['ma']);?>},aync:false,dataType:'json',method:"POST"})
+    	.done(function(data){
+    		viz.zone = $('#zone-select').val();
+    		viz.model_run = <?php echo intval($_GET['mr']);?>;
+    		viz.centroid = JSON.parse(data.centroid);
+    		viz.njtransit();
+    	})
+    	.fail(function(e){
+    		console.log(e.responseText);
+    	})
+		
 		$(".stops_legend").html($("#stops-select").find(":selected").text())
 		$("#stops-select").on('change',function(){
 			$(".stops_legend").html($("#stops-select").find(":selected").text())
@@ -254,17 +267,7 @@
 
 
 
-		$('#zone-select').val(<?php echo intval($_GET['ma']);?>);
-    	$.ajax({url:'../data/get/getZoneforD3.php',data:{zone:<?php echo intval($_GET['ma']);?>},aync:false,dataType:'json',method:"POST"})
-    	.done(function(data){
-    		viz.zone = $('#zone-select').val();
-    		viz.model_run = <?php echo intval($_GET['mr']);?>;
-    		viz.centroid = JSON.parse(data.centroid);
-    		viz.njtransit();
-    	})
-    	.fail(function(e){
-    		console.log(e.responseText);
-    	})
+		
 
 	});
 </script>
