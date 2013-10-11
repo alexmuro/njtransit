@@ -126,7 +126,7 @@ angular.module('myApp.controllers', [])
       $scope.output = "";
       $scope.runModel = function(){
         if(!$scope.active_run){
-        $scope.active_run= true;
+        $scope.active_run=true;
         $scope.message = "Calculating trip table and metadata.";
         //console.log($scope.user.id)
         $http({url:'/otp/setupModel.php',params:{name:$scope.runName,zone:$scope.activeMarket.id,season:$scope.model_season,dow:$scope.dow,time:$scope.model_time,type:$scope.model_type,walk_distance:$scope.walk_distance,walk_speed:$scope.walk_speed,user_id:$scope.user.id},method:"GET"})
