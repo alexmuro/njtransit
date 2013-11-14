@@ -1,6 +1,5 @@
 <?php
- ini_set('display_errors','On');
- error_reporting(E_ALL);
+ error_reporting(E_ALL ^ E_DEPRECATED);
 
 /**
  * USE THIS CLASS FOR SHOW SPECIFIC DATABASE

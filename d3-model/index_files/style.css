@@ -15,8 +15,8 @@ a:visited										    {color:#2C7BC9;text-decoration:none;
 													-webkit-transition:color .1s ease-in;  
 													-moz-transition:color .1s ease-in;  
 													-o-transition:color .1s ease-in;  
-													transition:color .1s ease-in;
-}
+													transition:color .1s ease-in;}
+													
 a:hover,
 a:visited:hover									    {color:#19b5f7;text-decoration:none;}
 
