@@ -16,3 +16,5 @@ ST_SetSRID(ST_MakePoint(survey_geo.d_mat_long,survey_geo.d_mat_lat),4326)
 
 
 "id","o_mat_lat","o_mat_long","on_mat_lat","on_mat_long","off_mat_lat","off_mat_long","d_mat_lat","d_mat_long","o_geoid10","d_geoid10","on_geoid10","off_geoid10"
+
+ogr2ogr -f MySQL MySQL:us_atlas,host=localhost,user=root,password=am1238wk tracts.shp -nln 34_tracts -update -overwrite -lco engine=MYISAM
