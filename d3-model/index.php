@@ -132,7 +132,7 @@
 					<rect x="32" y="2" width="25" height="25" fill="#FF7F00" id="sd" class="hidden"/>
 					<rect x="62" y="2" width="25" height="25" fill="#FF7F00" id="mo" class="hidden"/>
 					<rect x="92" y="2" width="25" height="25" fill="#FF7F00" id="md" class="hidden"/>
-					<circle class="od_circle" cx="15" cy="15" r="10" fill="#E41A1C" color="#E41A1C" on="0"sel="so" text="Survey Origins"></circle>
+					<circle class="od_circle" cx="15" cy="15" r="10" fill="#C994C7" color="#C994C7" on="0"sel="so" text="Survey Origins"></circle>
 					<circle class="od_circle" cx="45" cy="15" r="10" fill="#377EB8" color="#377EB8" on="0" sel="sd" text="Survey Destinations"></circle>
 					<circle class="od_circle" cx="75" cy="15" r="10" fill="#4DAF4A" color="#4DAF4A" on="0" sel="mo" text="Model Origins"></circle>
 					<circle class="od_circle" cx="105" cy="15" r="10" fill="#984EA3" color="#984EA3" on="0" sel="md" text="Model Destinations"></circle>

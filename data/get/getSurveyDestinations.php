@@ -13,17 +13,40 @@
 	$rs =mysql_query($sql) or die($sql." ");
 	$row = mysql_fetch_array($rs);
 
-	$sql = "select D_MAT_LAT,D_MAT_LONG from survey_geo where d_geoid10 in ".$row['ct'];
+	$sql = "select D_MAT_LAT,D_MAT_LONG,WEIGHT,SURVEYNAME,CASINOWORKER,CASINOVISITOR,CAPTIVITY,VEHICLEAVAIL,TRIPFREQ,TRIPTENURE,GENDER,AGE,RACE,OCCUPATION,HOUSEHOLDSIZE,HOUSEHOLDCARS,INCOME,FREQUENTRIDER,INCOME_MIDPT,AGE_MIDPT from survey_geo as a join survey_attributes as b on a.ID = b.ID where d_geoid10 in ".$row['ct'];
 	$rs =mysql_query($sql) or die($sql." ".mysql_error());
 	
 	while($row = mysql_fetch_array($rs)){
-		 $feature = array();
-		 $geometry = array();
-		 $coordinates = array();
+		$feature = array();
+		$geometry = array();
+		$coordinates = array();
+		$properties =array();
+		 
+		$properties['WEIGHT']=$row['WEIGHT'];
+		$properties['SURVEYNAME']=$row['SURVEYNAME'];
+		$properties['CASINOWORKER']=$row['CASINOWORKER'];
+		$properties['CASINOVISITOR']=$row['CASINOVISITOR'];
+		$properties['CAPTIVITY']=$row['CAPTIVITY'];
+		$properties['VEHICLEAVAIL']=$row['VEHICLEAVAIL'];
+		$properties['TRIPFREQ']=$row['TRIPFREQ'];
+		$properties['TRIPTENURE']=$row['TRIPTENURE'];
+		$properties['GENDER']=$row['GENDER'];
+		$properties['AGE']=$row['AGE'];
+		$properties['RACE']=$row['RACE'];
+		$properties['OCCUPATION']=$row['OCCUPATION'];
+		$properties['HOUSEHOLDSIZE']=$row['HOUSEHOLDSIZE'];
+		$properties['HOUSEHOLDCARS']=$row['HOUSEHOLDCARS'];
+		$properties['INCOME']=$row['INCOME'];
+		$properties['FREQUENTRIDER']=$row['FREQUENTRIDER'];
+		$properties['INCOME_MIDPT']=$row['INCOME_MIDPT'];
+		$properties['AGE_MIDPT']=$row['AGE_MIDPT'];
+		
+		
 		 $feature['type'] = 'Feature';
 		 $geometry['type'] = 'Point'; 
          $coordinates = array($row['D_MAT_LONG']*1,$row['D_MAT_LAT']*1);
          $geometry['coordinates'] = $coordinates;
+         $feature['properties'] = $properties;
          $feature['geometry'] = $geometry;
          $origins['features'][]=$feature;
 		//echo ." ".."<br>";

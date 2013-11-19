@@ -42,9 +42,9 @@ var viz = {
     //----------------------------------------------------------------------------------------------------------
    	njtransit  : function() {
 
-	    // clean viz div and routes ul
-	    $("#viz").html("");
-	    $('#routes').html("");
+		// clean viz div and routes ul
+		$("#viz").html("");
+		$('#routes').html("");
 
 		// set variables
 		var lonlat = viz.centroid;
@@ -64,17 +64,15 @@ var viz = {
 			.projection(viz.projection);
 
 		viz.map = new L.Map("viz", {
-  		     		center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
-  		     		zoom: 13
-  		   	})
-			.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));	
-  			L.control.scale().addTo(viz.map);
-  		
-  		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg"),
-    	viz.g = viz.svg.append("g").attr("class", "leaflet-zoom-hide");
-
-		
+				center: [viz.centroid[1],viz.centroid[0]],//[37.8, -96.9],
+				zoom: 13
+		})
+		.addLayer(new L.TileLayer("http://{s}.tile.cloudmade.com/117aaa97872a451db8e036485c9f464b/998/256/{z}/{x}/{y}.png"));
+		L.control.scale().addTo(viz.map);
 			
+		viz.svg = d3.select(viz.map.getPanes().overlayPane).append("svg");
+		viz.g = viz.svg.append("g").attr("class", "leaflet-zoom-hide");
+
 		var routeID = function(d,i) {
 			return "route-" + d.properties.route.replace(" ","-");
 		};
@@ -82,30 +80,29 @@ var viz = {
 		var routeName = function(d,i) {
 			return d.properties.route_name;
 		};
-		
+
 		var routes = function() {
 
 			
 			collection = viz.routeData = transitData.getGTFSRoutes(viz.zone);
 			var bounds = d3.geo.bounds(collection),
-     		path = d3.geo.path().projection(viz.project);
-     		var feature = viz.g.selectAll("path.route")
-     			.data(collection.features)
-     			.enter().append("path")
-     			.attr("d", path)
+				path = d3.geo.path().projection(viz.project);
+				var feature = viz.g.selectAll("path.route")
+					.data(collection.features)
+					.enter().append("path")
+					.attr("d", path)
 				.style("fill", "none")
 				.attr("class", "route")
 				.attr("id", routeID)
 				.attr("title", routeName);
 
-     		viz.map.on("viewreset", function(){
-     			viz.reset(bounds,feature);
-     			viz.boundsReset(bounds);
-     		});
-     		viz.reset(bounds,feature)
-  			viz.boundsReset(bounds);
+				viz.map.on("viewreset", function(){
+					viz.reset(bounds,feature);
+					viz.boundsReset(bounds);
+				});
+				viz.reset(bounds,feature)
+				viz.boundsReset(bounds);
 
-		  	
 			collection.features.forEach(function(d,i){
 				$('#routes').append('<li><a href="#" id="toggle-route-'+d.properties.route.replace(" ","-")+'" class="toggle-routes">'+d.properties.route_name.replace("\"","").replace("\"","")+'</a></li>');
 			});
@@ -117,13 +114,12 @@ var viz = {
 		};
 		
 		function mousemoved() {
-		  $('#coords').text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
+			$('#coords').text(formatLocation(projection.invert(d3.mouse(this)), zoom.scale()));
 		}
 
 		function formatLocation(p, k) {
- 			var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
-  			return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
-       		+ (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+			var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+			return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "+ (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
 		}
 		
 		// queue up and run the functions
@@ -137,30 +133,66 @@ var viz = {
 	},
 	od:{
 		drawSurveyOrigins:function(){
-			
 			so_data = transitData.getSurveyOrigins();
 			var bounds = d3.geo.bounds(so_data),
- 			path = d3.geo.path().projection(viz.project);
+			path = d3.geo.path().projection(viz.project);
 			var feature = viz.g.selectAll("circle.so")
 				.data(so_data.features)
 				.enter()
 				.append("circle")
 				.classed("so_dot", true)
 				.attr({
-					r: 2,
-					fill:'#E41A1C',
-					cx: function(d,i) { 
-						return viz.project(d.geometry.coordinates)[0]; 
+					r:  function(d){ return d.properties.WEIGHT; },
+					fill:'#C994C7',
+					cx: function(d,i) {
+						return viz.project(d.geometry.coordinates)[0];
 					},
-					cy: function(d,i) { 
-						return viz.project(d.geometry.coordinates)[1]; 
+					cy: function(d,i) {
+						return viz.project(d.geometry.coordinates)[1];
 					},
-				});
+				})
+				.on("mouseover", function(d){
+						self = $(this);
+						self.css({
+							"stroke-width": "2px"
+						});
+						var textTitle = "<p>";
+						textTitle += "<strong>Census Tract: </strong>" + d.properties["geoid"] + "<br>";
+						textTitle += "<strong>WEIGHT: </strong>"+ d.properties['WEIGHT'] +"<br>";
+						textTitle += "<strong>SURVEYNAME: </strong>"+ d.properties['SURVEYNAME'] +"<br>";
+						textTitle += "<strong>CASINOWORKER: </strong>"+ d.properties['CASINOWORKER'] +"<br>";
+						textTitle += "<strong>CASINOVISITOR: </strong>"+ d.properties['CASINOVISITOR'] +"<br>";
+						textTitle += "<strong>CAPTIVITY: </strong>"+ d.properties['CAPTIVITY'] +"<br>";
+						textTitle += "<strong>VEHICLEAVAIL: </strong>"+ d.properties['VEHICLEAVAIL'] +"<br>";
+						textTitle += "<strong>TRIPFREQ: </strong>"+ d.properties['TRIPFREQ'] +"<br>";
+						textTitle += "<strong>TRIPTENURE: </strong>"+ d.properties['TRIPTENURE'] +"<br>";
+						textTitle += "<strong>GENDER: </strong>"+ d.properties['GENDER'] +"<br>";
+						textTitle += "<strong>AGE: </strong>"+ d.properties['AGE'] +"<br>";
+						textTitle += "<strong>RACE: </strong>"+ d.properties['RACE'] +"<br>";
+						textTitle += "<strong>OCCUPATION: </strong>"+ d.properties['OCCUPATION'] +"<br>";
+						textTitle += "<strong>HOUSEHOLDSIZE: </strong>"+ d.properties['HOUSEHOLDSIZE'] +"<br>";
+						textTitle += "<strong>HOUSEHOLDCARS: </strong>"+ d.properties['HOUSEHOLDCARS'] +"<br>";
+						textTitle += "<strong>INCOME: </strong>"+ d.properties['INCOME'] +"<br>";
+						textTitle += "<strong>FREQUENTRIDER: </strong>"+ d.properties['FREQUENTRIDER'] +"<br>";
+						textTitle += "<strong>INCOME_MIDPT: </strong>"+ d.properties['INCOME_MIDPT'] +"<br>";
+						textTitle += "<strong>AGE_MIDPT: </strong>"+ d.properties['AGE_MIDPT'] +"<br>";
+		
+						//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
+						//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
+						$("#info").show().html(textTitle);// + textPoverty + textRace
+					})
+					.on("mouseout", function(self) {
+						self = $(this);
+						self.css({
+							"stroke-width": 0
+						});
+						$("#info").hide().html("");
+					});
 
-				viz.map.on("viewreset", function(){
-     				viz.reset(bounds,feature);
-     			});
-     			viz.reset(bounds,feature);
+			viz.map.on("viewreset", function(){
+				viz.reset(bounds,feature);
+			});
+			viz.reset(bounds,feature);
 
 		},
 		drawSurveyDestinations:function(){
@@ -182,11 +214,49 @@ var viz = {
 					cy: function(d,i) { 
 						return viz.project(d.geometry.coordinates)[1]; 
 					},
-				});
+				})
+				.on("mouseover", function(d){
+						self = $(this);
+						self.css({
+							"stroke-width": "2px"
+						});
+						var textTitle = "<p>";
+						textTitle += "<strong>Census Tract: </strong>" + d.properties["geoid"] + "<br>";
+						textTitle += "<strong>WEIGHT: </strong>"+ d.properties['WEIGHT'] +"<br>";
+						textTitle += "<strong>SURVEYNAME: </strong>"+ d.properties['SURVEYNAME'] +"<br>";
+						textTitle += "<strong>CASINOWORKER: </strong>"+ d.properties['CASINOWORKER'] +"<br>";
+						textTitle += "<strong>CASINOVISITOR: </strong>"+ d.properties['CASINOVISITOR'] +"<br>";
+						textTitle += "<strong>CAPTIVITY: </strong>"+ d.properties['CAPTIVITY'] +"<br>";
+						textTitle += "<strong>VEHICLEAVAIL: </strong>"+ d.properties['VEHICLEAVAIL'] +"<br>";
+						textTitle += "<strong>TRIPFREQ: </strong>"+ d.properties['TRIPFREQ'] +"<br>";
+						textTitle += "<strong>TRIPTENURE: </strong>"+ d.properties['TRIPTENURE'] +"<br>";
+						textTitle += "<strong>GENDER: </strong>"+ d.properties['GENDER'] +"<br>";
+						textTitle += "<strong>AGE: </strong>"+ d.properties['AGE'] +"<br>";
+						textTitle += "<strong>RACE: </strong>"+ d.properties['RACE'] +"<br>";
+						textTitle += "<strong>OCCUPATION: </strong>"+ d.properties['OCCUPATION'] +"<br>";
+						textTitle += "<strong>HOUSEHOLDSIZE: </strong>"+ d.properties['HOUSEHOLDSIZE'] +"<br>";
+						textTitle += "<strong>HOUSEHOLDCARS: </strong>"+ d.properties['HOUSEHOLDCARS'] +"<br>";
+						textTitle += "<strong>INCOME: </strong>"+ d.properties['INCOME'] +"<br>";
+						textTitle += "<strong>FREQUENTRIDER: </strong>"+ d.properties['FREQUENTRIDER'] +"<br>";
+						textTitle += "<strong>INCOME_MIDPT: </strong>"+ d.properties['INCOME_MIDPT'] +"<br>";
+						textTitle += "<strong>AGE_MIDPT: </strong>"+ d.properties['AGE_MIDPT'] +"<br>";
+		
+						//var textPoverty = "<p><span class=\"poverty\">" + self.attr("poverty") + "%" + "</span> of residents live under the federal poverty line</p>";
+						//var textRace = "<table class=\"race\"><tr><td><span>" + self.attr("race-white") + "%" + "</span></td><td>&nbsp;identify as White</td></tr><tr><td><span>" + self.attr("race-black") + "%" + "</span></td><td>&nbsp;identify as Black or African American</td></tr><tr><td><span>" + self.attr("race-native") + "%" + "</span></td><td>&nbsp;identify as American Indian or Alaska Native</td></tr><tr><td><span>" + self.attr("race-asian") + "%" + "</span></td><td>&nbsp;identify as Asian</td></tr><tr><td><span>" + self.attr("race-pi") + "%" + "</span></td><td>&nbsp;identify as Native Hawaiian or Pacific Islander</td></tr><tr><td><span>" + self.attr("race-other") + "%" + "</span></td><td>&nbsp;identify as Other</td></tr><tr><td><span>"+ self.attr("race-hispanic") + "%" + "</span></td><td>&nbsp;identify as Hispanic or Latino (of any race)" + "</td></tr></table>";
+						$("#info").show().html(textTitle);// + textPoverty + textRace
+					})
+					.on("mouseout", function(self) {
+						self = $(this);
+						self.css({
+							"stroke-width": 0
+						});
+						$("#info").hide().html("");
+					});
 
 				viz.map.on("viewreset", function(){
      				viz.reset(bounds,feature);
-     			});
+				});
+				
      			viz.reset(bounds,feature);
 
 		},
@@ -707,6 +777,7 @@ var transitData = {
 			async:false
 		})
 		.done(function(data){
+			console.log('origins',data);
 			output = data;
 		})
 		.fail(function(e){

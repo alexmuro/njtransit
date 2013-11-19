@@ -84,31 +84,63 @@
      	}
 
      	private function parseZones($zones){
-     		foreach ($zones as $index => $fips) {
-     			if($index >= 0){
-					$this->getTractTrips(substr($fips,9,2),substr($fips,11,3),substr($fips,14,6));
-     				$this->output['census_tracts'][] = $index." ".substr($fips,9,2)." ".substr($fips,11,3)." ".substr($fips,14,6);
-				}
-     		}
+     		if($this->type =="AC_SURVEY"){
+     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0";
+
+     			$rs=mysql_query($sql) or die($sql." ".mysql_error());
+	 			$data = array();
+	 		
+	 			while($row = mysql_fetch_assoc($rs)){
+	 				$weight = $row['WEIGHT']*1;
+	 				for($i = 0;$i < $weight; $i++){
+	 					$begin_lat = $row['O_MAT_LAT']+((rand(0,40)-20)/10000);
+						$begin_lon = $row['O_MAT_LONG']+((rand(0,40)-20)/10000);
+						$end_lat = $row['D_MAT_LAT']+((rand(1,40)-20)/10000);
+						$end_lon = $row['D_MAT_LONG']+((rand(1,40)-20)/10000);
+						$from_tract = $row['o_geoid10'];
+						$to_tract = $row['d_geoid10'];
+						$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon,$end_lat,$end_lon);
+	 				}
+	 			}
+     		}else{
+	     		foreach ($zones as $index => $fips) {
+	     			if($index >= 0){
+						$this->getTractTrips(substr($fips,9,2),substr($fips,11,3),substr($fips,14,6));
+	     				$this->output['census_tracts'][] = $index." ".substr($fips,9,2)." ".substr($fips,11,3)." ".substr($fips,14,6);
+					}
+	     		}
+	     	}
      	}
 
      	private function getTractTrips($in_state,$in_county,$in_tract){
      		if($this->type == "LEHD5"){
      			$sql="select CONCAT('0',substring(h_geocode ,1, 2)) as state,substring(h_geocode,3,3) as county,substring(h_geocode,6,6) as tract, CONCAT('0',substring(w_geocode ,1, 2)) as qpowst,substring(w_geocode,3,3) as qpowco,substring(w_geocode,6,6) as qpowtract,CAST(s000/20 as UNSIGNED) as bus_total from LEHD_2011.nj_od_j00_ct where h_geocode = '".$in_state.$in_county.$in_tract."' or w_geocode = '".$in_state.$in_county.$in_tract."'";
 
-     		}else{
+ 				$rs=mysql_query($sql) or die($sql." ".mysql_error());
+	 			$data = array();
+	 		
+	 			while($row = mysql_fetch_assoc($rs)){
+	 				$data[] = $row;
+	 			}	
+	 			foreach ($data as $key => $tract) {
+	 				$this->makeTrips($tract);	
+	 			}
+     		}
+     		else{
      			$sql = "select state3 as state, county, tract, qpowst, qpowco, qpowtract, `table301-1` as total_workers, `table302-1-5` as bus_avail, `table306-8` as bus_total from  workplace_flow_data_2010 where (state3 = '0$in_state' and county = '$in_county' and tract = '$in_tract' ) or  (qpowst = '0$in_state' and qpowco = '$in_county' and qpowtract = '$in_tract' )";
+
+ 				$rs=mysql_query($sql) or die($sql." ".mysql_error());
+	 			$data = array();
+	 		
+	 			while($row = mysql_fetch_assoc($rs)){
+	 				$data[] = $row;
+	 			}	
+	 			foreach ($data as $key => $tract) {
+	 				$this->makeTrips($tract);	
+	 			}
      		}
  			
- 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
- 			$data = array();
  		
- 			while($row = mysql_fetch_assoc($rs)){
- 				$data[] = $row;
- 			}	
- 			foreach ($data as $key => $tract) {
- 				$this->makeTrips($tract);	
- 			}
      	}
 
      	private function makeTrips($tract){
@@ -143,7 +175,7 @@
 					$begin_lon = $begin_stops[$begin_stop]['lon']+(rand(0,20)/10000);
 					$end_lat = $end_stops[$end_stop]['lat']+(rand(1,20)/10000);
 					$end_lon = $end_stops[$end_stop]['lon']+(rand(1,20)/10000);
-					$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon ,$end_lat,$end_lon);
+					$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon,$end_lat,$end_lon);
 				}
 			}	
      	}

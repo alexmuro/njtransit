@@ -1,0 +1,18 @@
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --fields-enclosed-by=\" --columns='ID,O_MAT_LAT,O_MAT_LONG,ON_MAT_LAT,ON_MAT_LONG,OFF_MAT_LAT,OFF_MAT_LONG,D_MAT_LAT,D_MAT_LONG' --local -u root -p njtransit survey_geo.csv
+
+//,o_geoid10,d_geoid10,on_geoid10,off_geoid10
+
+shp2pgsql -s 4326 US_tract_2010.shp | psql -U postgres -d us_census
+
+
+UPDATE survey_geo 
+SET d_geoid10=tl_2013_34_tract.geoid
+from tl_2013_34_tract
+where 
+ST_Contains(
+ST_SetSRID(tl_2013_34_tract.geom,4326),
+ST_SetSRID(ST_MakePoint(survey_geo.d_mat_long,survey_geo.d_mat_lat),4326)
+) 
+
+
+"id","o_mat_lat","o_mat_long","on_mat_lat","on_mat_long","off_mat_lat","off_mat_long","d_mat_lat","d_mat_long","o_geoid10","d_geoid10","on_geoid10","off_geoid10"
