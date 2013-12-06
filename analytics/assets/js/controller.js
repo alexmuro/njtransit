@@ -7,7 +7,7 @@ var ngBus = angular.module('busAnalytics', ['uiSlider'])
 	}]);
 function pageController($scope,$http){
 
-	$scope.runID = 237;
+	$scope.runID = 226;
 	$scope.routes=[];
 
 	busAnalyst.init($scope.runID);
