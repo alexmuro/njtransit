@@ -121,7 +121,7 @@
 		  	$otp_url .= "&preferredRoutes=";
 		  	$otp_url .= "&unpreferredRoutes=";
 		  	
-		  	//echo $otp_url.'<br>';
+		  	echo $otp_url.'<br>';
 		  	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
 
 		  	$this->processTrip(json_decode($this->curl_download($otp_url),true));

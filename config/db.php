@@ -1,5 +1,5 @@
 <?php
- error_reporting(E_ALL ^ E_DEPRECATED);
+ error_reporting(E_ALL ^ E_DEPRECATED ^ E_WARNING);
 
 /**
  * USE THIS CLASS FOR SHOW SPECIFIC DATABASE

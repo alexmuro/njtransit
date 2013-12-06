@@ -85,8 +85,14 @@
 
      	private function parseZones($zones){
      		if($this->type =="AC_SURVEY"){
-     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0";
-
+     			$zone_string = "(";
+     			foreach ($zones as $index => $fips) {
+	     			if($index >= 0){
+						$zone_string .= substr($fips,9,2).substr($fips,11,3).substr($fips,14,6).",";
+					}
+	     		}
+	     		$zone_string = rtrim($zone_string, ",").")";
+     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where (MILITARYSTARTTIME BETWEEN ('15:30:00') AND ('19:00:00') ) and (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) and ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
      			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	 			$data = array();
 	 		
