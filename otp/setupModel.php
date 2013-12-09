@@ -49,7 +49,7 @@
 
 			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".date('l',strtotime($this->date))."','".date('F Y',strtotime($this->date))."','AM Peak','".$this->walk_distance."','".$this->walk_speed."','".$this->type."','".$row[$this->geo_type]."')";
 			$sql = "INSERT into model_runs (runtime,zone_id,name,dow,season,time,max_walk_distance,walk_speed,type,zones) VALUES $insert_data";
-			mysql_query($sql);
+			mysql_query($sql) or die($sql." ".mysql_error());
 			$this->id = mysql_insert_id();
 
 			$sql = "Insert into user_model  (user_id,run_id) values (".$this->user.",".$this->id.")";
@@ -60,7 +60,7 @@
 			//Parse Zones distributes all the work here
 
 			//and we're back
-			$rs=mysql_query(rtrim($this->insert,",")) or die(rtrim($this->insert,",")." ".mysql_error());
+			$rs=mysql_query(rtrim($this->insert,",")) or die(rtrim($this->insert,",")."hello ".mysql_error());
 			$finish = microtime(TRUE);
 
 			$sql = "select count(id) as numTrips from model_trip_table where run_id = ". $this->id;
@@ -79,7 +79,7 @@
 
      	public function runOTP(){
      		$command = "php5 -f cliRunModel.php ".$this->id;
-			$pid = exec( "$command > /dev/null &", $arrOutput );
+     		$pid = exec( "$command > /home/alex/code/logs/otp_model.log &", $arrOutput );
 			
      	}
 
@@ -92,7 +92,7 @@
 					}
 	     		}
 	     		$zone_string = rtrim($zone_string, ",").")";
-     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where (MILITARYSTARTTIME BETWEEN ('15:30:00') AND ('19:00:00') ) and (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) and ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
+     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where (MILITARYSTARTTIME BETWEEN ('5:30:00') AND ('10:00:00') ) and (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) and ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
      			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	 			$data = array();
 	 		
@@ -221,7 +221,7 @@
 
 		private function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon)
 		{
-		  $this->insert .= "(".$this->id.",'$from_tract','$to_tract',$from_lat,$from_lon,$to_lat,$to_lon),";
+	      $this->insert .= "(".$this->id.",'$from_tract','$to_tract',$from_lat,$from_lon,$to_lat,$to_lon),";
 		  
 		}
 
@@ -245,7 +245,6 @@
 		}
 
 		private function processTrip($data){
-			print_r($data);
 			if(count($data['plan']['itineraries']) > 0){
 				//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 				$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];

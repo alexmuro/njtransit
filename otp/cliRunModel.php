@@ -48,7 +48,7 @@
 	  	$otp_url .= "&min=QUICK";
 	  	$otp_url .= "&maxWalkDistance=1000";
 	  	$otp_url .= "&walkSpeed=1.341";
-	  	$otp_url .= "&time=".rand(4,7).':'.$minutes.'pm';
+	  	$otp_url .= "&time=".rand(6,10).':'.$minutes.'am';
 	  	$otp_url .= "&date=7/23/2013";
 	  	$otp_url .= "&arriveBy=false";
 	  	$otp_url .= "&itinID=1";
@@ -83,15 +83,15 @@
 
 	function processTrip($data,$model_id,$flat,$flon,$tlat,$tlon,$itin_id){
 		if(count($data['plan']['itineraries']) > 0){
-			$sql = "Update model_trip_table set departure_time = '"+$data['requestParameters']['time']+"', routed = 1 where id = $itin_id";
-			mysql_query($sql) or die(mysql_error());
+			$sql = "Update model_trip_table set departure_time = '".$data['requestParameters']['time']."', routed = 1 where id = $itin_id";
+			mysql_query($sql) or die($sql.'\n'.mysql_error());
 			//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 			$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
 			//print_r($trip);
 			//echo "Start Time: ".date('Y-m-d H:i:s',$trip['startTime']/1000).",".$trip['startTime']."<br>";
 			$insert_data = "(".$model_id.",'".date('Y-m-d H:i:s',$trip['startTime']/1000)."','".date('Y-m-d H:i:s',$trip['startTime']/1000)."',".$trip['duration'].",".$trip['transitTime'].",".$trip['waitingTime'].",".$trip['walkTime'].",".$trip['walkDistance'].",$flat,$flon,$tlat,$tlon)";
  			$sql = "INSERT into model_trips (run_id,start_time,end_time,duration,transit_time,waiting_time,walking_time,walk_distance,from_lat,from_lon,to_lat,to_lon) VALUES $insert_data";
-			mysql_query($sql) or die(mysql_error());
+			mysql_query($sql) or die($sql.'\n'.mysql_error());
 			$insert_trip_id =  mysql_insert_id();
  			$leg_data = '';
 			foreach ($trip['legs'] as $index => $leg) {
@@ -112,7 +112,7 @@
 			$sql = "INSERT into model_legs (run_id,trip_id, mode,duration,distance,route,route_id,gtfs_trip_id,on_stop_code,on_stop_id,off_stop_code,off_stop_id) VALUES $leg_data";
 			mysql_query($sql) or die($sql.'<br>'.mysql_error());
 		}else{
-			$sql = "Update model_trip_table set departure_time = '"+$data['requestParameters']['time']+"', routed = 0 where id = $itin_id";
-			mysql_query($sql) or die(mysql_error()
+			$sql = "Update model_trip_table set departure_time = '".$data['requestParameters']['time']."', routed = 0 where id = $itin_id";
+			mysql_query($sql) or die($sql.'\n'.mysql_error());
 		}
 	}
