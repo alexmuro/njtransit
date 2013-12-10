@@ -11,7 +11,7 @@
 </style>
 </head>
 <body ng-app="busAnalytics">
-<div class="content" ng-controller="pageController">
+<div class="content">
 	<header>
 	  <a href="http://availabs.org" rel="author">AVAILabs</a>
 	  <h1>Model Overview</h1>
@@ -26,8 +26,7 @@
 		<li ng-repeat="route in the_routes"><a href="#" ng-click="setpage('route_{{route.name}}');">{{ route.name }}</a></li>
 		<li><a href="#" ng-click="setpage('route');">{{route}}</a></li>
 	</ul>
-	
-	<div id="data-display"></div>
+	<div ng-view></div>
 </div>
 <!-- Includes -->
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>

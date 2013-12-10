@@ -4,6 +4,19 @@
  
  $test = new db();
  $inscon = $test->connect();
+ $sql = "select time from model_runs where id = ".$model_id;
+ $rs=mysql_query($sql) or die($sql." ".mysql_error());
+ $row = $row = mysql_fetch_assoc($rs);
+ $start_hour = 6;
+ $end_hour = 10;
+ $ampm = 'am';
+ if($row['time'] == "PM Peak"){
+ 	$start_hour = 15;
+ 	$end_hour = 19;
+ 	$ampm = 'pm';
+ }
+
+
  $sql = "select * from model_trip_table where run_id = ".$model_id;
  $rs=mysql_query($sql) or die($sql." ".mysql_error());
  while($row = mysql_fetch_assoc($rs)){
@@ -35,32 +48,33 @@
  mysql_query($sql) or die($sql." ".mysql_error());
 
 
-	function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$model_id,$itin_id){
-		$minutes = rand(0,59);
-		if($minutes < 10){
-			$minutes = "0".$minutes;
-		}
-
-		$otp_url = "http://localhost:8080/opentripplanner-api-webapp/ws/plan?";
-		$otp_url .= "fromPlace=$from_lat,$from_lon";
-		$otp_url .= "&toPlace=$to_lat,$to_lon";
-		$otp_url .= "&mode=TRANSIT,WALK";
-	  	$otp_url .= "&min=QUICK";
-	  	$otp_url .= "&maxWalkDistance=1000";
-	  	$otp_url .= "&walkSpeed=1.341";
-	  	$otp_url .= "&time=".rand(6,10).':'.$minutes.'am';
-	  	$otp_url .= "&date=7/23/2013";
-	  	$otp_url .= "&arriveBy=false";
-	  	$otp_url .= "&itinID=1";
-	  	$otp_url .= "&wheelchair=false";
-	  	$otp_url .= "&preferredRoutes=";
-	  	$otp_url .= "&unpreferredRoutes=";
-	  	
-	  	echo $otp_url.'<br>';
-	  // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
-
-	  processTrip(json_decode(curl_download($otp_url),true),$model_id,$from_lat,$from_lon,$to_lat,$to_lon,$itin_id);
+function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$model_id,$itin_id){
+	global $start_hour, $end_hour,$ampm;
+	$minutes = rand(0,59);
+	if($minutes < 10){
+		$minutes = "0".$minutes;
 	}
+
+	$otp_url = "http://localhost:8080/opentripplanner-api-webapp/ws/plan?";
+	$otp_url .= "fromPlace=$from_lat,$from_lon";
+	$otp_url .= "&toPlace=$to_lat,$to_lon";
+	$otp_url .= "&mode=TRANSIT,WALK";
+  	$otp_url .= "&min=QUICK";
+  	$otp_url .= "&maxWalkDistance=1000";
+  	$otp_url .= "&walkSpeed=1.341";
+  	$otp_url .= "&time=".rand($start_hour,$end_hour).':'.$minutes.$ampm;
+  	$otp_url .= "&date=7/23/2013";
+  	$otp_url .= "&arriveBy=false";
+  	$otp_url .= "&itinID=1";
+  	$otp_url .= "&wheelchair=false";
+  	$otp_url .= "&preferredRoutes=";
+  	$otp_url .= "&unpreferredRoutes=";
+  	
+  	echo $otp_url.'<br>';
+  // 	//echo 'Running trip at: time:'.rand($this->start_hour,$this->end_hour).':'.rand(0,59).'am<br><br>';
+
+  processTrip(json_decode(curl_download($otp_url),true),$model_id,$from_lat,$from_lon,$to_lat,$to_lon,$itin_id);
+}
 
 	function curl_download($Url){ 
 	    // is cURL installed yet?

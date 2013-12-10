@@ -1,13 +1,15 @@
 
 var ngBus = angular.module('busAnalytics', ['uiSlider'])
 	.config(['$routeProvider', function($routeProvider) {
-		$routeProvider.
-		when('/route/:routeID', {templateUrl: 'route.html', controller: 'routeController'}).
-		otherwise({redirectTo: '/'});
+		$routeProvider
+		.when('/route/:routeID', {templateUrl: 'assets/templates/route.html', controller: 'routeController'})
+		.when('/run/:runID',{templateUrl:'assets/templates/overview.html',controller:'pageController'})
+		.otherwise({redirectTo: '/run/123'});
 	}]);
-function pageController($scope,$http){
 
-	$scope.runID = 226;
+ngBus.controller('pageController',function($scope,$http,$routeParams){
+	console.log('s',$routeParams.runID);
+	$scope.runID = $routeParams.runID;
 	$scope.routes=[];
 
 	busAnalyst.init($scope.runID);
@@ -18,6 +20,7 @@ function pageController($scope,$http){
 		if(page !== $scope.currentPage ){
 			if(page == 'routes'){
 				busAnalyst.init_routes();
+				console.log('test');
 				$scope.currentPage = page;
 			}else if(page === 'geo'){
 				busAnalyst.init_geography(page.substring)
@@ -51,7 +54,8 @@ function pageController($scope,$http){
 			$scope.the_routes.push(route);
 		})
     });
-}
+});
+
 function routeController(){
 
 }
