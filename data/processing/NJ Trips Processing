@@ -1,0 +1,58 @@
+CREATE TABLE `NJ_Trips` (
+  `LINE` varchar(45) DEFAULT NULL,
+  `RUN` varchar(45) DEFAULT NULL,
+  `TRIP` varchar(45) DEFAULT NULL,
+  `PATTERN` varchar(45) DEFAULT NULL,
+  `TIME_PERIOD` varchar(45) DEFAULT NULL,
+  `BOARDING_ZONE` varchar(45) DEFAULT NULL,
+  `ALIGHTING_ZONE` varchar(45) DEFAULT NULL,
+  `TOTAL_TRANSACTIONS` varchar(45) DEFAULT NULL,
+  `COUNTER` varchar(45) DEFAULT NULL,
+  `CASH` varchar(45) DEFAULT NULL,
+  `TICKET` varchar(45) DEFAULT NULL,
+  `TEN_TRIP` varchar(45) DEFAULT NULL,
+  `CONTINUE_TRIP` varchar(45) DEFAULT NULL,
+  `CASH_RT` varchar(45) DEFAULT NULL,
+  `MONTHLY_PASS` varchar(45) DEFAULT NULL,
+  `TRANSFER1_RECEIVED` varchar(45) DEFAULT NULL,
+  `TRANSFER1_ISSUED` varchar(45) DEFAULT NULL,
+  `SPECIAL` varchar(45) DEFAULT NULL,
+  `TRANSFER2` varchar(45) DEFAULT NULL,
+  `RAIL_PASS_CH` varchar(45) DEFAULT NULL,
+  `NONE` varchar(45) DEFAULT NULL,
+  `ADULT` varchar(45) DEFAULT NULL,
+  `CHILD` varchar(45) DEFAULT NULL,
+  `SENIOR_HANDICAPPED` varchar(45) DEFAULT NULL,
+  `STUDENT` varchar(45) DEFAULT NULL,
+  `EMPLOYEE` varchar(45) DEFAULT NULL,
+  `FAMILY` varchar(45) DEFAULT NULL,
+  `FOREIGN` varchar(45) DEFAULT NULL,
+  `TEN_TRIP_CLASS` varchar(45) DEFAULT NULL,
+  `RECOVERY_PROCESSING_ID` varchar(45) DEFAULT NULL,
+  `RUN_DATE` DATE DEFAULT NULL,
+  `START_TIME` TIME DEFAULT NULL
+  KEY `bus` (`LINE`,`RUN`,`TRIP`,`PATTERN`,`TIME_PERIOD`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --fields-enclosed-by=\" --columns='LINE,RUN,TRIP,PATTERN,TIME_PERIOD,BOARDING_ZONE,ALIGHTING_ZONE,TOTAL_TRANSACTIONS,COUNTER,CASH,TICKET,TEN_TRIP,CONTINUE_TRIP,CASH_RT,MONTHLY_PASS,TRANSFER1_RECEIVED,TRANSFER1_ISSUED,SPECIAL,OVERRIDE,TRANSFER2,RAIL_PASS_CH,NONE,ADULT,CHILD,SENIOR_HANDICAPPED,STUDENT,EMPLOYEE,FAMILY,FOREIGN,TEN_TRIP_CLASS,RECOVERY_PROCESSING_ID' --local -u root -p njtransit njt_trips.csv
+
+mysqlimport  --ignore-lines=1 --fields-terminated-by=, --fields-enclosed-by=\" --columns='gid,line,op,abbr,county,municipali,place_no,stop_num,bsl,stop_type,street_dir,measure,dlat_gis,dlong_gis,date_stamp,id1,seq_no,dist,fare_zone,fare_zon0,fare_zon1,alight,mb_dir,bus_bay,heading,date,geom' --local -u root -p njstops njstops.csv
+
+
+shp2pgsql -c -D -s 4326 -I PATTERN_STOP_point.shp public.njstops > njstops.sql
+psql -h localhost -U postgres -d us_census -f njstops.sql 
+
+
+update njt_trips set RUN_DATE = '2013-07-26' where RUN_DATE is null
+
+update njt_trips set START_TIME = 
+CASE LENGTH(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1)) 
+  WHEN 4 THEN STR_TO_DATE(CONCAT(SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),1,1),":",SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),2,2),SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),4,1),"m"),'%h:%i%p')
+  WHEN 5 THEN STR_TO_DATE(CONCAT(SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),1,2),":",SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),3,2),SUBSTRING(LEFT(TIME_PERIOD,LOCATE('-',TIME_PERIOD)-1),5,1),"m"),'%h:%i%p')
+  ELSE "Mystery"
+END
+
+
+select LINE, MIN(LINE_TOTAL),FLOOR(AVG(LINE_TOTAL)),MAX(LINE_TOTAL) from
+(select RUN_DATE,LINE,SUM(TOTAL_TRANSACTIONS) as LINE_TOTAL from njt_trips WHERE START_TIME BETWEEN ('6:00:00') AND ('10:00:00') group by LINE,RUN_DATE ) as b
+group by LINE

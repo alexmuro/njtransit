@@ -1,5 +1,5 @@
 <?php
- error_reporting(E_ALL ^ E_DEPRECATED ^ E_WARNING);
+error_reporting(E_ALL ^ E_DEPRECATED ^ E_WARNING);
 
 /**
  * USE THIS CLASS FOR SHOW SPECIFIC DATABASE
@@ -20,9 +20,6 @@ class db {
   {
     
         $docroot = $_SERVER['DOCUMENT_ROOT'];
-        //echo "Docroot:$docroot";
-        // LIVE DB CONNECTION SETTINGS
-        //laptop Docroot = /var/www
         if(strstr($docroot,'/usr/docs/dummy-host.example.com'))
         //Mac Default Settings
         {

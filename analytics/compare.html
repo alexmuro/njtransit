@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>Bus Trip Model Visualizations</title>
+
+<style>
+@import url(assets/css/style.css);
+@import url(assets/css/dc.css);
+@import url(assets/css/angular-slider.min.css);
+
+</style>
+</head>
+<body>
+<div class="content">
+	<header>
+	  <a href="http://availabs.org" rel="author">AVAILabs</a>
+	  <h1>Model Overview</h1>
+	  <p>Run Name: Model Type: Run Month: Dow: Time: Max Walk Distance: Walk Speed: 
+	  <!-- <aside>November 11, 2013</aside> -->
+	</header>
+	<div id="data-display">
+	</div>
+</div>
+<!-- Includes -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="assets/js/crossfilter.min.js"></script>
+<script src="assets/js/dc.min.js"></script>
+
+<!-- src -->
+<script src="assets/src/modelComapre.js"></script>
+<script>
+busAnalyst.init(182);
+busAnalyst.init_routes();
+</script>
+</body>
+
+
