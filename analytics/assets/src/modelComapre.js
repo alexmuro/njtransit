@@ -1,3 +1,4 @@
+var numberFormat = d3.format(".0f");
 var loader = {
 	queue: [],
 	push: function(fn, scope, params) {
@@ -11,14 +12,20 @@ var loader = {
 var busAnalyst = (function(){
 	var timeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
 	var modelTrips,fareTrips = {};
-	var run_id=182;
-	var modelRoute,modelRoutesGroup,fareRoute,fareRoutesGroup,startTimeDimension,modelTripsAllDimension = {};
+	var run_id=269;
+	var modelRoute,
+		modelRoutesGroup,
+		fareRoute,
+		fareRoutesGroup,
+		startTimeDimension,
+		modelTripsAllDimension,
+		modelGeoIDBoarding,
+		modelGeoIDBoardingGroup,
+		modelGeoIDAlighting,
+		modelGeoIDAlightingGroup= {};
+
 	var route_id = -1;
 	var censusGeo = {};
-	
-	
-	//var delayCountChart = dc.barChart("#chart-delay-count");
-
 
 	function loadModelData(){
 		//console.log('1');
@@ -32,17 +39,34 @@ var busAnalyst = (function(){
 		})
 		.done(function(data){
 			data.forEach(function(d,i){
-				//if(i < 10) console.log(d3.time.minute(timeFormat.parse(d.start_time)));
 				d.start_time_d = timeFormat.parse(d.start_time);
 				d.minute = d3.time.minute(d.start_time_d);
 				d.minute.setHours(d.minute.getHours()-4);
 			});
-			console.log('model data',data);
+			//console.log('model data',data);
 			modelTrips = crossfilter(data);
 			loader.run();
 		})
 		.fail(function(e){
 			console.log(e.responseText);
+		});
+	}
+
+	function loadCensusTracts(){
+		var output = {};
+		$.ajax({url:'/data/geo/getTractsByZone.php',
+			data:{zone_id:2,run_id:run_id},
+			method:'POST',
+			dataType:'json',
+			async:false
+		})
+		.done(function(data){
+			censusGeo = data;
+			loader.run();
+		})
+		.fail(function(e){
+			console.log(e.responseText);
+			loader.run();
 		});
 	}
 
@@ -56,9 +80,8 @@ var busAnalyst = (function(){
 			async:false
 		})
 		.done(function(data){
-			console.log('fare data:',data);
+			//console.log('fare data:',data);
 			fareTrips = crossfilter(data);
-			console.log(data);
 			loader.run();
 		})
 		.fail(function(e){
@@ -70,11 +93,19 @@ var busAnalyst = (function(){
 
 		modelRoutes = modelTrips.dimension(function(d){return d.route;});
 		modelRoutesGroup = modelRoutes.group(function(d){return d;});
+		
 		modelFareZones = modelTrips.dimension(function(d){ return d.on_fare_zone;});
 		modelFareZonesGroup = modelFareZones.group(function(d){return d;});
+		
 		modelFareZonesAlighting = modelTrips.dimension(function(d){ return d.off_fare_zone;});
 		modelFareZonesAlightingGroup = modelFareZonesAlighting.group(function(d){return d;});
-
+		
+		modelGeoIDBoarding = modelTrips.dimension(function(d){return d.on_tract;});
+		modelGeoIDBoardingGroup = modelGeoIDBoarding.group(function(d){return d;});
+		
+		modelGeoIDAlighting = modelTrips.dimension(function(d){return d.off_tract;});
+		modelGeoIDAlightingGroup = modelGeoIDAlighting.group(function(d){return d;});
+		
 
 		fareRoutes = fareTrips.dimension(function(d){return d.LINE;});
 		fareRoutesGroup = fareRoutes.group().reduceSum(function(d) { return d.TOTAL_TRANSACTIONS*1; });
@@ -94,22 +125,85 @@ var busAnalyst = (function(){
 		loader.push(RouteCountCharts);
 		loader.push(FareZoneCountCharts);
 		loader.push(RouteComparisonTable);
+		loader.push(CensusTractBoardingChart);
 		loader.push(dc.renderAll);
 		loader.run();
 	
+	}
+	function CensusTractBoardingChart(){
+		var width = 550;
+		var height = 650;
+		var censusTractBoarding = dc.geoChoroplethChart("#chart-model-census-tracts-boarding");
+		var correctProject = getProjection(height,width,censusGeo);
+		censusTractBoarding
+			.width(width)
+      .height(height)
+      .dimension(modelGeoIDBoarding)
+      .group(modelGeoIDBoardingGroup)
+      .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+      .colorDomain([0, 200])
+      .colorCalculator(function (d) { return d ? censusTractBoarding.colors()(d) : '#ccc'; })
+      .overlayGeoJson(censusGeo.features, "tract", function (d) {
+				return d.properties.geoid;
+      })
+      .projection(correctProject)
+      .title(function (d) {
+				return "Censust Tract: " + d.key + "\n # Boarding: " + numberFormat(d.value ? d.value : 0);
+      });
+
+    var censusTractAlighting = dc.geoChoroplethChart("#chart-model-census-tracts-alighting");
+		censusTractAlighting
+			.width(width)
+      .height(height)
+      .dimension(modelGeoIDAlighting)
+      .group(modelGeoIDAlightingGroup)
+      .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+      .colorDomain([0, 200])
+      .colorCalculator(function (d) { return d ? censusTractAlighting.colors()(d) : '#ccc'; })
+      .overlayGeoJson(censusGeo.features, "tract", function (d) {
+				return d.properties.geoid;
+      })
+      .projection(correctProject)
+      .title(function (d) {
+				return "Census Tract: " + d.key + "\n # Alighting: " + numberFormat(d.value ? d.value : 0);
+      });
+
+		loader.run();
+	}
+
+	function getProjection(width,height,json){
+		var center = d3.geo.centroid(json);
+    var scale  = 150;
+    var offset = [width/2, height/2];
+      var projection = d3.geo.mercator().scale(scale).center(center)
+          .translate(offset);
+
+      // create the path
+      var path = d3.geo.path().projection(projection);
+
+      // using the path determine the bounds of the current map and use 
+      // these to determine better values for the scale and translation
+      var bounds  = path.bounds(json);
+      var hscale  = scale*width  / (bounds[1][0] - bounds[0][0]);
+      var vscale  = scale*height / (bounds[1][1] - bounds[0][1]);
+      scale   = (hscale < vscale) ? hscale : vscale;
+      offset  = [width - (bounds[0][0] + bounds[1][0])/2, height - (bounds[0][1] + bounds[1][1])/2];
+
+      // new projection
+      return d3.geo.mercator().center(center).scale(scale).translate(offset);
 	}
 	function RouteCountCharts(){
 
 		var routeCountChart = dc.rowChart("#chart-model-route-count");
 		routeCountChart
-			.width(425).height(300)
+			.width(550).height(600)
 			.dimension(modelRoutes)
 			.group(modelRoutesGroup)
 			.elasticX(true);
 
 		var fareCountChart = dc.rowChart("#chart-fare-route-count");
 		fareCountChart
-			.width(425).height(300)
+			.width(550).height(600)
 			.dimension(fareRoutes)
 			.group(fareRoutesGroup)
 			.elasticX(true);
@@ -120,29 +214,28 @@ var busAnalyst = (function(){
 		
 		var modelCountChart = dc.rowChart("#chart-model-farezone-count");
 		modelCountChart
-			.width(425).height(600)
+			.width(550).height(700)
 			.dimension(modelFareZones)
 			.group(modelFareZonesGroup)
 			.elasticX(true);
 		
-		console.log('fare farezone test',fareFareZonesGroup.all());
+		
 		var fareCountChart = dc.rowChart("#chart-fare-farezone-count");
 		fareCountChart
-			.width(425).height(600)
+			.width(550).height(700)
 			.dimension(fareFareZones)
 			.group(fareFareZonesGroup)
 			.elasticX(true);
 		var modelCountChartOff = dc.rowChart("#chart-model-farezone-off-count");
 		modelCountChartOff
-			.width(425).height(600)
+			.width(550).height(700)
 			.dimension(modelFareZonesAlighting)
 			.group(modelFareZonesAlightingGroup)
 			.elasticX(true);
 		
-		console.log('fare farezone test',fareFareZonesGroup.all());
 		var fareCountChartOff = dc.rowChart("#chart-fare-farezone-off-count");
 		fareCountChartOff
-			.width(425).height(600)
+			.width(550).height(700)
 			.dimension(fareFareZonesAlighting)
 			.group(fareFareZonesAlightingGroup)
 			.elasticX(true);
@@ -151,38 +244,18 @@ var busAnalyst = (function(){
 	}
 
 	function RouteComparisonTable(){
-		var output = '<table><tr><th>Route</th><th>Model Riders</th><th>Fare Riders</th><th>%</th></tr>';
+		var output = '<table class="table table-hover"><thead><tr><th>Route</th><th>Model Riders</th><th>Fare Riders</th><th>% difference</th></tr></thead><tbody>';
+		var modelTotal= 0, faresTotal = 0;
 		fareRoutesGroup.all().forEach(function(d,i){
 			var difference = Math.round(((modelRoutesGroup.all()[i].value-fareRoutesGroup.all()[i].value) / fareRoutesGroup.all()[i].value)*100);
 			output += "<tr><td>"+d.key+"</td><td>"+modelRoutesGroup.all()[i].value+'</td><td>'+fareRoutesGroup.all()[i].value+"</td><td>"+difference+"%</td><td><tr>";
+			modelTotal += modelRoutesGroup.all()[i].value;
+			faresTotal += fareRoutesGroup.all()[i].value;
 		});
+		var difference = Math.round(((modelTotal-faresTotal) / faresTotal)*100);
+		output += "</tbody><tfoot><tr><td>Total</td><td>"+modelTotal+'</td><td>'+faresTotal+"</td><td>"+difference+"%</td><td><tr></tfoot>";
 		output += '<table>';
 		$("#table-route-comparison").html(output);
-		loader.run();
-	}
-
-	
-
-	
-	function routesDOM(){
-		$('#data-display')
-			.html(
-				'<div id="chart-model-route-count"></div>'+
-				'<div id="chart-fare-route-count"></div>'+
-				'<div id="chart-model-farezone-count"></div>'+
-				'<div id="chart-fare-farezone-count"></div>'+
-				'<div id="chart-model-farezone-off-count"></div>'+
-				'<div id="chart-fare-farezone-off-count"></div>'+
-				'<div id="table-route-comparison"></div>');
-		loader.run();
-	}
-
-	function routeDOM(){
-		$('#data-display').html('<h2>Route '+route_id+'</h2><div id="chart-marley"></div>');
-		loader.run();
-	}
-	function geoDOM(){
-		$('#data-display').html('Geographies<div id="chart-geo-count"></div>');
 		loader.run();
 	}
 
@@ -191,12 +264,13 @@ var busAnalyst = (function(){
 			run_id = runID;
 			loader.push(loadModelData);
 			loader.push(loadFareData);
+			loader.push(loadCensusTracts);
+			loader.push(filterData);
+			loader.push(makeGraphs);
 			loader.run();
 		},
 		init_routes:function(){
-			loader.push(routesDOM);
-			loader.push(filterData);
-			loader.push(makeGraphs);
+			
 			loader.run();
 		}
 	};

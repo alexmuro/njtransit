@@ -27,7 +27,7 @@
 				c.arrival_time,
 				d.arrival_time as trip_start_time,
 			    CONCAT(e.state, e.county, e.tract) as on_tract,
-				CONCAT(h.state, h.county, h.tract) as on_tract,
+				CONCAT(h.state, h.county, h.tract) as off_tract,
 			    f.fare_zone as on_fare_zone,
 				g.fare_zone as off_fare_zone
 			from

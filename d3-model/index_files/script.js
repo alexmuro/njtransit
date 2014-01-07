@@ -738,7 +738,7 @@ var transitData = {
 		var output = {};
 		//console.log('modelrun', viz.model_run)
 		$.ajax({url:'/data/geo/getTractsByZone.php',
-			data:{zone_id:viz.zone,model_run:viz.model_run},
+			data:{zone_id:viz.zone,run_id:viz.model_run},
 			method:'POST',
 			dataType:'json',
 			async:false

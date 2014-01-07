@@ -2,36 +2,140 @@
 <meta charset="utf-8">
 <head>
 <title>Bus Trip Model Visualizations</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 <style>
-@import url(assets/css/style.css);
 @import url(assets/css/dc.css);
 @import url(assets/css/angular-slider.min.css);
-
+body { padding-top: 70px; background: #e7e7e7; }
+.main-content {background: #fff;}
 </style>
+<!-- Latest compiled and minified CSS -->
+
 </head>
 <body>
-<div class="content">
-	<header>
-	  <a href="http://availabs.org" rel="author">AVAILabs</a>
-	  <h1>Model Overview</h1>
-	  <p>Run Name: Model Type: Run Month: Dow: Time: Max Walk Distance: Walk Speed: 
-	  <!-- <aside>November 11, 2013</aside> -->
-	</header>
-	<div id="data-display">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+	<div class="container">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6">
+		    <span class="sr-only">Toggle navigation</span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="#">Atlantic City Model Overview</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+		  <ul class="nav navbar-nav">
+		    <li><a href="#route-count">Route Count</a></li>
+		    <li class="dropdown">
+		        <a href="#fare-zone-boarding" class="dropdown-toggle" data-toggle="dropdown">Fare Zones <b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		          <li><a href="#fare-zone-boarding">Boarding</a></li>
+		          <li><a href="#fare-zone-alighting">Alighting</a></li>
+		        </ul>
+		    </li>
+		    <li class="dropdown">
+		        <a href="#census-tract-boarding" class="dropdown-toggle" data-toggle="dropdown">Census Tract<b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		          <li><a href="#census-tract-boarding">Boarding</a></li>
+		          <li><a href="#census-tract-alighting">Alighting</a></li>
+		        </ul>
+		    </li>
+		  </ul>
+		</div><!-- /.navbar-collapse -->
 	</div>
+
+</nav>
+<div class="container main-content" id="data-display">
+	<div class="row" style="overflow:hidden">	
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="model-info">Model Info</a></div></nav>
+		<div class="col-md-6">
+			<h4> Model Info</h4>
+			<select id="model-select">
+				
+			</select><br>
+			Name:<br>
+			Season>:<br>
+			Run Type:<br>
+		</div>
+		<div class="col-md-6">
+			<h4>Farebox Info</h4>
+			<select>
+				<option> Atlantic City - AM</option>
+				<option> Atlantic City - PM</option>
+				<option> Atlantic City - Combined</option>
+			</select>
+		</div>
+	</div>
+	<div class="row" style="overflow:hidden">	
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="route-count">Route Totals</a></div></nav>
+		<div class="col-md-6">
+			<h3>Model Riders by Route</h3>
+			<div id="chart-model-route-count"></div>
+		</div>
+		<div class="col-md-6">
+			<h3>Farebox Riders by Route</h3>
+			<div id="chart-fare-route-count"></div>
+		</div>
+		<div class="col-md-12">
+			<div id="table-route-comparison"></div>
+		</div>
+	</div>
+	<div class="row" style="overflow:hidden">
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="fare-zone-boarding">Boarding Fare Zone Totals</a></div></nav>
+		<div class="col-md-6">
+			<div id="chart-model-farezone-count"></div>
+		</div>
+		<div class="col-md-6">
+			<div id="chart-fare-farezone-count"></div>
+		</div>
+		<div class="col-md-12">
+			<div id="table-fare-zone-alighting-comparison"></div>
+		</div>
+	</div>
+	<div class="row" style="overflow:hidden">
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="fare-zone-boarding">Alighting Fare Zone Totals</a></div></nav>
+		<div class="col-md-6">
+			<div id="chart-model-farezone-off-count"></div>
+		</div>
+		<div class="col-md-6">
+			<div id="chart-fare-farezone-off-count"></div>
+		</div>
+	</div>
+	<div class="row" style="overflow:hidden">
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="fare-zone-boarding">Census Tracts Boarding and Alighting</a></div></nav>
+		<div class="col-md-6">
+			<h3> Boarding Count by Census Tract</h3>
+			<div id="chart-model-census-tracts-boarding"></div>
+		</div>
+		<div class="col-md-6">
+			<h3> Alighting Count by Census Tract</h3>
+			<div id="chart-model-census-tracts-alighting"></div>
+		</div>
+	</div>
+	
 </div>
+
+
 <!-- Includes -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="assets/js/crossfilter.min.js"></script>
-<script src="assets/js/dc.min.js"></script>
+<script src="assets/js/dc.2.0.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<!-- <script src="assets/js/dc.min.js"></script> -->
 
 <!-- src -->
 <script src="assets/src/modelComapre.js"></script>
+<script src="assets/src/behaviour.js"></script>
 <script>
-busAnalyst.init(182);
-busAnalyst.init_routes();
+busAnalyst.init(270);
 </script>
 </body>
 

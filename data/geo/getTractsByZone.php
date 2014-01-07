@@ -5,15 +5,19 @@ $test = new db();
 $inscon = $test->connect();
 
 $zone = $_POST['zone_id'];
-//$model =$_POST['model_id'];
 
 function wkt_to_json($wkt) {
   $geom = geoPHP::load($wkt,'wkt');
   return $geom->out('json');
 }
-
-
-$sql = "select replace(replace(replace(ct,'[','('),'1400000US',''),']',')') as ct from njtransit.zones where id =$zone";
+$sql = "";
+if(isset($_POST['run_id'])){
+    $run_id = $_POST['run_id'];
+    $sql = "select replace(replace(replace(zones,'[','('),'1400000US',''),']',')') as ct from njtransit.model_runs where id =$run_id";
+}
+else{
+    $sql = "select replace(replace(replace(ct,'[','('),'1400000US',''),']',')') as ct from njtransit.zones where id =$zone";
+}
 $rs =mysql_query($sql) or die($sql." ");
 
 $row = mysql_fetch_array($rs);

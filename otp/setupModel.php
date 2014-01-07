@@ -120,7 +120,7 @@
 
      	private function getTractTrips($in_state,$in_county,$in_tract){
      		if($this->type == "LEHD5"){
-     			$sql="select CONCAT('0',substring(h_geocode ,1, 2)) as state,substring(h_geocode,3,3) as county,substring(h_geocode,6,6) as tract, CONCAT('0',substring(w_geocode ,1, 2)) as qpowst,substring(w_geocode,3,3) as qpowco,substring(w_geocode,6,6) as qpowtract,CAST(s000/20 as UNSIGNED) as bus_total from LEHD_2011.nj_od_j00_ct where h_geocode = '".$in_state.$in_county.$in_tract."' or w_geocode = '".$in_state.$in_county.$in_tract."'";
+     			$sql="select CONCAT('0',substring(h_geocode ,1, 2)) as state,substring(h_geocode,3,3) as county,substring(h_geocode,6,6) as tract, CONCAT('0',substring(w_geocode ,1, 2)) as qpowst,substring(w_geocode,3,3) as qpowco,substring(w_geocode,6,6) as qpowtract,CAST(s000/30 as UNSIGNED) as bus_total from LEHD_2011.nj_od_j00_ct where h_geocode = '".$in_state.$in_county.$in_tract."' or w_geocode = '".$in_state.$in_county.$in_tract."'";
 
  				$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	 			$data = array();
