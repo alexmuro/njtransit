@@ -38,13 +38,7 @@ body { padding-top: 70px; background: #e7e7e7; }
 		          <li><a href="#fare-zone-alighting">Alighting</a></li>
 		        </ul>
 		    </li>
-		    <li class="dropdown">
-		        <a href="#census-tract-boarding" class="dropdown-toggle" data-toggle="dropdown">Census Tract<b class="caret"></b></a>
-		        <ul class="dropdown-menu">
-		          <li><a href="#census-tract-boarding">Boarding</a></li>
-		          <li><a href="#census-tract-alighting">Alighting</a></li>
-		        </ul>
-		    </li>
+		    <li><a href="#census-tracts">Riders by Census Tract</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
 	</div>
@@ -59,7 +53,7 @@ body { padding-top: 70px; background: #e7e7e7; }
 				
 			</select><br>
 			Name:<br>
-			Season>:<br>
+			Season:<br>
 			Run Type:<br>
 		</div>
 		<div class="col-md-6">
@@ -80,6 +74,20 @@ body { padding-top: 70px; background: #e7e7e7; }
 		<div class="col-md-6">
 			<h3>Farebox Riders by Route</h3>
 			<div id="chart-fare-route-count"></div>
+		</div>
+		<div class="col-md-12">
+			<div id="table-route-comparison"></div>
+		</div>
+	</div>
+	<div class="row" style="overflow:hidden">	
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="route-count">Trip Totals</a></div></nav>
+		<div class="col-md-6">
+			<h3>Model Riders by Trip</h3>
+			<div id="chart-model-trip-count"></div>
+		</div>
+		<div class="col-md-6">
+			<h3>Farebox Riders by Trip</h3>
+			<div id="chart-fare-trip-count"></div>
 		</div>
 		<div class="col-md-12">
 			<div id="table-route-comparison"></div>
@@ -107,10 +115,11 @@ body { padding-top: 70px; background: #e7e7e7; }
 		</div>
 	</div>
 	<div class="row" style="overflow:hidden">
-		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="fare-zone-boarding">Census Tracts Boarding and Alighting</a></div></nav>
+		<nav class="navbar navbar-default" role="navigation"><div class="navbar-header"><a class="navbar-brand" name="census-tracts">Census Tracts Boarding and Alighting</a></div></nav>
 		<div class="col-md-6">
 			<h3> Boarding Count by Census Tract</h3>
 			<div id="chart-model-census-tracts-boarding"></div>
+			<div id="chart-model-census-tracts-boarding-table" class="table table-hover"></div>
 		</div>
 		<div class="col-md-6">
 			<h3> Alighting Count by Census Tract</h3>
@@ -135,7 +144,7 @@ body { padding-top: 70px; background: #e7e7e7; }
 <script src="assets/src/modelComapre.js"></script>
 <script src="assets/src/behaviour.js"></script>
 <script>
-busAnalyst.init(270);
+busAnalyst.init(269);
 </script>
 </body>
 

@@ -9,6 +9,7 @@
     	 $start_min =0,
     	 $end_hour=9,
     	 $end_min=59,
+    	 $AM_PM = 'am',
     	 $date='7/22/2013',
     	 $trips=array(),
     	 $totalTrips=0,
@@ -21,10 +22,10 @@
      	 $type="CTPP2000",
      	 $survey=false,
      	 $user=0,
-     	 $insert = "Insert into model_trip_table (run_id,from_tract,to_tract,from_lat,from_lon,to_lat,to_lon) values ";
+     	 $insert = "Insert into model_trip_table (run_id,from_tract,to_tract,from_lat,from_lon,to_lat,to_lon,departure_time) values ";
      	 
 
-     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='7/22/2013',$distance,$speed,$type,$user) {
+     	function __construct($in_name="Untitiled Mode",$in_zone=1,$in_date='7/22/2013',$distance,$speed,$type,$user,$ampm) {
        			$this->name = $in_name;
        			$this->market_area = $in_zone;
        			$this->date = $in_date;
@@ -32,6 +33,7 @@
        			$this->walk_speed = $speed * 1.60934;
        			$this->type = $type;
        			$this->user = $user;
+       			$this->AM_PM = $ampm;
        			if($this->market_area == 1 || $this->market_area == 4){
        				$this->survey = true;
        			}
@@ -47,7 +49,7 @@
 			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 			$row = mysql_fetch_assoc( $rs );
 
-			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".date('l',strtotime($this->date))."','".date('F Y',strtotime($this->date))."','AM Peak','".$this->walk_distance."','".$this->walk_speed."','".$this->type."','".$row[$this->geo_type]."')";
+			$insert_data = "(NOW(),".$this->market_area.",'".$this->name."','".date('l',strtotime($this->date))."','".date('F Y',strtotime($this->date))."','".$this->AM_PM."','".$this->walk_distance."','".$this->walk_speed."','".$this->type."','".$row[$this->geo_type]."')";
 			$sql = "INSERT into model_runs (runtime,zone_id,name,dow,season,time,max_walk_distance,walk_speed,type,zones) VALUES $insert_data";
 			mysql_query($sql) or die($sql." ".mysql_error());
 			$this->id = mysql_insert_id();
@@ -60,7 +62,7 @@
 			//Parse Zones distributes all the work here
 
 			//and we're back
-			$rs=mysql_query(rtrim($this->insert,",")) or die(rtrim($this->insert,",")."hello ".mysql_error());
+			$rs=mysql_query(rtrim($this->insert,",")) or die(rtrim($this->insert,",").mysql_error());
 			$finish = microtime(TRUE);
 
 			$sql = "select count(id) as numTrips from model_trip_table where run_id = ". $this->id;
@@ -92,7 +94,22 @@
 					}
 	     		}
 	     		$zone_string = rtrim($zone_string, ",").")";
-     			$sql = "select O_MAT_LAT,O_MAT_LONG,D_MAT_LAT,D_MAT_LONG,WEIGHT,o_geoid10,d_geoid10 from survey_geo as a join survey_attributes as b on a.ID = b.ID where (MILITARYSTARTTIME BETWEEN ('5:30:00') AND ('10:00:00') ) and (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) and ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
+     			$sql = "SELECT 
+     						O_MAT_LAT,
+     						O_MAT_LONG,
+     						D_MAT_LAT,
+     						D_MAT_LONG,
+     						WEIGHT,
+     						o_geoid10,
+     						d_geoid10,
+     						MILITARYSTARTTIME
+     					FROM survey_geo as a 
+     					JOIN survey_attributes as b on 
+     						a.ID = b.ID 
+     					where 
+     						(MILITARYSTARTTIME BETWEEN ('5:30:00') AND ('10:00:00') ) 
+     						AND (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) 
+     						AND ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
      			$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	 			$data = array();
 	 		
@@ -120,7 +137,7 @@
 
      	private function getTractTrips($in_state,$in_county,$in_tract){
      		if($this->type == "LEHD5"){
-     			$sql="select CONCAT('0',substring(h_geocode ,1, 2)) as state,substring(h_geocode,3,3) as county,substring(h_geocode,6,6) as tract, CONCAT('0',substring(w_geocode ,1, 2)) as qpowst,substring(w_geocode,3,3) as qpowco,substring(w_geocode,6,6) as qpowtract,CAST(s000/30 as UNSIGNED) as bus_total from LEHD_2011.nj_od_j00_ct where h_geocode = '".$in_state.$in_county.$in_tract."' or w_geocode = '".$in_state.$in_county.$in_tract."'";
+     			$sql="SELECT CONCAT('0',substring(h_geocode ,1, 2)) as state,substring(h_geocode,3,3) as county,substring(h_geocode,6,6) as tract, CONCAT('0',substring(w_geocode ,1, 2)) as qpowst,substring(w_geocode,3,3) as qpowco,substring(w_geocode,6,6) as qpowtract,CAST(s000/30 as UNSIGNED) as bus_total from LEHD_2011.nj_od_j00_ct where h_geocode = '".$in_state.$in_county.$in_tract."' or w_geocode = '".$in_state.$in_county.$in_tract."'";
 
  				$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	 			$data = array();
@@ -219,10 +236,23 @@
  			return $data;
 		}
 
-		private function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon)
+		private function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$time = false)
 		{
-	      $this->insert .= "(".$this->id.",'$from_tract','$to_tract',$from_lat,$from_lon,$to_lat,$to_lon),";
-		  
+			if(!$time){
+				if($this->AM_PM == 'am'){
+					$time = rand(6,9);
+				}
+				else{
+					$time = rand(3,6);
+				}
+				$minutes = rand(0,59);
+			
+				if($minutes < 10){
+					$minutes = "0".$minutes;
+				}
+				$time .= ':'.$minutes.$this->AM_PM;
+			}
+	      $this->insert .= "(".$this->id.",'$from_tract','$to_tract',$from_lat,$from_lon,$to_lat,$to_lon,'$time'),";
 		}
 
 		private function curl_download($Url){ 
@@ -281,6 +311,8 @@
 	$zone = 2;
 	$name = "untitled model";
 	$user_id = -1;
+	$am_pm = 'am';
+	if(isset($_GET['ampm'])){ $am_pm =$_GET['ampm']; }
 	if(isset($_GET['zone'])){ $zone = $_GET['zone'];}
 	if(isset($_GET['name'])){ $name = $_GET['name'];}
 	if(isset($_GET['season'])){ 
@@ -295,7 +327,7 @@
 	}
 	if(isset($_GET['user_id'])){ $user_id = $_GET['user_id']; } 
 	
-	$model = new transitModel($name,$zone,$run_date,$walk_distance,$walk_speed,$model_type,$user_id);
+	$model = new transitModel($name,$zone,$run_date,$walk_distance,$walk_speed,$model_type,$user_id,$am_pm);
 	$model->run();
 	$model->runOTP();
 	echo json_encode($model->getOutput());

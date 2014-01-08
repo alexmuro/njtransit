@@ -105,14 +105,21 @@ var busAnalyst = (function(){
 		
 		modelGeoIDAlighting = modelTrips.dimension(function(d){return d.off_tract;});
 		modelGeoIDAlightingGroup = modelGeoIDAlighting.group(function(d){return d;});
-		
+
+		modelRouteStart = modelTrips.dimension(function(d){return d.route+" "+d.trip_start_time;});
+		modelRouteStartGroup = modelRouteStart.group(function(d){return d;});
 
 		fareRoutes = fareTrips.dimension(function(d){return d.LINE;});
 		fareRoutesGroup = fareRoutes.group().reduceSum(function(d) { return d.TOTAL_TRANSACTIONS*1; });
+
 		fareFareZones = fareTrips.dimension(function(d){return d.BOARDING_ZONE;});
 		fareFareZonesGroup = fareFareZones.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
+
 		fareFareZonesAlighting = fareTrips.dimension(function(d){return d.ALIGHTING_ZONE;});
 		fareFareZonesAlightingGroup = fareFareZonesAlighting.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
+
+		fareRouteStart = fareTrips.dimension(function(d){return d.LINE+" "+d.START_TIME;});
+		fareRouteStartGroup = fareRouteStart.group().reduceSum(function(d){ return d.TOTAL_TRANSACTIONS*1; });
 
 		startMinuteDimension = modelTrips.dimension(function(d){return d.minute;});
 		countPerMinute = startMinuteDimension.group().reduceCount();
@@ -123,6 +130,7 @@ var busAnalyst = (function(){
 	function makeGraphs(){
 		
 		loader.push(RouteCountCharts);
+		//loader.push(TripCountCharts);
 		loader.push(FareZoneCountCharts);
 		loader.push(RouteComparisonTable);
 		loader.push(CensusTractBoardingChart);
@@ -137,19 +145,24 @@ var busAnalyst = (function(){
 		var correctProject = getProjection(height,width,censusGeo);
 		censusTractBoarding
 			.width(width)
-      .height(height)
-      .dimension(modelGeoIDBoarding)
-      .group(modelGeoIDBoardingGroup)
-      .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
-      .colorDomain([0, 200])
-      .colorCalculator(function (d) { return d ? censusTractBoarding.colors()(d) : '#ccc'; })
-      .overlayGeoJson(censusGeo.features, "tract", function (d) {
-				return d.properties.geoid;
-      })
-      .projection(correctProject)
-      .title(function (d) {
-				return "Censust Tract: " + d.key + "\n # Boarding: " + numberFormat(d.value ? d.value : 0);
-      });
+			.height(height)
+			.dimension(modelGeoIDBoarding)
+			.group(modelGeoIDBoardingGroup)
+			.colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+			.colorDomain([0, 200])
+			.colorCalculator(function (d) { return d ? censusTractBoarding.colors()(d) : '#ccc'; })
+			.overlayGeoJson(censusGeo.features, "tract", function (d) {
+						return d.properties.geoid;
+			})
+			.projection(correctProject)
+			.title(function (d) {
+						return "Censust Tract: " + d.key + "\n # Boarding: " + numberFormat(d.value ? d.value : 0);
+			});
+			censusTractBoarding.legend(dc.legend());
+
+    
+
+
 
     var censusTractAlighting = dc.geoChoroplethChart("#chart-model-census-tracts-alighting");
 		censusTractAlighting
@@ -173,9 +186,9 @@ var busAnalyst = (function(){
 
 	function getProjection(width,height,json){
 		var center = d3.geo.centroid(json);
-    var scale  = 150;
-    var offset = [width/2, height/2];
-      var projection = d3.geo.mercator().scale(scale).center(center)
+		var scale  = 150;
+		var offset = [width/2, height/2];
+		var projection = d3.geo.mercator().scale(scale).center(center)
           .translate(offset);
 
       // create the path
@@ -192,14 +205,18 @@ var busAnalyst = (function(){
       // new projection
       return d3.geo.mercator().center(center).scale(scale).translate(offset);
 	}
+
+
 	function RouteCountCharts(){
 
+		var fareFiltered,modelFiltered = false;
 		var routeCountChart = dc.rowChart("#chart-model-route-count");
 		routeCountChart
 			.width(550).height(600)
 			.dimension(modelRoutes)
 			.group(modelRoutesGroup)
 			.elasticX(true);
+
 
 		var fareCountChart = dc.rowChart("#chart-fare-route-count");
 		fareCountChart
@@ -208,8 +225,54 @@ var busAnalyst = (function(){
 			.group(fareRoutesGroup)
 			.elasticX(true);
 
+		routeCountChart.on("filtered", function(chart, filter){
+			if(!modelFiltered){
+				fareCountChart.filter(filter);
+				modelRouteStartGroup = modelRouteStart.group(function(d){if(d.substring(0,3) == filter){ return d;}});
+				TripCountCharts(true);
+				modelFiltered = true;
+			}else{
+				modelRouteStartGroup = modelRouteStart.group(function(d){return d;});
+				TripCountCharts(true);
+				modelFiltered = false;
+			}
+
+		});
+
+		fareCountChart.on("filtered", function(chart, filter){
+			if(!fareFiltered){
+				fareRouteStart = fareTrips.dimension(function(d){if(d.LINE == filter){return d.LINE+" "+d.START_TIME;}});
+				fareRouteStartGroup = fareRouteStart.group().reduceSum(function(d){if(d.LINE == filter){return d.TOTAL_TRANSACTIONS*1;}});
+			}else{
+				fareRouteStart = fareTrips.dimension(function(d){return d.LINE+" "+d.START_TIME;});
+				fareRouteStartGroup = fareRouteStart.group().reduceSum(function(d){return d.TOTAL_TRANSACTIONS*1;});
+			}
+			TripCountCharts(true);
+		});
+
 		loader.run();
 	}
+
+	function TripCountCharts(redraw){
+		var modelTripCountChart = dc.rowChart("#chart-model-trip-count");
+		modelTripCountChart
+			.width(550).height(700)
+			.dimension(modelRouteStart)
+			.group(modelRouteStartGroup)
+			.elasticX(true);
+		
+
+		var fareTripCountChart = dc.rowChart("#chart-fare-trip-count");
+		fareTripCountChart
+			.width(550).height(700)
+			.dimension(fareRouteStart)
+			.group(fareRouteStartGroup)
+			.elasticX(true);
+
+		dc.renderAll();
+		
+	}
+
 	function FareZoneCountCharts(){
 		
 		var modelCountChart = dc.rowChart("#chart-model-farezone-count");
@@ -248,12 +311,12 @@ var busAnalyst = (function(){
 		var modelTotal= 0, faresTotal = 0;
 		fareRoutesGroup.all().forEach(function(d,i){
 			var difference = Math.round(((modelRoutesGroup.all()[i].value-fareRoutesGroup.all()[i].value) / fareRoutesGroup.all()[i].value)*100);
-			output += "<tr><td>"+d.key+"</td><td>"+modelRoutesGroup.all()[i].value+'</td><td>'+fareRoutesGroup.all()[i].value+"</td><td>"+difference+"%</td><td><tr>";
+			output += "<tr><td>"+d.key+"</td><td>"+modelRoutesGroup.all()[i].value+'</td><td>'+numberFormat(fareRoutesGroup.all()[i].value)+"</td><td>"+difference+"%</td><td><tr>";
 			modelTotal += modelRoutesGroup.all()[i].value;
 			faresTotal += fareRoutesGroup.all()[i].value;
 		});
 		var difference = Math.round(((modelTotal-faresTotal) / faresTotal)*100);
-		output += "</tbody><tfoot><tr><td>Total</td><td>"+modelTotal+'</td><td>'+faresTotal+"</td><td>"+difference+"%</td><td><tr></tfoot>";
+		output += "</tbody><tfoot><tr><td>Total</td><td>"+modelTotal+'</td><td>'+numberFormat(faresTotal)+"</td><td>"+difference+"%</td><td><tr></tfoot>";
 		output += '<table>';
 		$("#table-route-comparison").html(output);
 		loader.run();

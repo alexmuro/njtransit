@@ -4,23 +4,12 @@
  
  $test = new db();
  $inscon = $test->connect();
- $sql = "select time from model_runs where id = ".$model_id;
- $rs=mysql_query($sql) or die($sql." ".mysql_error());
- $row = $row = mysql_fetch_assoc($rs);
- $start_hour = 6;
- $end_hour = 10;
- $ampm = 'am';
- if($row['time'] == "PM Peak"){
- 	$start_hour = 15;
- 	$end_hour = 19;
- 	$ampm = 'pm';
- }
 
 
  $sql = "select * from model_trip_table where run_id = ".$model_id;
  $rs=mysql_query($sql) or die($sql." ".mysql_error());
  while($row = mysql_fetch_assoc($rs)){
- 	planTrip($row['from_tract'],$row['to_tract'],$row['from_lat'],$row['from_lon'],$row['to_lat'],$row['to_lon'],$model_id,$row['id']);
+ 	planTrip($row['from_tract'],$row['to_tract'],$row['from_lat'],$row['from_lon'],$row['to_lat'],$row['to_lon'],$model_id,$row['id'],$row['departure_time']);
  }
  $sql ="INSERT into model_stops (run_id,stop_code,boarding,alighting,routes) (
     select 
@@ -48,21 +37,17 @@
  mysql_query($sql) or die($sql." ".mysql_error());
 
 
-function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$model_id,$itin_id){
-	global $start_hour, $end_hour,$ampm;
-	$minutes = rand(0,59);
-	if($minutes < 10){
-		$minutes = "0".$minutes;
-	}
+function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$model_id,$itin_id,$departure_time){
+	
 
 	$otp_url = "http://localhost:8080/opentripplanner-api-webapp/ws/plan?";
 	$otp_url .= "fromPlace=$from_lat,$from_lon";
 	$otp_url .= "&toPlace=$to_lat,$to_lon";
 	$otp_url .= "&mode=TRANSIT,WALK";
   	$otp_url .= "&min=QUICK";
-  	$otp_url .= "&maxWalkDistance=1000";
+  	$otp_url .= "&maxWalkDistance=800";
   	$otp_url .= "&walkSpeed=1.341";
-  	$otp_url .= "&time=".rand($start_hour,$end_hour).':'.$minutes.$ampm;
+  	$otp_url .= "&time=$departure_time";
   	$otp_url .= "&date=7/23/2013";
   	$otp_url .= "&arriveBy=false";
   	$otp_url .= "&itinID=1";
@@ -97,7 +82,7 @@ function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$m
 
 	function processTrip($data,$model_id,$flat,$flon,$tlat,$tlon,$itin_id){
 		if(count($data['plan']['itineraries']) > 0){
-			$sql = "Update model_trip_table set departure_time = '".$data['requestParameters']['time']."', routed = 1 where id = $itin_id";
+			$sql = "Update model_trip_table set routed = 1 where id = $itin_id";
 			mysql_query($sql) or die($sql.'\n'.mysql_error());
 			//this.trips.push(data.plan.itineraries[getRandomInt(0,data.plan.itineraries.length-1)]);
 			$trip = $data['plan']['itineraries'][rand(0,count($data['plan']['itineraries'])-1)];
@@ -126,7 +111,7 @@ function  planTrip ($from_tract,$to_tract,$from_lat,$from_lon,$to_lat,$to_lon,$m
 			$sql = "INSERT into model_legs (run_id,trip_id, mode,duration,distance,route,route_id,gtfs_trip_id,on_stop_code,on_stop_id,off_stop_code,off_stop_id) VALUES $leg_data";
 			mysql_query($sql) or die($sql.'<br>'.mysql_error());
 		}else{
-			$sql = "Update model_trip_table set departure_time = '".$data['requestParameters']['time']."', routed = 0 where id = $itin_id";
+			$sql = "Update model_trip_table set routed = 0 where id = $itin_id";
 			mysql_query($sql) or die($sql.'\n'.mysql_error());
 		}
 	}

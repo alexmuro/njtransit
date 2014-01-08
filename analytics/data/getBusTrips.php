@@ -48,6 +48,7 @@
 			    gtfs_20130712.stop_fips h ON h.stop_id = a.off_stop_id
 			where
 			    a.run_id = $run_id and mode = 'BUS'
+			    and d.arrival_time BETWEEN ('6:00:00') AND ('10:00:00')
 			    and a.route in ('501','502','504','505','507','508','509','551','552','553','554','559')";
 
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
