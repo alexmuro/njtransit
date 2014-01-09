@@ -162,8 +162,6 @@ var busAnalyst = (function(){
 
     
 
-
-
     var censusTractAlighting = dc.geoChoroplethChart("#chart-model-census-tracts-alighting");
 		censusTractAlighting
 			.width(width)

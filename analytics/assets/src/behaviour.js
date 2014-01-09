@@ -6,7 +6,6 @@ $(function(){
 		async:false
 	})
 	.done(function(data){
-		console.log('model runs',data);
 		data.forEach(function(d,i){
 			$('#model-select').append('<option value="'+d.id+'">'+d.id+' - '+d.name+'</option>');
 		});
