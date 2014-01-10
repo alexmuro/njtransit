@@ -9,6 +9,7 @@
 @import url(assets/css/angular-slider.min.css);
 body { padding-top: 70px; background: #e7e7e7; }
 .main-content {background: #fff;}
+.titlerow {stroke:#000;}
 </style>
 <!-- Latest compiled and minified CSS -->
 
@@ -52,16 +53,19 @@ body { padding-top: 70px; background: #e7e7e7; }
 			<select id="model-select">
 				
 			</select><br>
-			Name:<br>
-			Season:<br>
-			Run Type:<br>
+			ID: <b><span id="model_id"></span></b><br>
+			Name: <b><span id="model_name"></span></b><br>
+			Season: <b><span id="model_season"></span></b><br>
+			Run Time: <b><span id="model_time"></span></b><br>
+			Run Type: <b><span id="model_type"></span></b><br>
 		</div>
 		<div class="col-md-6">
 			<h4>Farebox Info</h4>
-			<select>
-				<option> Atlantic City - AM</option>
-				<option> Atlantic City - PM</option>
-				<option> Atlantic City - Combined</option>
+			<select id="time_select">
+				<option value="am"> Atlantic City - AM</option>
+				<option value="pm"> Atlantic City - PM</option>
+				<option value="combined"> Atlantic City - Combined</option>
+				<option value="fullday"> Atlantic City - FullDay</option>
 			</select>
 		</div>
 	</div>
@@ -131,20 +135,20 @@ body { padding-top: 70px; background: #e7e7e7; }
 
 
 <!-- Includes -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="assets/js/jquery-1.9.1.min.js"></script>
+<script src="assets/js/d3.min.js"></script>
 <script src="assets/js/crossfilter.min.js"></script>
 <script src="assets/js/dc.2.0.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 <!-- <script src="assets/js/dc.min.js"></script> -->
 
 <!-- src -->
 <script src="assets/src/modelComapre.js"></script>
 <script src="assets/src/behaviour.js"></script>
 <script>
-busAnalyst.init(269);
+busAnalyst.init(291,'pm');
 </script>
 </body>
 

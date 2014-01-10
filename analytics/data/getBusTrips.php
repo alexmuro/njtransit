@@ -1,10 +1,17 @@
 <?php
 	error_reporting(E_ALL ^ E_DEPRECATED);
+	$ampm = 'am';
 	if(isset($_POST['run_id'])){
 		$run_id = $_POST['run_id'];
 	}
 	if(isset($_GET['run_id'])){
 		$run_id = $_GET['run_id'];
+	}
+	if(isset($_POST['ampm'])){
+		$ampm = $_POST['ampm'];
+	}
+	if(isset($_GET['ampm'])){
+		$ampm = $_GET['ampm'];
 	}
 
 	include 'db.php'; 
@@ -12,6 +19,12 @@
 	$test = new db();
 	$inscon = $test->connect();
 	
+	$start_time = '6:00:00';
+	$end_time = '10:00:00';
+	if($ampm == 'pm'){
+		$start_time = '15:00:00';
+		$end_time = '19:00:00';
+	}
 	$sql = "SELECT
 			    a.trip_id,
 			    a.duration,
@@ -48,9 +61,11 @@
 			    gtfs_20130712.stop_fips h ON h.stop_id = a.off_stop_id
 			where
 			    a.run_id = $run_id and mode = 'BUS'
-			    and d.arrival_time BETWEEN ('6:00:00') AND ('10:00:00')
+			    and g.fare_zone like 'P%'
+			    and d.arrival_time BETWEEN ('$start_time') AND ('$end_time')
 			    and a.route in ('501','502','504','505','507','508','509','551','552','553','554','559')";
 
+	//echo $sql;
 	$rs=mysql_query($sql) or die($sql." ".mysql_error());
 	$rows = array();
 	while($r = mysql_fetch_assoc($rs)) {

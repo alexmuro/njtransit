@@ -13,6 +13,7 @@ var busAnalyst = (function(){
 	var timeFormat = d3.time.format("%Y-%m-%d %H:%M:%S");
 	var modelTrips,fareTrips = {};
 	var run_id=269;
+	var ampm = 'am';
 	var modelRoute,
 		modelRoutesGroup,
 		fareRoute,
@@ -31,8 +32,9 @@ var busAnalyst = (function(){
 		//console.log('1');
 		var minutes;
 		var hours;
+		console.log('test',ampm,run_id)
 		$.ajax({url:'data/getBusTrips.php',
-			data:{run_id:run_id},
+			data:{run_id:run_id,ampm:ampm},
 			method:'POST',
 			dataType:'json',
 			async:false
@@ -43,7 +45,7 @@ var busAnalyst = (function(){
 				d.minute = d3.time.minute(d.start_time_d);
 				d.minute.setHours(d.minute.getHours()-4);
 			});
-			//console.log('model data',data);
+			console.log('model data',data);
 			modelTrips = crossfilter(data);
 			loader.run();
 		})
@@ -75,6 +77,7 @@ var busAnalyst = (function(){
 		var minutes;
 		var hours;
 		$.ajax({url:'data/getRealTrips.php',
+			data:{time:ampm},
 			method:'POST',
 			dataType:'json',
 			async:false
@@ -213,7 +216,8 @@ var busAnalyst = (function(){
 			.width(550).height(600)
 			.dimension(modelRoutes)
 			.group(modelRoutesGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 
 
 		var fareCountChart = dc.rowChart("#chart-fare-route-count");
@@ -221,7 +225,8 @@ var busAnalyst = (function(){
 			.width(550).height(600)
 			.dimension(fareRoutes)
 			.group(fareRoutesGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 
 		routeCountChart.on("filtered", function(chart, filter){
 			if(!modelFiltered){
@@ -257,7 +262,8 @@ var busAnalyst = (function(){
 			.width(550).height(700)
 			.dimension(modelRouteStart)
 			.group(modelRouteStartGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 		
 
 		var fareTripCountChart = dc.rowChart("#chart-fare-trip-count");
@@ -265,7 +271,8 @@ var busAnalyst = (function(){
 			.width(550).height(700)
 			.dimension(fareRouteStart)
 			.group(fareRouteStartGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 
 		dc.renderAll();
 		
@@ -278,6 +285,7 @@ var busAnalyst = (function(){
 			.width(550).height(700)
 			.dimension(modelFareZones)
 			.group(modelFareZonesGroup)
+			.renderTitleLabel(true)
 			.elasticX(true);
 		
 		
@@ -286,20 +294,24 @@ var busAnalyst = (function(){
 			.width(550).height(700)
 			.dimension(fareFareZones)
 			.group(fareFareZonesGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
+
 		var modelCountChartOff = dc.rowChart("#chart-model-farezone-off-count");
 		modelCountChartOff
 			.width(550).height(700)
 			.dimension(modelFareZonesAlighting)
 			.group(modelFareZonesAlightingGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 		
 		var fareCountChartOff = dc.rowChart("#chart-fare-farezone-off-count");
 		fareCountChartOff
 			.width(550).height(700)
 			.dimension(fareFareZonesAlighting)
 			.group(fareFareZonesAlightingGroup)
-			.elasticX(true);
+			.elasticX(true)
+			.renderTitleLabel(true);
 
 		loader.run();
 	}
@@ -321,8 +333,9 @@ var busAnalyst = (function(){
 	}
 
 	return{
-		init:function(runID){
+		init:function(runID,time){
 			run_id = runID;
+			ampm = time;
 			loader.push(loadModelData);
 			loader.push(loadFareData);
 			loader.push(loadCensusTracts);

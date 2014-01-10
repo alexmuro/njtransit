@@ -74,7 +74,7 @@ angular.module('myApp.controllers', [])
       $scope.walk_distance = 1;
       $scope.walk_speed = 3;
       $scope.model_type = "CTPP2000" 
-      $scope.model_time = 0;
+      $scope.model_time = 'pm';
       $scope.model_season= '7/22/2013';
       //AM Peak Hours
       $scope.AMstart = new Date();
@@ -82,7 +82,7 @@ angular.module('myApp.controllers', [])
       $scope.AMstart.setMinutes(0);
       $scope.AMend = new Date();
       $scope.AMend.setHours(9);
-      $scope.AMend.setMinutes(0)
+      $scope.AMend.setMinutes(0);
       $scope.hstep = 1;
       $scope.mstep = 15;
       $scope.message = "";

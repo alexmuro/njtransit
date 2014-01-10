@@ -6,7 +6,7 @@
 	$inscon = $test->connect();
 
 	$date = array();
-	$sql = "SELECT model_runs.id,model_runs.name 
+	$sql = "SELECT * 
 			from 
 				model_runs 
 			where 
@@ -17,8 +17,10 @@
 
  	while($row = mysql_fetch_assoc($rs)){
  		$model = array();
+ 		$model['name'] = $row['name'];
  		$model['id'] = $row['id'];
- 		$model['name'] = $row['name']; 
+		$model['info'] = $row; 		
+
  		$data[] = $model;
  	}
  	echo json_encode($data);

@@ -94,6 +94,8 @@
 					}
 	     		}
 	     		$zone_string = rtrim($zone_string, ",").")";
+				$start_time = '5:30:00';
+				$end_time = '10:00:00';
      			$sql = "SELECT 
      						O_MAT_LAT,
      						O_MAT_LONG,
@@ -107,7 +109,7 @@
      					JOIN survey_attributes as b on 
      						a.ID = b.ID 
      					where 
-     						(MILITARYSTARTTIME BETWEEN ('5:30:00') AND ('10:00:00') ) 
+     						(MILITARYSTARTTIME BETWEEN ('$start_time') AND ('$end_time') ) 
      						AND (not O_MAT_LAT = 0 and not O_MAT_LONG = 0 and not D_MAT_LAT = 0 and not D_MAT_LONG = 0) 
      						AND ( o_geoid10 in $zone_string or d_geoid10 in $zone_string )";
      			$rs=mysql_query($sql) or die($sql." ".mysql_error());
@@ -122,7 +124,11 @@
 						$end_lon = $row['D_MAT_LONG']+((rand(1,40)-20)/10000);
 						$from_tract = $row['o_geoid10'];
 						$to_tract = $row['d_geoid10'];
-						$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon,$end_lat,$end_lon);
+						if($this->AM_PM == 'am'){
+							$this->planTrip($from_tract,$to_tract,$begin_lat,$begin_lon,$end_lat,$end_lon,$this->militaryTimeToAMPM($row['MILITARYSTARTTIME']));
+	 					}else if($this->AM_PM == 'pm'){
+	 						$this->planTrip($to_tract,$from_tract,$end_lat,$end_lon,$begin_lat,$begin_lon,$this->militaryTimeToAMPM($row['MILITARYSTARTTIME']));
+	 					}
 	 				}
 	 			}
      		}else{
@@ -133,6 +139,24 @@
 					}
 	     		}
 	     	}
+     	}
+
+     	private function militaryTimeToAMPM($time){
+			$toks = explode(":",$time);
+			$ampm = 'am';
+			if($this->AM_PM == 'pm'){
+				$toks[0] = $toks[0]*1+8;
+			}
+			if($toks[0]*1 > 12){
+			  $ampm = 'pm';
+			}
+
+			$hours = ($toks[0]%12);
+			if($toks[0] == 12){
+				$hours = 12;
+			}
+			return $hours.":".$toks[1].$ampm;
+
      	}
 
      	private function getTractTrips($in_state,$in_county,$in_tract){
@@ -312,7 +336,7 @@
 	$name = "untitled model";
 	$user_id = -1;
 	$am_pm = 'am';
-	if(isset($_GET['ampm'])){ $am_pm =$_GET['ampm']; }
+	if(isset($_GET['time'])){ $am_pm =$_GET['time']; }
 	if(isset($_GET['zone'])){ $zone = $_GET['zone'];}
 	if(isset($_GET['name'])){ $name = $_GET['name'];}
 	if(isset($_GET['season'])){ 
