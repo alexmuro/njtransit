@@ -7,7 +7,7 @@ $test = new db();
 $inscon = $test->connect();
 
 
-$zone_id = $_POST['zone_id'];
+$zone_id = $_GET['zone_id'];
 $sql = "select routes from zones where id = $zone_id";
 $rs=mysql_query($sql) or die($select."<br><br>".mysql_error());
 $results = array();
@@ -81,7 +81,6 @@ foreach($routes as $route)
             $feature['type'] = 'Feature';
             $feature['properties'] = $properties;
             $geometry['type'] = 'LineString'; 
-            $coordinates[] = array();
 
             $x=0;
             $coordinates[] = array();

@@ -486,7 +486,7 @@ var viz = {
 			changeSymbol:function(){
 
 				viz.tracts.max=0;
-				viz.tracts.min=10000
+				viz.tracts.min=100000;
 				viz.tracts.data.features.forEach(function(f){
 					//console.log(f.properties)
 				 	if(f.properties[viz.tracts.symbol] > viz.tracts.max){

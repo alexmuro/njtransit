@@ -4,7 +4,9 @@
 	The Transit Quality and Equity - http://ray-mon.com/ &
 	http://urbanprototyping.org/prototype/challenges/urban-data-challenge-zurich-sf-geneva/transit-quality-and-equity/
  -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!-- Meta Data -->
 	<meta name="description" content="description">
 	<meta name="keywords" content="keywords">
